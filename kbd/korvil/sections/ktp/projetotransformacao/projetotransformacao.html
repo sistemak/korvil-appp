@@ -238,9 +238,7 @@ h1{font-size:14px;font-weight:900;color:var(--c);}
   <div id="semana-container"></div>
 
   <!-- CRONOGRAMA DO ALUNO - SÓ APARECE DEPOIS DO ID -->
-  <div id="cronograma-container">
-    <div class="msg-inicial">🔑 Clique em "Acessar ID" no topo e digite seu ID para ver seu cronograma pessoal<br><small style="color:#555;font-size:10px;margin-top:8px;display:block;">Seu plano, horários, valores e dados completos aparecerão aqui</small></div>
-  </div>
+  <div id="cronograma-container" style="display:none;"></div>
 </div>
 
 <div id="k-ai-tour-overlay" onclick="kAI.fecharTour()"></div>
@@ -516,8 +514,10 @@ function fecharResultado(){
   idLogado='';
   localStorage.removeItem('idLogado');
   document.getElementById('info-aluno-container').innerHTML='';
-  // limpa só o cronograma do aluno, MANTÉM a mensagem da semana visível
-  document.getElementById('cronograma-container').innerHTML='<div class="msg-inicial">🔑 Clique em "Acessar ID" no topo e digite seu ID para ver seu cronograma pessoal<br><small style="color:#555;font-size:10px;margin-top:8px;display:block;">Seu plano, horários, valores e dados completos aparecerão aqui</small></div>';
+  // esconde cronograma do aluno, mantém só mensagem da semana
+  const crono = document.getElementById('cronograma-container');
+  crono.innerHTML='';
+  crono.style.display='none';
 }
 function formatarData(d){const dt=new Date(d+'T12:00:00');return dt.toLocaleDateString('pt-BR');}
 function getSegundaDaSemana(){const agora=new Date();let dataBase=new Date(agora);if(agora.getDay()===1&&agora.getHours()<1){dataBase.setDate(agora.getDate()-7);}const diaSemana=dataBase.getDay();const diff=dataBase.getDate()-diaSemana+(diaSemana===0?-6:1);const segunda=new Date(dataBase.setDate(diff));const ano=segunda.getFullYear();const mes=String(segunda.getMonth()+1).padStart(2,'0');const dia=String(segunda.getDate()).padStart(2,'0');return `${ano}-${mes}-${dia}`;}
@@ -624,9 +624,11 @@ function mostrarDadosAluno(id){
 function mostrarCronograma(){
   const container = document.getElementById('cronograma-container');
   if(!idLogado){
-    container.innerHTML='<div class="msg-inicial">🔑 Clique em "Acessar ID" no topo e digite seu ID para ver seu cronograma pessoal<br><small style="color:#555;font-size:10px;margin-top:8px;display:block;">Seu plano, horários, valores e dados completos aparecerão aqui</small></div>';
+    container.innerHTML='';
+    container.style.display='none';
     return;
   }
+  container.style.display='block';
   const alunoDB = ALUNOS_DB[idLogado];
   const ehAdm = alunoDB?.tipo==='ADMIN';
   const encontrado = encontrarAlunoCompleto(idLogado);
@@ -680,7 +682,7 @@ function buscarAluno(){
   if(!id){document.getElementById('resultado-aluno').innerHTML='<div style="color:var(--aviso)">Digite um ID</div>';return;}
   if(ALUNOS_DB[id]){
     idLogado=id;
-    localStorage.setItem('idLogado', id);
+    localStorage.removeItem('idLogado'); // não salva automático mais
     const enc = encontrarAlunoCompleto(id);
     if(enc){ planoAtivo = enc.tipoPlano; }
     else { planoAtivo = ALUNOS_DB[id].tipo==='ADMIN' ? 'PRESENCIAL' : 'PRESENCIAL'; }
@@ -712,14 +714,14 @@ window.onload=function(){
   }
   mostrarInfoSemana(dataParaMostrar);
   
-  const salvo=localStorage.getItem('idLogado');
-  if(salvo){
-    idLogado=salvo;
-    const enc=encontrarAlunoCompleto(salvo);
-    if(enc) planoAtivo=enc.tipoPlano;
-    mostrarDadosAluno(salvo);
-    mostrarCronograma();
-  }
+  // INICIO SEMPRE LIMPO: não carrega nenhum ID automaticamente
+  // limpa qualquer login antigo salvo
+  idLogado='';
+  document.getElementById('info-aluno-container').innerHTML='';
+  const crono = document.getElementById('cronograma-container');
+  if(crono){ crono.innerHTML=''; crono.style.display='none'; }
+  // não usa mais localStorage automático - só quando clicar em Acessar ID
+
   kAI.iniciar();
 };
 </script>
