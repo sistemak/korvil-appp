@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#000">
 <title>K-TP PROJETO TRANSFORMAÇÃO 2026</title>
 <style>
-:root{--c:#00f5ff; --bg:#000; --card:#0a0a0a; --text:#fff; --text2:#aaa; --borda:#1f1f1f; --ok:#00ff88; --erro:#ff4444; --aviso:#ffaa00;}
+:root{--c:#00f5ff; --bg:#000; --card:#0a0a0a; --text:#fff; --text2:#aaa; --borda:#1f1f1f; --ok:#00ff88; --erro:#ff4444; --aviso:#ffaa00; --azul:#0084ff;}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;}
 body{background:var(--bg);color:var(--text);margin:0;overflow-x:hidden;}
 .header{padding:12px 16px 12px 56px;text-align:left;border-bottom:1px solid var(--borda);background:#0a0a0a;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;}
@@ -22,10 +22,62 @@ h1{font-size:14px;font-weight:900;color:var(--c);}
 #menu-lateral.ativo{left:0;}
 #overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:199;display:none;}
 #overlay.ativo{display:block;}
-.menu-titulo{padding:14px 16px;font-size:11px;color:var(--c);font-weight:900;letter-spacing:1px;border-bottom:2px solid var(--c);margin-top:8px;}
-.semanas-da-fase{background:#050505;}
-.semana-item{padding:10px 16px 10px 24px;font-size:10px;cursor:pointer;border-bottom:1px solid var(--borda);color:var(--text2);line-height:1.4;text-decoration:none;display:block;transition:.2s;}
+
+/* MENU MELHORADO - ABAS */
+.menu-titulo{
+  padding:14px 16px;
+  font-size:11px;
+  color:var(--c);
+  font-weight:900;
+  letter-spacing:1px;
+  border-bottom:2px solid var(--c);
+  margin-top:8px;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  user-select:none;
+  transition:.2s;
+}
+.menu-titulo:hover{background:#111;}
+.menu-titulo::after{
+  content:'+';
+  font-size:14px;
+  color:var(--c);
+  transition:.3s;
+}
+.menu-titulo.aberto::after{
+  content:'−';
+}
+.semanas-da-fase{
+  background:#050505;
+  display:none;
+}
+.semanas-da-fase.aberta{
+  display:block;
+}
+.semana-item{
+  padding:10px 16px 10px 24px;
+  font-size:10px;
+  cursor:pointer;
+  border-bottom:1px solid var(--borda);
+  color:var(--text2);
+  line-height:1.4;
+  text-decoration:none;
+  display:block;
+  transition:.2s;
+  border-left:3px solid transparent;
+}
 .semana-item:hover{background:#111;color:#fff;}
+/* SELETOR AZUL DA DATA ATUAL - igual css do site */
+.semana-item.atual{
+  color:#fff;
+  background:#0d111a;
+  border-left:3px solid var(--azul);
+  box-shadow:inset 0 0 0 1px var(--azul), 0 0 12px rgba(0,132,255,0.25);
+  font-weight:800;
+}
+
 .container{padding:12px;max-width:1200px;margin:auto;}
 .card-aluno{background:#001a1a;border:2px solid var(--c);border-radius:10px;padding:12px;margin-bottom:12px;position:relative;}
 .card-aluno h2{font-size:12px;color:var(--c);margin-bottom:6px;}
@@ -92,7 +144,6 @@ h1{font-size:14px;font-weight:900;color:var(--c);}
 </div>
 
 <script>
-// MENSAGENS DA SEMANA - DO mensagens-2026.js
 const MENSAGENS_SEMANA = {
   "2026-01-05": `K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE MANUTENÇÃO\n\nEssa é uma semana única dentro do processo — uma pausa estratégica para ajustar, aprender e evoluir com mais consciência.\n\nOBJETIVO DA FASE: Regeneração | Adaptações | Aprendizados\nAqui, a intensidade diminui, mas a atenção aumenta. É o momento de aprender mais sobre os exercícios, melhorar a execução dos movimentos e corrigir detalhes que fazem toda a diferença lá na frente.\n\nO foco está na regeneração muscular, na mobilidade e na qualidade de cada exercício. Um corpo bem recuperado responde melhor, ganha mais eficiência e reduz o risco de lesões.\n\nMenos carga, mais controle. Menos pressa, mais precisão.\n\nSemana mais leve. É ela que sustenta sua evolução e prepara você para voltar ainda mais forte.`,
   "2026-01-12": `K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE RESISTÊNCIA\nOBJETIVO DA FASE: Regeneração | Adaptações | Aprendizados\n\nEssa é uma semana fundamental dentro do processo — onde você constrói a base que sustenta toda evolução física.\n\nAqui, o foco não está no peso, mas na capacidade do músculo trabalhar por mais tempo, suportar esforço e melhorar a recuperação entre exercícios.\n\nA intensidade vem do volume e da continuidade, não da carga. É o momento de fortalecer o fôlego, a mente e a disciplina física.\n\nMais repetições, menos peso.\nMais constância, menos pausa.\nMais resistência, mais preparação.\n\nSemana de construção da base. É ela que aumenta sua capacidade e prepara seu corpo para níveis mais altos de força, hipertrofia e performance.`,
@@ -212,8 +263,8 @@ const FASES_MENU = {
 };
 
 let ALUNOS_DB = {
-  "ktp0": {nome:"SAY KORVIL", tipo:"ADMIN"}, // SEU ID ADM
-  "mag1": {nome:"Magda Gomes dos Santos", tipo:"ADMIN"}, // MAG ADM
+  "ktp0": {nome:"SAY KORVIL", tipo:"ADMIN"},
+  "mag1": {nome:"Magda Gomes dos Santos", tipo:"ADMIN"},
   "mcarla2": {nome:"Maria Carla Carvalho Santos", tipo:"ALUNO"},
   "hvitoria3": {nome:"Hellem Vitória Carvalho dos Santos", tipo:"ALUNO"},
   "alexandra4": {nome:"Alexandra", tipo:"ALUNO"},
@@ -292,42 +343,70 @@ function fecharResultado(){
   idLogado='';
   localStorage.removeItem('idLogado');
   document.getElementById('info-aluno-container').innerHTML='';
-
-  // VOLTA PRA SEMANA ATUAL COM IMAGEM E MENSAGEM
   const dataAtual = getSegundaDaSemana();
   mostrarInfoSemana(MENSAGENS_SEMANA[dataAtual]? dataAtual : "2026-01-05");
 }
-  function formatarData(d){const dt=new Date(d+'T12:00:00');return dt.toLocaleDateString('pt-BR');}
+function formatarData(d){const dt=new Date(d+'T12:00:00');return dt.toLocaleDateString('pt-BR');}
+
 function getSegundaDaSemana(){
   const agora = new Date();
   let dataBase = new Date(agora);
-
-  // Regra: só troca pra próxima segunda depois das 01:00
   if(agora.getDay() === 1 && agora.getHours() < 1){
     dataBase.setDate(agora.getDate() - 7);
   }
-
   const diaSemana = dataBase.getDay();
   const diff = dataBase.getDate() - diaSemana + (diaSemana === 0? -6 : 1);
   const segunda = new Date(dataBase.setDate(diff));
-
   const ano = segunda.getFullYear();
   const mes = String(segunda.getMonth() + 1).padStart(2, '0');
   const dia = String(segunda.getDate()).padStart(2, '0');
   return `${ano}-${mes}-${dia}`;
 }
+
+function getFaseDaDataAtual(){
+  const hojeISO = getSegundaDaSemana();
+  let melhorData = null;
+  for(let data in MENU){
+    if(data <= hojeISO){
+      if(!melhorData || data > melhorData) melhorData = data;
+    }
+  }
+  if(!melhorData) melhorData = Object.keys(MENU)[0];
+  for(let fase in FASES_MENU){
+    if(FASES_MENU[fase].includes(melhorData)){
+      return {faseAtual: fase, dataAtual: melhorData};
+    }
+  }
+  return {faseAtual: Object.keys(FASES_MENU)[0], dataAtual: melhorData};
+}
+
 function carregarMenu(){
+  const {faseAtual, dataAtual} = getFaseDaDataAtual();
   let html='';
   for(let fase in FASES_MENU){
-    html+=`<div class="menu-titulo">${fase}</div>`;
-    html+=`<div class="semanas-da-fase">`;
+    const ehFaseAtual = (fase === faseAtual);
+    html+=`<div class="menu-titulo ${ehFaseAtual? 'aberto' : ''}" onclick="toggleFase(this)">${fase}</div>`;
+    html+=`<div class="semanas-da-fase ${ehFaseAtual? 'aberta' : ''}">`;
     FASES_MENU[fase].forEach(data=>{
       const segundaLinha = MENU[data].split('\n')[1] || 'SEMANA';
-      html+=`<div class="semana-item" onclick="mostrarInfoSemana('${data}')">${formatarData(data)} - ${segundaLinha}</div>`;
+      const ehAtual = (data === dataAtual)? ' atual' : '';
+      html+=`<div class="semana-item${ehAtual}" onclick="mostrarInfoSemana('${data}')">${formatarData(data)} - ${segundaLinha}</div>`;
     });
     html+=`</div>`;
   }
   document.getElementById('menu-lateral').innerHTML=html;
+}
+
+function toggleFase(el){
+  const conteudo = el.nextElementSibling;
+  const isAberta = conteudo.classList.contains('aberta');
+  if(isAberta){
+    conteudo.classList.remove('aberta');
+    el.classList.remove('aberto');
+  } else {
+    conteudo.classList.add('aberta');
+    el.classList.add('aberto');
+  }
 }
 
 function mostrarInfoSemana(data){
@@ -337,8 +416,6 @@ function mostrarInfoSemana(data){
   const titulo = linhas[0];
   const subtitulo = linhas[1];
   const mensagem = MENSAGENS_SEMANA[data] || "Mensagem da semana não cadastrada.";
-
-  // As 4 imagens se repetem em todas as fases
   const imagens = {
     'MANUTENÇÃO': 'semana-de-manutencao',
     'RESISTÊNCIA': 'semana-de-resistencia',
@@ -349,11 +426,8 @@ function mostrarInfoSemana(data){
   for(let key in imagens){
     if(subtitulo.includes(key)){ pastaImagem = imagens[key]; break; }
   }
-  
-  // CAMINHO CORRIGIDO PEGANDO DO SEU PRINT
   const baseURL = `https://korvilp-sudo.github.io/korvil-app/sections/ktp/projetotransformacao/images/imagens/2026/imagens-dos-metodos`;
   const caminhoImagem = `${baseURL}/${pastaImagem}/${pastaImagem}.png`;
-
   let html = `
     <div class="card-semana">
       <h3>${titulo}</h3>
@@ -378,9 +452,7 @@ function mostrarDadosAluno(id){
   const aluno = ALUNOS_DB[id];
   const container = document.getElementById('info-aluno-container');
   if(!aluno) return;
-
   const ehAdm = aluno.tipo === 'ADMIN';
-
   if(ehAdm){
     container.innerHTML = `<div class="card-aluno"><button class="btn-fechar-resultado" onclick="fecharResultado()">X</button><h2>👑 MODO ADMIN</h2><p><b>Usuário:</b> ${aluno.nome}<br><b>Acesso:</b> Cronograma completo PRESENCIAL + ONLINE</p></div>`;
   } else {
@@ -394,35 +466,24 @@ function mostrarCronograma(){
     mostrarInfoSemana(MENSAGENS_SEMANA[dataAtual]? dataAtual : "2026-01-05");
     return;
   }
-
   let html = `<div class="titulo-crono">📋 CRONOGRAMA K-TP — PROJETO TRANSFORMAÇÃO</div>`;
   html += `<div class="obs-pix">Olá ${ALUNOS_DB[idLogado].nome}, mensalidade em dia.<br><b>Pix: korvilloja@gmail.com</b></div>`;
-
   const ehAdm = ALUNOS_DB[idLogado]?.tipo === 'ADMIN';
-
   if(ehAdm){
     html += `<div class="abas-plano">
       <button class="aba-plano ${planoAtivo==='PRESENCIAL'?'ativa':''}" onclick="trocarAba('PRESENCIAL', this)">🌐 PRESENCIAL</button>
       <button class="aba-plano ${planoAtivo==='ONLINE'?'ativa':''}" onclick="trocarAba('ONLINE', this)">💻 ONLINE</button>
     </div>`;
   }
-
   const planosParaMostrar = ehAdm? ['PRESENCIAL', 'ONLINE'] : [planoAtivo];
-
   planosParaMostrar.forEach(plano=>{
     if(ehAdm) html += `<div style="font-size:14px;font-weight:900;color:var(--c);text-align:center;margin:20px 0">🌐 ${plano} 🌐</div>`;
-
     CRONOGRAMA_DB[plano].forEach(bloco=>{
-      // REGRA FINAL: SÓ ADM VÊ TUDO
       let alunosDoBloco = ehAdm? bloco.alunos : bloco.alunos.filter(a => a.id === idLogado);
-
       if(alunosDoBloco.length === 0) return;
-
       if(bloco.hora) html += `<div class="grupo-horario">🕒 ${bloco.hora}</div>`;
       html += `<div class="grupo-status">${bloco.status==='ATIVOS'?'✅ ATIVOS':'❌ DESATIVADOS'}</div>`;
-
       html += `<div class="tabela-wrapper"><table class="tabela-crono"><thead><tr><th>Nº</th><th>Aluno</th><th>Dias</th><th>Freq</th><th>Objetivo</th><th>Valor</th><th>Vencimento</th><th>Status</th><th>ID</th></tr></thead><tbody>`;
-
       alunosDoBloco.sort((a,b)=>a.n-b.n).forEach(a=>{
         html += `<tr class="destaque"><td>${a.n}</td><td>${a.aluno}</td><td>${a.dias}</td><td>${a.freq}</td><td>${a.objetivo}</td><td>${a.valor}</td><td>${a.venc}</td><td class="${a.status==='Ativo'?'status-ativo':'status-desativado'}">${a.status}</td><td style="font-weight:900;color:var(--c)">${a.id}</td></tr>`;
       });
@@ -451,11 +512,8 @@ function buscarAluno(){
 
 window.onload=function(){
   carregarMenu();
-
-  // PEGA A SEGUNDA ATUAL E JÁ MOSTRA NA TELA
   const dataISO = getSegundaDaSemana();
   mostrarInfoSemana(MENSAGENS_SEMANA[dataISO]? dataISO : "2026-01-05");
-
   if(idLogado){mostrarDadosAluno(idLogado);mostrarCronograma();}
 };
 </script>
