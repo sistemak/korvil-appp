@@ -380,7 +380,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
             <li><span class="bullet">♿</span>Acessível: funciona com leitor de tela, teclado, touch e mouse</li>
           </ul>
           <div style="display:grid;gap:12px">
-            <button class="btn btn-p" style="min-height:58px;font-size:16px" onclick="window.location.href='sistemak/korvil-app/kbd/korvil/sections/ktp/projetotransformacao/inscricao-do-projeto.html'">COMEÇAR INSCRIÇÃO</button>
+            <button class="btn btn-p" style="min-height:58px;font-size:16px" onclick="window.location.href='inscricao-do-projeto.html'">COMEÇAR INSCRIÇÃO</button>
             <button class="btn btn-s" style="min-height:58px;font-size:16px" onclick="acessarProjeto()">ACESSAR PROJETO</button>
           </div>
         </div>
@@ -399,7 +399,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
   <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
   <div class="dots" id="dots" role="tablist" aria-label="Navegação dos slides"></div>
   <div class="acoes-footer">
-    <button class="btn btn-p" onclick="window.location.href='sistemak/korvil-app/kbd/korvil/sections/ktp/projetotransformacao/inscricao-do-projeto.html'">INSCRIÇÃO</button>
+    <button class="btn btn-p" onclick="window.location.href='inscricao-do-projeto.html'">INSCRIÇÃO</button>
     <button class="btn btn-s" onclick="acessarProjeto()">ACESSAR</button>
   </div>
 </footer>
@@ -421,7 +421,7 @@ function acessarProjeto(){
   console.log("Tentando logar com:", senhaNormalizada);
   if(idsPermitidos.includes(senhaNormalizada)){
     localStorage.setItem('idLogado', senhaNormalizada);
-    window.location.href = "sistemak/korvil-app/kbd/korvil/sections/ktp/projetotransformacao/projetotransformacao.html";
+    window.location.href = "projetotransformacao.html";
   } else {
     alert("Acesso negado. ID: " + senha + " não encontrado.");
   }
