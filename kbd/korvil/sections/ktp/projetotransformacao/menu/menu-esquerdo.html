@@ -5,14 +5,68 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>MENU K-TP 2026</title>
 <style>
-:root{--c:#00f5ff; --bg:#080808; --text:#fff; --text2:#aaa; --ok:#00ff88; --borda:#1a1a1a;}
+:root{--c:#00f5ff; --bg:#080808; --text:#fff; --text2:#aaa; --ok:#00ff88; --borda:#1a1a1a; --azul:#0084ff;}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;}
 body{background:var(--bg);color:var(--text);width:100%;padding-bottom:40px;}
-.menu-titulo{padding:14px 16px;font-size:11px;color:var(--c);font-weight:900;letter-spacing:1px;border-bottom:2px solid var(--c);margin-top:8px;}
-.semanas-da-fase{background:#050505;}
-.semana-item{padding:10px 16px 10px 24px;font-size:10px;cursor:pointer;border-bottom:1px solid var(--borda);color:var(--text2);line-height:1.4;text-decoration:none;display:block;transition:.2s;}
+
+.menu-titulo{
+  padding:14px 16px;
+  font-size:11px;
+  color:var(--c);
+  font-weight:900;
+  letter-spacing:1px;
+  border-bottom:2px solid var(--c);
+  margin-top:8px;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  user-select:none;
+  transition:.2s;
+}
+.menu-titulo:hover{background:#0a0a0a;}
+.menu-titulo::after{
+  content:'+';
+  font-size:14px;
+  transition:.3s;
+}
+.menu-titulo.aberto::after{
+  content:'−';
+  transform:rotate(180deg);
+}
+
+.semanas-da-fase{
+  background:#050505;
+  display:none;
+  overflow:hidden;
+}
+.semanas-da-fase.aberta{
+  display:block;
+}
+
+.semana-item{
+  padding:10px 16px 10px 24px;
+  font-size:10px;
+  cursor:pointer;
+  border-bottom:1px solid var(--borda);
+  color:var(--text2);
+  line-height:1.4;
+  text-decoration:none;
+  display:block;
+  transition:.2s;
+  border-left:3px solid transparent;
+}
 .semana-item:hover{background:#111;color:#fff;}
 .semana-item:active{background:#001a1a;color:var(--ok);}
+
+/* SELETOR AZUL DA SEMANA ATUAL - igual css do site */
+.semana-item.atual{
+  color:#fff;
+  background:#0d111a;
+  border-left:3px solid var(--azul);
+  box-shadow:inset 0 0 0 1px var(--azul), 0 0 12px rgba(0,132,255,0.25);
+  font-weight:700;
+}
 </style>
 </head>
 <body>
@@ -20,7 +74,6 @@ body{background:var(--bg);color:var(--text);width:100%;padding-bottom:40px;}
 <div id="menu-conteudo"></div>
 
 <script>
-// BANCO DE DADOS OFICIAL DO MENU - IGUAL AO QUE VC MANDOU
 const MENSAGENS_2026_MENU = {
   "2026-01-05": `K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE MANUTENÇÃO`,
   "2026-01-12": `K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE RESISTÊNCIA`,
@@ -86,18 +139,64 @@ const FASES_MENU = {
 
 function formatarData(d){const dt=new Date(d+'T12:00:00');return dt.toLocaleDateString('pt-BR');}
 
-function carregarMenu(){
-  let html='';
+// pega a data atual real
+function getDataAtualISO(){
+  const hoje = new Date();
+  // hoje = 2026-08-24 no seu caso, vai funcionar sozinho
+  return hoje.toISOString().slice(0,10);
+}
+
+function getFaseDaDataAtual(){
+  const hojeISO = getDataAtualISO();
+  // acha a semana mais próxima sem passar de hoje
+  let melhorData = null;
+  for(let data in MENSAGENS_2026_MENU){
+    if(data <= hojeISO){
+      if(!melhorData || data > melhorData) melhorData = data;
+    }
+  }
+  // se não achou (ano ainda não começou), pega a primeira
+  if(!melhorData) melhorData = Object.keys(MENSAGENS_2026_MENU)[0];
+
+  // descobre qual fase contém essa data
   for(let fase in FASES_MENU){
-    html+=`<div class="menu-titulo">${fase}</div>`;
-    html+=`<div class="semanas-da-fase">`;
-    FASES_MENU.forEach(data=>{
+    if(FASES_MENU[fase].includes(melhorData)){
+      return {faseAtual: fase, dataAtual: melhorData};
+    }
+  }
+  return {faseAtual: Object.keys(FASES_MENU)[0], dataAtual: melhorData};
+}
+
+function carregarMenu(){
+  const {faseAtual, dataAtual} = getFaseDaDataAtual();
+  let html='';
+
+  for(let fase in FASES_MENU){
+    const ehFaseAtual = (fase === faseAtual);
+    html+=`<div class="menu-titulo ${ehFaseAtual? 'aberto' : ''}" onclick="toggleFase(this)">${fase}</div>`;
+    html+=`<div class="semanas-da-fase ${ehFaseAtual? 'aberta' : ''}">`;
+
+    FASES_MENU[fase].forEach(data=>{
       const segundaLinha = MENSAGENS_2026_MENU[data].split('\n')[1] || 'SEMANA';
-      html+=`<div class="semana-item" onclick="parent.mostrarInfoSemana('${data}')">${formatarData(data)} - ${segundaLinha}</div>`;
+      const ehAtual = (data === dataAtual)? ' atual' : '';
+      html+=`<div class="semana-item${ehAtual}" onclick="parent.mostrarInfoSemana('${data}')">${formatarData(data)} - ${segundaLinha}</div>`;
     });
+
     html+=`</div>`;
   }
   document.getElementById('menu-conteudo').innerHTML=html;
+}
+
+function toggleFase(el){
+  const conteudo = el.nextElementSibling;
+  const aberto = conteudo.classList.contains('aberta');
+  if(aberto){
+    conteudo.classList.remove('aberta');
+    el.classList.remove('aberto');
+  } else {
+    conteudo.classList.add('aberta');
+    el.classList.add('aberto');
+  }
 }
 
 carregarMenu();
