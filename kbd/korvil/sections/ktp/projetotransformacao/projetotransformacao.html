@@ -495,7 +495,7 @@ function fecharResultado(){
   idLogado='';
   localStorage.removeItem('idLogado');
   document.getElementById('info-aluno-container').innerHTML='';
-  // limpa só o cronograma do aluno, mantém a semana visível
+  // limpa só o cronograma do aluno, MANTÉM a mensagem da semana visível
   document.getElementById('cronograma-container').innerHTML='<div class="msg-inicial">🔑 Clique em "Acessar ID" no topo e digite seu ID para ver seu cronograma pessoal<br><small style="color:#555;font-size:10px;margin-top:8px;display:block;">Seu plano, horários, valores e dados completos aparecerão aqui</small></div>';
 }
 function formatarData(d){const dt=new Date(d+'T12:00:00');return dt.toLocaleDateString('pt-BR');}
@@ -664,6 +664,14 @@ function buscarAluno(){
     if(enc){ planoAtivo = enc.tipoPlano; }
     else { planoAtivo = ALUNOS_DB[id].tipo==='ADMIN' ? 'PRESENCIAL' : 'PRESENCIAL'; }
     fecharBuscaAluno();
+    // Ao acessar com ID, mostra a semana atual + cronograma do aluno
+    const dataAtual=getSegundaDaSemana();
+    let dataParaMostrar=dataAtual;
+    if(!MENU[dataParaMostrar]){
+      const {dataAtual: d} = getFaseDaDataAtual();
+      dataParaMostrar = d;
+    }
+    mostrarInfoSemana(dataParaMostrar);
     mostrarDadosAluno(id);
     mostrarCronograma();
     document.getElementById('resultado-aluno').innerHTML='';
@@ -674,17 +682,15 @@ function buscarAluno(){
 }
 window.onload=function(){
   carregarMenu();
-  // Mostra semana atual automaticamente de acordo com data (como estava antes)
+  // MOSTRA MENSAGEM DA DATA CERTA DE ACORDO COM MENU (como estava)
   const dataAtual=getSegundaDaSemana();
-  // se a data atual não estiver no MENU, pega a mais próxima
   let dataParaMostrar=dataAtual;
   if(!MENU[dataParaMostrar]){
-    // pega a fase atual
     const {dataAtual: d} = getFaseDaDataAtual();
     dataParaMostrar = d;
   }
   mostrarInfoSemana(dataParaMostrar);
-
+  
   const salvo=localStorage.getItem('idLogado');
   if(salvo){
     idLogado=salvo;
