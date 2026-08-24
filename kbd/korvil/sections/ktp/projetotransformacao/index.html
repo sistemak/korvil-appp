@@ -4,420 +4,544 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#000">
-<title>K-TP PROJETO TRANSFORMAÇÃO 4D</title>
+<title>K-TP PROJETO TRANSFORMAÇÃO - SLIDES</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700;900&display=swap');
-
-:root {
-  --c: #00ffff;
-  --c-glow: rgba(0, 255, 255, 0.4);
-  --bg: #020208;
-  --card-bg: rgba(6, 15, 30, 0.75);
-  --text: #ffffff;
-  --text2: #e0e0e0;
-  --borda: rgba(0, 255, 255, 0.3);
-  --ok: #00ff88;
-  --pink: #ff0055;
+:root{
+  --c:#00ffff;
+  --bg:#020208;
+  --card:rgba(10,18,35,0.96);
+  --text:#ffffff;
+  --text2:#eef6fb;
+  --muted:#a9c0ce;
+  --borda:rgba(0,255,255,0.5);
+  --ok:#00ff88;
+  --pink:#ff0055;
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  padding: 20px 12px;
-  max-width: 800px;
-  margin: auto;
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-  perspective: 1000px;
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;overflow:hidden}
+*:focus-visible{outline:4px solid var(--c);outline-offset:2px}
+.bg{
+  position:fixed;inset:0;z-index:-1;
+  background:radial-gradient(80% 60% at 50% 10%, #0e2244 0%, #020208 70%);
 }
-
-/* --- FUNDO VIVO ANIMADO 4D --- */
-.bg-container {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  z-index: -1;
-  background: radial-gradient(circle at 50% 50%, #081026 0%, #000000 100%);
-  pointer-events: none;
+.bg::after{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(0,255,255,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,255,0.07) 1px, transparent 1px);
+  background-size:42px 42px;
+  opacity:0.5;
 }
-
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.4;
-  animation: floatOrb 14s ease-in-out infinite alternate;
+.header{
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;
+  background:rgba(0,0,0,0.9);
+  border-bottom:2px solid var(--borda);
+  backdrop-filter:blur(10px);
 }
-.orb-1 { width: 60vw; height: 60vw; background: #00ffff; top: -20vw; left: -10vw; }
-.orb-2 { width: 50vw; height: 50vw; background: #0066ff; bottom: -15vw; right: -10vw; animation-delay: -7s; }
-.orb-3 { width: 40vw; height: 40vw; background: var(--pink); top: 40%; left: 20%; opacity: 0.25; animation-duration: 20s; }
-
-@keyframes floatOrb {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(60px, 40px) scale(1.15); }
-  100% { transform: translate(-50px, 60px) scale(0.9); }
+.header .logo-mini{display:flex;align-items:center;gap:10px}
+.header img{width:38px;height:38px;border:2px solid var(--c);border-radius:10px;padding:3px;background:#000}
+.header .brand{font-family:'Orbitron';font-weight:900;font-size:13px;letter-spacing:1.5px;color:var(--c);text-shadow:0 0 10px var(--c)}
+.header .contador{font-family:'Orbitron';font-size:12px;color:var(--muted);letter-spacing:1px}
+.slider-wrap{
+  position:relative;
+  height:calc(100% - 64px - 78px);
+  width:100%;
+  max-width:1100px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
 }
-
-.grid-3d {
-  position: absolute;
-  width: 200vw;
-  height: 200vh;
-  top: -50vh;
-  left: -50vw;
-  background-image: 
-    linear-gradient(to right, rgba(0, 255, 255, 0.12) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 255, 255, 0.12) 1px, transparent 1px);
-  background-size: 50px 50px;
-  transform: perspective(600px) rotateX(65deg) translateZ(0);
-  animation: gridMove 10s linear infinite;
-  transform-origin: center center;
+.slider-viewport{
+  width:100%;height:100%;
+  overflow:hidden;
+  touch-action:pan-y;
 }
-
-@keyframes gridMove {
-  0% { transform: perspective(600px) rotateX(65deg) translateY(0); }
-  100% { transform: perspective(600px) rotateX(65deg) translateY(50px); }
+.slider-track{
+  display:flex;
+  height:100%;
+  transition:transform 0.6s cubic-bezier(0.22,1,0.36,1);
+  will-change:transform;
 }
-
-/* --- CARDS & HIERARQUIA GLASSMORPHISM --- */
-.card-main {
-  background: rgba(4, 10, 22, 0.85);
-  border: 2px solid var(--borda);
-  border-radius: 20px;
-  padding: 24px 18px;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 25px var(--c-glow);
+.slide{
+  min-width:100%;
+  height:100%;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-
-.brand-header {
-  text-align: center;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 18px;
-  font-weight: 900;
-  color: var(--c);
-  margin-bottom: 15px;
-  letter-spacing: 2px;
-  text-shadow: 0 0 12px var(--c);
+.slide-card{
+  width:100%;
+  max-width:720px;
+  max-height:100%;
+  overflow-y:auto;
+  background:var(--card);
+  border:2px solid var(--borda);
+  border-radius:24px;
+  padding:22px 18px;
+  box-shadow:0 18px 50px rgba(0,0,0,0.8),0 0 30px rgba(0,255,255,0.18);
+  scrollbar-width:thin;
 }
-
-.logos-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
+.slide-card::-webkit-scrollbar{width:6px}
+.slide-card::-webkit-scrollbar-thumb{background:var(--c);border-radius:10px}
+.slide-topo{
+  display:flex;align-items:center;gap:12px;margin-bottom:14px;
 }
-
-.logo, .logo-projeto {
-  display: block;
-  max-width: 140px;
-  height: auto;
-  border: 2px solid var(--c);
-  border-radius: 14px;
-  padding: 6px;
-  background: rgba(0, 0, 0, 0.6);
-  box-shadow: 0 0 20px var(--c-glow);
-  transition: transform 0.3s ease;
+.slide-icone{
+  width:48px;height:48px;min-width:48px;
+  display:grid;place-items:center;
+  border-radius:14px;
+  background:rgba(0,255,255,0.15);
+  border:2px solid var(--c);
+  font-size:22px;
+  box-shadow:0 0 14px rgba(0,255,255,0.3);
 }
-
-.logo:hover, .logo-projeto:hover {
-  transform: scale(1.05) rotate(1deg);
+.slide-mes{
+  font-family:'Orbitron';font-weight:900;
+  font-size:12px;letter-spacing:1px;
+  background:linear-gradient(90deg,rgba(0,255,255,0.28),rgba(0,102,255,0.28));
+  border:1.5px solid var(--c);
+  padding:8px 12px;border-radius:999px;color:#fff;line-height:1.2;
 }
-
-.main-title {
-  text-align: center;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 26px;
-  font-weight: 900;
-  background: linear-gradient(180deg, #ffffff 20%, var(--c) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 24px;
-  letter-spacing: 1.5px;
-  filter: drop-shadow(0 0 15px var(--c));
+.slide h2{
+  font-family:'Orbitron';font-weight:900;
+  font-size:clamp(20px,5vw,26px);
+  line-height:1.25;margin:6px 0 14px;color:#fff;
+  text-shadow:0 0 16px rgba(0,255,255,0.7);
 }
-
-.titulo-secao {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 18px;
-  font-weight: 900;
-  color: var(--c);
-  margin: 22px 0 12px;
-  border-left: 4px solid var(--c);
-  padding-left: 10px;
-  text-shadow: 0 0 10px var(--c);
-  letter-spacing: 1px;
+.slide h2 .num{color:var(--ok)}
+.slide .sub{
+  font-size:17px;font-weight:700;color:var(--text2);line-height:1.6;margin-bottom:16px;
 }
-
-.sub-titulo {
-  font-size: 15px;
-  color: var(--text2);
-  margin-bottom: 14px;
-  line-height: 1.5;
-  font-weight: 600;
+.topicos{
+  list-style:none;
+  display:grid;
+  gap:10px;
 }
-
-.badge-card {
-  background: linear-gradient(135deg, rgba(0, 255, 255, 0.15), rgba(0, 0, 0, 0.6));
-  border: 1.5px solid var(--c);
-  border-radius: 12px;
-  padding: 14px;
-  text-align: center;
-  margin-bottom: 18px;
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+.topicos li{
+  display:flex;gap:10px;align-items:flex-start;
+  background:rgba(0,0,0,0.45);
+  border:1.5px solid rgba(0,255,255,0.32);
+  border-radius:14px;
+  padding:12px 12px;
+  font-size:16px;font-weight:600;line-height:1.6;color:var(--text2);
 }
-
-.badge-card div {
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 900;
-  color: #fff;
-  font-size: 16px;
-  line-height: 1.4;
-  text-shadow: 0 0 8px var(--c);
+.topicos li .bullet{
+  width:28px;height:28px;min-width:28px;
+  display:grid;place-items:center;
+  background:rgba(0,255,136,0.15);
+  border:1.5px solid var(--ok);
+  border-radius:50%;
+  color:var(--ok);font-weight:900;font-size:14px;
+  margin-top:1px;
 }
-
-/* LISTAS EM CARDS/BADGES */
-.grid-badges {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 10px;
-  margin-bottom: 18px;
+.grid-pills{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(min-width:600px){.grid-pills{grid-template-columns:repeat(3,1fr)}}
+.pill{
+  min-height:56px;
+  display:flex;align-items:center;gap:8px;
+  background:rgba(0,0,0,0.55);border:1.8px solid rgba(0,255,255,0.4);
+  border-radius:14px;padding:10px 12px;
+  font-size:16px;font-weight:800;
 }
-
-.badge-item {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(0, 255, 255, 0.25);
-  border-radius: 8px;
-  padding: 10px 8px;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.05);
+.pill .check{width:26px;height:26px;display:grid;place-items:center;border-radius:50%;background:rgba(0,255,136,0.18);border:1.5px solid var(--ok);color:var(--ok)}
+.controls{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 6px;
 }
-
-.check { color: var(--ok); font-weight: 900; text-shadow: 0 0 8px var(--ok); }
-
-/* --- FASES / LINHA DO TEMPO 4D --- */
-.fase-card {
-  background: rgba(10, 20, 35, 0.65);
-  border: 1.5px solid var(--borda);
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 16px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.controls button{
+  pointer-events:auto;
+  width:52px;height:52px;
+  border-radius:50%;
+  border:2.5px solid var(--c);
+  background:rgba(0,0,0,0.75);
+  color:var(--c);
+  font-size:22px;font-weight:900;
+  display:grid;place-items:center;
+  cursor:pointer;
+  box-shadow:0 0 18px rgba(0,255,255,0.35);
+  backdrop-filter:blur(6px);
 }
-
-.fase-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  border-color: var(--c);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8), 0 0 20px var(--c-glow);
+.controls button:active{transform:scale(0.92)}
+.footer{
+  height:78px;
+  max-width:1100px;
+  margin:0 auto;
+  padding:10px 16px 14px;
+  display:grid;
+  gap:8px;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,0.95) 30%);
 }
-
-.meses {
-  background: linear-gradient(90deg, rgba(0, 255, 255, 0.25), rgba(0, 136, 255, 0.25));
-  border: 1px solid var(--c);
-  color: #fff;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 13px;
-  font-weight: 900;
-  padding: 10px 12px;
-  border-radius: 8px;
-  text-align: center;
-  margin-bottom: 12px;
-  letter-spacing: 1px;
-  text-shadow: 0 0 10px var(--c);
+.progress{
+  height:4px;width:100%;
+  background:rgba(255,255,255,0.15);
+  border-radius:999px;overflow:hidden;
 }
-
-.titulo-fase {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 17px;
-  font-weight: 900;
-  color: var(--c);
-  margin-bottom: 10px;
-  letter-spacing: 0.5px;
+.progress-bar{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--c),#0088ff);
+  box-shadow:0 0 10px var(--c);
+  transition:width 0.2s linear;
 }
-
-.numero { color: var(--ok); text-shadow: 0 0 10px var(--ok); }
-
-.desc-fase {
-  font-size: 15px;
-  color: var(--text2);
-  line-height: 1.7;
-  text-align: justify;
-  font-weight: 600;
+.dots{
+  display:flex;gap:8px;justify-content:center;align-items:center;
+  overflow-x:auto;scrollbar-width:none;
 }
-
-/* --- BOTÕES FUTURISTAS --- */
-.btn {
-  width: 100%;
-  padding: 16px;
-  background: linear-gradient(90deg, var(--c), #0088ff);
-  color: #000;
-  text-align: center;
-  border-radius: 12px;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 900;
-  font-size: 16px;
-  border: 0;
-  cursor: pointer;
-  margin-top: 14px;
-  box-shadow: 0 0 25px var(--c-glow);
-  transition: all 0.3s ease;
-  letter-spacing: 1px;
+.dots::-webkit-scrollbar{display:none}
+.dot{
+  min-width:10px;width:10px;height:10px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.3);
+  border:2px solid transparent;
+  cursor:pointer;
+  transition:all .25s;
 }
-
-.btn:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 35px var(--c);
+.dot.ativo{
+  width:28px;border-radius:999px;
+  background:var(--c);
+  box-shadow:0 0 12px var(--c);
+  border-color:var(--c);
 }
-
-.btn.acessar {
-  background: rgba(0, 0, 0, 0.4);
-  border: 2px solid var(--c);
-  color: var(--c);
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+.acoes-footer{
+  display:flex;gap:10px;
 }
-
-.btn.acessar:hover, .btn.acessar:active {
-  background: var(--c);
-  color: #000;
-  box-shadow: 0 0 30px var(--c);
+.btn{
+  flex:1;
+  min-height:48px;
+  border-radius:12px;
+  font-family:'Orbitron';font-weight:900;
+  font-size:13px;letter-spacing:0.8px;
+  cursor:pointer;border:0;
 }
+.btn-p{background:linear-gradient(90deg,var(--c),#0088ff);color:#000;box-shadow:0 0 18px rgba(0,255,255,0.4)}
+.btn-s{background:rgba(0,0,0,0.7);color:var(--c);border:2px solid var(--c)}
 </style>
 </head>
 <body>
+<div class="bg" aria-hidden="true"></div>
 
-<!-- FUNDO VIVO ANIMADO 4D -->
-<div class="bg-container">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-  <div class="grid-3d"></div>
-</div>
+<header class="header" role="banner">
+  <div class="logo-mini">
+    <img src="https://korvilp-sudo.github.io/korvil-app/sections/ktp/images/logoktp.png" alt="">
+    <div class="brand">K-TP • TRANSFORMAÇÃO</div>
+  </div>
+  <div class="contador" id="contador">1 / 9</div>
+</header>
 
-<!-- TELA INICIAL: APRESENTAÇÃO -->
-<div id="apresentacao">
-  <div class="card-main">
-    <div class="brand-header">K-TP Treinamento Personalizado</div>
-    
-    <div class="logos-container">
-      <img src="https://korvilp-sudo.github.io/korvil-app/sections/ktp/images/logoktp.png" class="logo" alt="Logo K-TP">
-      <img src="https://korvilp-sudo.github.io/korvil-app/sections/ktp/images/logoprojetotransformacao.png" class="logo-projeto" alt="Logo Projeto Transformação">
-    </div>
+<div class="slider-wrap">
+  <div class="slider-viewport" id="viewport" aria-live="polite">
+    <div class="slider-track" id="track">
 
-    <div class="main-title">PROJETO TRANSFORMAÇÃO</div>
-
-    <div class="titulo-secao">| SOBRE O PROGRAMA</div>
-    <div class="sub-titulo">Programa de guia fitness de alta performance desenvolvido por Say Korvil.</div>
-
-    <div class="badge-card">
-      <div>TREINADOR<br>TERAPEUTA HOLÍSTICO<br><span style="color:var(--c);">ESPECIALISTA EM RESULTADOS</span></div>
-    </div>
-
-    <div class="titulo-secao">| PARTICIPANTES</div>
-    <div class="grid-badges">
-      <div class="badge-item"><span class="check">✓</span>Crianças (10+)</div>
-      <div class="badge-item"><span class="check">✓</span>Jovens</div>
-      <div class="badge-item"><span class="check">✓</span>Adultos</div>
-      <div class="badge-item"><span class="check">✓</span>Idosos</div>
-      <div class="badge-item"><span class="check">✓</span>Praticantes</div>
-      <div class="badge-item"><span class="check">✓</span>Atletas</div>
-    </div>
-
-    <div class="titulo-secao">| METODOLOGIA</div>
-    <div class="grid-badges">
-      <div class="badge-item"><span class="check">✓</span>1. Manutenção</div>
-      <div class="badge-item"><span class="check">✓</span>2. Resistência</div>
-      <div class="badge-item"><span class="check">✓</span>3. Força</div>
-      <div class="badge-item"><span class="check">✓</span>4. Hipertrofia</div>
-    </div>
-
-    <div class="titulo-secao">| LINHA DO TEMPO DO PROJETO</div>
-
-    <!-- FASE 1: OFF SEASON -->
-    <div class="fase-card">
-      <div class="meses">JANEIRO A FEVEREIRO - OFF SEASON: PREPARO</div>
-      <div class="titulo-fase"><span class="numero">1.</span> OFF SEASON - ADAPTAÇÃO GERAL</div>
-      <div class="desc-fase">
-        Fase de adaptação total de corpo e mente às rotinas do Projeto TRANSFORMAÇÃO. Não existe dieta restritiva aqui. O objetivo é aumentar a ingestão calórica de forma estratégica para elevar energia, disposição, recuperação e preparar o metabolismo para o bulking. Para quem já fez o projeto no ano anterior, é o momento de liberdade consciente: aproveitar o que gosta sem sabotar os objetivos. Foco também na adaptação técnica: aprender execução correta dos exercícios e entender a metodologia semanal de cada fase. Essencial para ectomorfos e alunos com dificuldade de ganhar massa e peso. Se o objetivo for ganho de peso e hipertrofia, trabalhamos com superávit calórico. Se for emagrecimento e definição muscular, já iniciamos o controle calórico. Dieta mais liberal, mas sempre direcionada.
+      <div class="slide" role="group" aria-roledescription="slide" aria-label="1 de 9 - Capa">
+        <div class="slide-card" style="text-align:center">
+          <div style="display:flex;justify-content:center;gap:16px;margin-bottom:16px">
+            <img src="https://korvilp-sudo.github.io/korvil-app/sections/ktp/images/logoktp.png" style="width:90px;border:2px solid var(--c);border-radius:16px;padding:6px;background:#000" alt="Logo K-TP">
+            <img src="https://korvilp-sudo.github.io/korvil-app/sections/ktp/images/logoprojetotransformacao.png" style="width:90px;border:2px solid var(--c);border-radius:16px;padding:6px;background:#000" alt="Logo Projeto">
+          </div>
+          <div class="slide-mes" style="display:inline-block;margin-bottom:12px">K-TP TREINAMENTO PERSONALIZADO</div>
+          <h2 style="font-size:clamp(28px,7vw,36px)">PROJETO<br>TRANSFORMAÇÃO</h2>
+          <p class="sub">Programa de guia fitness de alta performance desenvolvido por Say Korvil.</p>
+          <div style="margin-top:18px;background:linear-gradient(135deg,rgba(0,255,255,0.18),rgba(0,0,0,0.6));border:2px solid var(--c);border-radius:16px;padding:16px;font-family:'Orbitron';font-weight:900;line-height:1.5">
+            TREINADOR<br>TERAPEUTA HOLÍSTICO<br><span style="color:var(--c)">ESPECIALISTA EM RESULTADOS</span>
+          </div>
+          <p style="margin-top:16px;font-size:14px;color:var(--muted)">Deslize pro lado → ou aguarde 15s • Toque nas bolinhas embaixo</p>
+        </div>
       </div>
-    </div>
 
-    <!-- FASE 2: BULKING -->
-    <div class="fase-card">
-      <div class="meses">MARÇO A MAIO - BULKING: EVOLUÇÃO</div>
-      <div class="titulo-fase"><span class="numero">2.</span> BULKING - HIPERTROFIA MÁXIMA</div>
-      <div class="desc-fase">
-        Fase prioritária de construção. Objetivo principal: hipertrofia muscular, ganho de força, regeneração tecidual, reabilitação e condicionamento físico geral com foco em saúde e performance. Regra básica: comer mais do que gasta. Dieta limpa e protocolar, totalmente alinhada aos objetivos escolhidos por cada aluno, com prioridade máxima em proteínas de alta qualidade, carboidratos complexos e micronutrientes. Treinos estruturados para progressão de carga e execução técnica impecável, sem erros. Zero desperdício. Essa é a fase de ganhar massa magra de verdade, volume e densidade muscular. Disciplina na dieta e no treino é obrigatória para construir a base sólida do físico.
+      <div class="slide" role="group" aria-roledescription="slide" aria-label="2 de 9 - Participantes">
+        <div class="slide-card">
+          <div class="slide-topo"><div class="slide-icone">👥</div><div class="slide-mes">PARA QUEM É O PROJETO</div></div>
+          <h2>| PARTICIPANTES</h2>
+          <p class="sub">O projeto atende todos os níveis e idades, do iniciante ao atleta.</p>
+          <div class="grid-pills">
+            <div class="pill"><span class="check">✓</span>Crianças (10+)</div>
+            <div class="pill"><span class="check">✓</span>Jovens</div>
+            <div class="pill"><span class="check">✓</span>Adultos</div>
+            <div class="pill"><span class="check">✓</span>Idosos</div>
+            <div class="pill"><span class="check">✓</span>Praticantes</div>
+            <div class="pill"><span class="check">✓</span>Atletas</div>
+          </div>
+          <ul class="topicos" style="margin-top:14px">
+            <li><span class="bullet">!</span>Treinos adaptados para cada idade e objetivo</li>
+            <li><span class="bullet">♥</span>Inclusão total: segurança e progressão para todos</li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <!-- FASE 3: MAINTENANCE -->
-    <div class="fase-card">
-      <div class="meses">JUNHO A AGOSTO - MAINTENANCE: MANTER RESULTADOS</div>
-      <div class="titulo-fase"><span class="numero">3.</span> MAINTENANCE - CONSOLIDAÇÃO</div>
-      <div class="desc-fase">
-        Fase de manutenção e consolidação de todos os ganhos conquistados no bulking. Momento de verificar, ajustar e refinar o protocolo geral do projeto. Objetivo: manter massa magra, reduzir levemente a gordura corporal e densificar a musculatura. Preparação física e mental para a fase de cutting. Foco total em disciplina, consistência e nutrição inteligente para nutrir o físico. Trabalhamos também o equilíbrio da mente, da alma e do estado de espírito. Os treinos são de intensidade mediana para evitar lesões, preservar articulações e não comprometer a energia da fase final. Esta é a ponte entre construção e definição. Fase de lapidar o que foi construído.
+      <div class="slide" role="group" aria-roledescription="slide" aria-label="3 de 9 - Metodologia">
+        <div class="slide-card">
+          <div class="slide-topo"><div class="slide-icone">⚙️</div><div class="slide-mes">COMO FUNCIONA</div></div>
+          <h2>| METODOLOGIA</h2>
+          <p class="sub">4 pilares trabalhados ao longo do ano, de forma cíclica.</p>
+          <div class="grid-pills">
+            <div class="pill"><span class="check">✓</span>1. Manutenção</div>
+            <div class="pill"><span class="check">✓</span>2. Resistência</div>
+            <div class="pill"><span class="check">✓</span>3. Força</div>
+            <div class="pill"><span class="check">✓</span>4. Hipertrofia</div>
+          </div>
+          <ul class="topicos" style="margin-top:14px">
+            <li><span class="bullet">1</span>Manutenção: preservar e estabilizar resultados</li>
+            <li><span class="bullet">2</span>Resistência: melhorar condicionamento e fôlego</li>
+            <li><span class="bullet">3</span>Força: aumentar capacidade de carga com técnica</li>
+            <li><span class="bullet">4</span>Hipertrofia: ganho de massa magra e densidade</li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <!-- FASE 4: CUTTING -->
-    <div class="fase-card">
-      <div class="meses">SETEMBRO A NOVEMBRO - CUTTING: FINALIZAÇÃO</div>
-      <div class="titulo-fase"><span class="numero">4.</span> CUTTING - DEFINIÇÃO TOTAL</div>
-      <div class="desc-fase">
-        Fase de finalização e exposição do resultado do Projeto TRANSFORMAÇÃO. Objetivo: eliminar o máximo de gordura corporal possível preservando 100% da massa muscular conquistada. Dieta rigorosa com déficit calórico controlado e estratégico. Treinos intensos, técnicos e precisos. Não pode errar e não pode se lesionar. Foco total em estética, simetria, vascularização e modelagem do físico. É aqui que o trabalho do ano inteiro aparece. Fase de definição muscular geral, performance máxima e resultado visível. Execução perfeita em dieta e treino. Sem falhas.
+      <div class="slide" role="group" aria-roledescription="slide" aria-label="4 de 9 - Off Season">
+        <div class="slide-card">
+          <div class="slide-topo"><div class="slide-icone">🌱</div><div class="slide-mes">JANEIRO A FEVEREIRO — OFF SEASON: PREPARO</div></div>
+          <h2><span class="num">1.</span> OFF SEASON - ADAPTAÇÃO GERAL</h2>
+          <ul class="topicos">
+            <li><span class="bullet">✓</span><b>Adaptação total:</b> corpo e mente às rotinas do Projeto TRANSFORMAÇÃO</li>
+            <li><span class="bullet">✓</span><b>Sem restrição:</b> não existe dieta restritiva aqui</li>
+            <li><span class="bullet">✓</span><b>Calorias estratégicas:</b> aumentar ingestão para elevar energia, disposição e recuperação, preparando metabolismo para bulking</li>
+            <li><span class="bullet">✓</span><b>Liberdade consciente:</b> para quem fez no ano anterior, aproveitar o que gosta sem sabotar objetivos</li>
+            <li><span class="bullet">✓</span><b>Técnica:</b> aprender execução correta e metodologia semanal de cada fase</li>
+            <li><span class="bullet">✓</span><b>Foco ectomorfo:</b> essencial para quem tem dificuldade de ganhar massa e peso</li>
+            <li><span class="bullet">✓</span><b>Objetivo duplo:</b> se for hipertrofia = superávit calórico / se for emagrecimento = já inicia controle calórico. Dieta mais liberal, mas sempre direcionada</li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <!-- FASE 5: DEZEMBRO -->
-    <div class="fase-card">
-      <div class="meses">DEZEMBRO - FÉRIAS: APROVEITAR OS RESULTADOS</div>
-      <div class="titulo-fase"><span class="numero">5.</span> DEZEMBRO - FÉRIAS ESTRATÉGICAS</div>
-      <div class="desc-fase">
-        Período oficial de férias e recarga. Treinos leves com exercícios de rotina, mobilidade e manutenção. Objetivo: aproveitar os resultados conquistados, descansar corpo e articulações e manter o corpo ativo sem pressão. Momento para avaliar o ano, celebrar a evolução e repensar as escolhas de objetivos para o próximo ciclo do projeto. É a fase de transição: manter a constância sem estresse. Para voltar no ano seguinte com mais foco, mais energia e mais estratégia para atingir um novo nível.
+      <div class="slide" role="group" aria-roledescription="slide" aria-label="5 de 9 - Bulking">
+        <div class="slide-card">
+          <div class="slide-topo"><div class="slide-icone">💪</div><div class="slide-mes">MARÇO A MAIO — BULKING: EVOLUÇÃO</div></div>
+          <h2><span class="num">2.</span> BULKING - HIPERTROFIA MÁXIMA</h2>
+          <ul class="topicos">
+            <li><span class="bullet">✓</span><b>Fase de construção:</b> prioridade total em hipertrofia muscular e ganho de força</li>
+            <li><span class="bullet">✓</span><b>Saúde + performance:</b> regeneração tecidual, reabilitação e condicionamento geral</li>
+            <li><span class="bullet">✓</span><b>Regra básica:</b> comer mais do que gasta</li>
+            <li><span class="bullet">✓</span><b>Dieta limpa e protocolar:</b> alinhada ao objetivo de cada aluno, com proteínas de alta qualidade, carboidratos complexos e micronutrientes</li>
+            <li><span class="bullet">✓</span><b>Treino sem erro:</b> progressão de carga e execução técnica impecável. Zero desperdício</li>
+            <li><span class="bullet">✓</span><b>Resultado:</b> ganhar massa magra de verdade, volume e densidade. Disciplina obrigatória para base sólida</li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <button class="btn" onclick="window.location.href='inscricao-do-projeto.html'">COMEÇAR INSCRIÇÃO</button>
-    <button class="btn acessar" onclick="acessarProjeto()">ACESSAR PROJETO</button>
+      <div class="slide" role="group" aria-roledescription="slide" aria-label="6 de 9 - Maintenance">
+        <div class="slide-card">
+          <div class="slide-topo"><div class="slide-icone">⚖️</div><div class="slide-mes">JUNHO A AGOSTO — MAINTENANCE: MANTER RESULTADOS</div></div>
+          <h2><span class="num">3.</span> MAINTENANCE - CONSOLIDAÇÃO</h2>
+          <ul class="topicos">
+            <li><span class="bullet">✓</span><b>Manutenção:</b> consolidar todos os ganhos do bulking</li>
+            <li><span class="bullet">✓</span><b>Ajuste fino:</b> verificar, ajustar e refinar protocolo geral do projeto</li>
+            <li><span class="bullet">✓</span><b>Objetivo:</b> manter massa magra, reduzir levemente gordura e densificar musculatura</li>
+            <li><span class="bullet">✓</span><b>Preparação:</b> física e mental para fase de cutting</li>
+            <li><span class="bullet">✓</span><b>Mente e corpo:</b> disciplina, consistência, nutrição inteligente + equilíbrio da mente, alma e espírito</li>
+            <li><span class="bullet">✓</span><b>Treino inteligente:</b> intensidade mediana para evitar lesões, preservar articulações e guardar energia para final. Ponte entre construção e definição</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide" role="group" aria-roledescription="slide" aria-label="7 de 9 - Cutting">
+        <div class="slide-card">
+          <div class="slide-topo"><div class="slide-icone">🔥</div><div class="slide-mes">SETEMBRO A NOVEMBRO — CUTTING: FINALIZAÇÃO</div></div>
+          <h2><span class="num">4.</span> CUTTING - DEFINIÇÃO TOTAL</h2>
+          <ul class="topicos">
+            <li><span class="bullet">✓</span><b>Finalização:</b> exposição do resultado do ano inteiro do Projeto TRANSFORMAÇÃO</li>
+            <li><span class="bullet">✓</span><b>Meta:</b> eliminar máximo de gordura preservando 100% da massa muscular</li>
+            <li><span class="bullet">✓</span><b>Dieta rigorosa:</b> déficit calórico controlado e estratégico</li>
+            <li><span class="bullet">✓</span><b>Treino técnico:</b> intenso, preciso, sem erro e sem lesão</li>
+            <li><span class="bullet">✓</span><b>Foco estético:</b> simetria, vascularização e modelagem do físico</li>
+            <li><span class="bullet">✓</span><b>Resultado visível:</b> definição muscular geral, performance máxima. Execução perfeita, sem falhas</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide" role="group" aria-roledescription="slide" aria-label="8 de 9 - Férias">
+        <div class="slide-card">
+          <div class="slide-topo"><div class="slide-icone">🏖️</div><div class="slide-mes">DEZEMBRO — FÉRIAS: APROVEITAR OS RESULTADOS</div></div>
+          <h2><span class="num">5.</span> DEZEMBRO - FÉRIAS ESTRATÉGICAS</h2>
+          <ul class="topicos">
+            <li><span class="bullet">✓</span><b>Recarga:</b> período oficial de férias e recarga</li>
+            <li><span class="bullet">✓</span><b>Treinos leves:</b> rotina, mobilidade e manutenção</li>
+            <li><span class="bullet">✓</span><b>Aproveitar:</b> curtir resultados, descansar corpo e articulações, manter-se ativo sem pressão</li>
+            <li><span class="bullet">✓</span><b>Avaliação:</b> avaliar o ano, celebrar evolução e repensar objetivos para próximo ciclo</li>
+            <li><span class="bullet">✓</span><b>Transição inteligente:</b> manter constância sem estresse para voltar no ano seguinte com mais foco, energia e estratégia</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide" role="group" aria-roledescription="slide" aria-label="9 de 9 - Inscrição">
+        <div class="slide-card" style="text-align:center">
+          <div class="slide-topo" style="justify-content:center"><div class="slide-icone">🚀</div><div class="slide-mes">PRÓXIMO PASSO</div></div>
+          <h2>PRONTO PARA TRANSFORMAR?</h2>
+          <p class="sub">Todo o conteúdo que você viu nos slides anteriores está aqui. Escolha uma opção abaixo.</p>
+          <ul class="topicos" style="text-align:left;margin-bottom:18px">
+            <li><span class="bullet">→</span><b>Começar inscrição:</b> entrar para o Projeto Transformação 4D</li>
+            <li><span class="bullet">→</span><b>Acessar projeto:</b> já é aluno, digite seu ID (ex: ktp0, mag1...)</li>
+            <li><span class="bullet">♿</span>Acessível: funciona com leitor de tela, teclado, touch e mouse</li>
+          </ul>
+          <div style="display:grid;gap:12px">
+            <button class="btn btn-p" style="min-height:58px;font-size:16px" onclick="window.location.href='sistemak/korvil-app/kbd/korvil/sections/ktp/projetotransformacao/index.html'">COMEÇAR INSCRIÇÃO</button>
+            <button class="btn btn-s" style="min-height:58px;font-size:16px" onclick="acessarProjeto()">ACESSAR PROJETO</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="controls" aria-hidden="true">
+    <button id="prev" aria-label="Slide anterior">‹</button>
+    <button id="next" aria-label="Próximo slide">›</button>
   </div>
 </div>
 
-<script>
-// MESMOS IDS DO projetotransformacao.html ALUNOS_DB
-const idsPermitidos = [
-  "ktp0", "mag1", "mcarla2", "hvitoria3", "alexandra4", "michele5", "aline6", 
-  "adriana7", "joss8", "amigaadrum9", "amigaadrdois10", "angel11", "anapaula12", 
-  "gusta13", "sueli14", "fabi15", "paula16", "nop17", "bianca18", "lau19", 
-  "cass20", "katia21", "mara22", "edna23", "luciane24", "marly25", "mcris26", 
-  "juci27", "joce28", "marcos29", "lucas30", "celi31", "jaque32", "elisa33", 
-  "gice34", "pati35", "mel36", "naty37", "gon38", "nicol39", "tchuco40", "dani41"
-]; 
+<footer class="footer" role="contentinfo">
+  <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="dots" id="dots" role="tablist" aria-label="Navegação dos slides"></div>
+  <div class="acoes-footer">
+    <button class="btn btn-p" onclick="window.location.href='sistemak/korvil-app/kbd/korvil/sections/ktp/projetotransformacao/index.html'">INSCRIÇÃO</button>
+    <button class="btn btn-s" onclick="acessarProjeto()">ACESSAR</button>
+  </div>
+</footer>
 
+<script>
+// MESMOS IDS ORIGINAIS - FUNCIONAMENTO ORIGINAL MANTIDO
+const idsPermitidos = [
+  "ktp0","mag1","mcarla2","hvitoria3","alexandra4","michele5","aline6",
+  "adriana7","joss8","amigaadrum9","amigaadrdois10","angel11","anapaula12",
+  "gusta13","sueli14","fabi15","paula16","nop17","bianca18","lau19",
+  "cass20","katia21","mara22","edna23","luciane24","marly25","mcris26",
+  "juci27","joce28","marcos29","lucas30","celi31","jaque32","elisa33",
+  "gice34","pati35","mel36","naty37","gon38","nicol39","tchuco40","dani41"
+];
 function acessarProjeto(){
   const senha = prompt("Digite sua senha/ID de aluno do Projeto Transformação:");
-  if(!senha){return;}
-  const senhaNormalizada = senha.trim().toLowerCase().replace(/\s+/g, ''); // TIRA ESPAÇO E MINÚSCULO
+  if(!senha) return;
+  const senhaNormalizada = senha.trim().toLowerCase().replace(/\s+/g,'');
   console.log("Tentando logar com:", senhaNormalizada);
-
   if(idsPermitidos.includes(senhaNormalizada)){
     localStorage.setItem('idLogado', senhaNormalizada);
-    window.location.href = "projetotransformacao.html"; 
+    window.location.href = "sistemak/korvil-app/kbd/korvil/sections/ktp/projetotransformacao/projetotransformacao.html";
   } else {
     alert("Acesso negado. ID: " + senha + " não encontrado.");
   }
 }
+
+// SLIDER LOGIC
+const track = document.getElementById('track');
+const viewport = document.getElementById('viewport');
+const dotsEl = document.getElementById('dots');
+const contador = document.getElementById('contador');
+const progressBar = document.getElementById('progressBar');
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let index = 0;
+let autoplayTimer = null;
+let progressTimer = null;
+let progress = 0;
+
+function renderDots(){
+  dotsEl.innerHTML='';
+  slides.forEach((_,i)=>{
+    const d=document.createElement('button');
+    d.className='dot'+(i===index?' ativo':'');
+    d.setAttribute('role','tab');
+    d.setAttribute('aria-label','Ir para slide '+(i+1));
+    d.setAttribute('aria-selected', i===index?'true':'false');
+    d.onclick=()=>goTo(i,true);
+    dotsEl.appendChild(d);
+  });
+}
+function update(){
+  track.style.transform = `translateX(-${index*100}%)`;
+  contador.textContent = `${index+1} / ${total}`;
+  renderDots();
+  resetProgress();
+}
+function goTo(i, user=false){
+  index = (i+total)%total;
+  update();
+  if(user) restartAutoplay();
+}
+function next(){ goTo(index+1); }
+function prev(){ goTo(index-1); }
+
+document.getElementById('next').onclick=()=>goTo(index+1,true);
+document.getElementById('prev').onclick=()=>goTo(index-1,true);
+
+let startX=0, currentX=0, dragging=false;
+viewport.addEventListener('touchstart', e=>{
+  dragging=true;
+  startX=e.touches[0].clientX;
+  pauseAutoplay();
+},{passive:true});
+viewport.addEventListener('touchmove', e=>{
+  if(!dragging) return;
+  currentX=e.touches[0].clientX;
+},{passive:true});
+viewport.addEventListener('touchend', e=>{
+  if(!dragging) return;
+  const diff = currentX - startX;
+  if(Math.abs(diff)>60){
+    if(diff<0) goTo(index+1,true);
+    else goTo(index-1,true);
+  } else {
+    restartAutoplay();
+  }
+  dragging=false; startX=0; currentX=0;
+});
+viewport.addEventListener('mousedown', e=>{ startX=e.clientX; dragging=true; pauseAutoplay(); });
+viewport.addEventListener('mouseup', e=>{
+  if(!dragging) return;
+  const diff = e.clientX - startX;
+  if(Math.abs(diff)>80){
+    if(diff<0) goTo(index+1,true);
+    else goTo(index-1,true);
+  } else restartAutoplay();
+  dragging=false;
+});
+viewport.addEventListener('mouseleave', ()=>{ if(dragging){ dragging=false; restartAutoplay(); } });
+
+window.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight') goTo(index+1,true);
+  if(e.key==='ArrowLeft') goTo(index-1,true);
+});
+
+function resetProgress(){
+  progress=0;
+  progressBar.style.width='0%';
+}
+function startProgress(){
+  clearInterval(progressTimer);
+  progressTimer = setInterval(()=>{
+    progress+=100/(15000/50);
+    if(progress>=100) progress=100;
+    progressBar.style.width=progress+'%';
+  },50);
+}
+function startAutoplay(){
+  clearInterval(autoplayTimer);
+  startProgress();
+  autoplayTimer = setInterval(()=>{
+    next();
+  },15000);
+}
+function pauseAutoplay(){
+  clearInterval(autoplayTimer);
+  clearInterval(progressTimer);
+}
+function restartAutoplay(){
+  pauseAutoplay();
+  startAutoplay();
+}
+
+viewport.addEventListener('mouseenter', pauseAutoplay);
+viewport.addEventListener('mouseleave', startAutoplay);
+viewport.addEventListener('focusin', pauseAutoplay);
+viewport.addEventListener('focusout', startAutoplay);
+
+update();
+startAutoplay();
 </script>
 </body>
 </html>
