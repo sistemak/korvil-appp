@@ -421,7 +421,7 @@ function acessarProjeto(){
   console.log("Tentando logar com:", senhaNormalizada);
   if(idsPermitidos.includes(senhaNormalizada)){
     localStorage.setItem('idLogado', senhaNormalizada);
-    window.location.href = "kbd/korvil/sections/ktp/projetotransformacao/projetotransformacao.html";
+    window.location.href = "sistemak/korvil-app/kbd/korvil/sections/ktp/projetotransformacao/projetotransformacao.html";
   } else {
     alert("Acesso negado. ID: " + senha + " não encontrado.");
   }
