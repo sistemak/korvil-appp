@@ -250,7 +250,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
           <div style="margin-top:18px;background:linear-gradient(135deg,rgba(0,255,255,0.18),rgba(0,0,0,0.6));border:2px solid var(--c);border-radius:16px;padding:16px;font-family:'Orbitron';font-weight:900;line-height:1.5">
             TREINADOR<br>TERAPEUTA HOLÍSTICO<br><span style="color:var(--c)">ESPECIALISTA EM RESULTADOS</span>
           </div>
-          <p style="margin-top:16px;font-size:14px;color:var(--muted)">Deslize pro lado → ou aguarde 15s • Toque nas bolinhas embaixo</p>
+          <p style="margin-top:16px;font-size:14px;color:var(--muted)">Deslize pro lado → ou aguarde 15s • Toque nas setas doa lados</p>
         </div>
       </div>
 
@@ -375,8 +375,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
           <h2>PRONTO PARA TRANSFORMAR?</h2>
           <p class="sub">Todo o conteúdo que você viu nos slides anteriores está aqui. Escolha uma opção abaixo.</p>
           <ul class="topicos" style="text-align:left;margin-bottom:18px">
-            <li><span class="bullet">→</span><b>Começar inscrição:</b> entrar para o Projeto Transformação 4D</li>
-            <li><span class="bullet">→</span><b>Acessar projeto:</b> já é aluno, digite seu ID (ex: ktp0, mag1...)</li>
+            <li><span class="bullet">→</span><b>Começar inscrição:</b> entrar para o Projeto TRANSFORMAÇÃO</li>
+            <li><span class="bullet">→</span><b>Acessar projeto:</b> já é participante, digite seu ID no botao de acessar</li>
             <li><span class="bullet">♿</span>Acessível: funciona com leitor de tela, teclado, touch e mouse</li>
           </ul>
           <div style="display:grid;gap:12px">
@@ -415,7 +415,7 @@ const idsPermitidos = [
   "gice34","pati35","mel36","naty37","gon38","nicol39","tchuco40","dani41"
 ];
 function acessarProjeto(){
-  const senha = prompt("Digite sua senha/ID de aluno do Projeto Transformação:");
+  const senha = prompt("Digite sua senha/ID de participante do Projeto TRANSFORMAÇÃO:");
   if(!senha) return;
   const senhaNormalizada = senha.trim().toLowerCase().replace(/\s+/g,'');
   console.log("Tentando logar com:", senhaNormalizada);
