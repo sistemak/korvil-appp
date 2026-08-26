@@ -1,540 +1,363 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>KORVIL 3D - K-B.D + K-RIADOR ATIVAR</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KORVIL v34 + EDITOR CÓDIGO - mesma ordem - tela vazia - segurar celular</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,sans-serif}
-:root{--bg:#070a12;--bg2:#0a0f1f;--card:rgba(22,27,38,.8);--cyan:#00f5ff;--green:#00ff88;--purple:#8a2be2;--border:rgba(255,255,255,.08)}
-body{background:radial-gradient(1200px 600px at 20% -10%, rgba(0,245,255,.15), transparent), radial-gradient(1000px 500px at 80% 10%, rgba(138,43,226,.12), transparent), var(--bg);color:#e6edf3;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;perspective:1000px}
-.header{background:linear-gradient(180deg, rgba(10,15,31,.95), rgba(7,10,18,.9));backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;box-shadow:0 10px 30px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05);transform-style:preserve-3d}
-.btn{background:linear-gradient(135deg, var(--cyan), #00d4ff);color:#000;font-weight:900;padding:8px 14px;border-radius:24px;border:none;cursor:pointer;font-size:11px;box-shadow:0 4px 15px rgba(0,245,255,.3), inset 0 1px 0 rgba(255,255,255,.4);transform:translateZ(10px);transition:.2s}
-.btn:hover{transform:translateZ(20px) scale(1.05);box-shadow:0 8px 25px rgba(0,245,255,.5)}
-.btn-ghost{background:rgba(22,27,38,.6);backdrop-filter:blur(10px);color:#fff;border:1px solid var(--border);padding:8px 14px;border-radius:24px;font-size:11px;cursor:pointer;transform:translateZ(5px)}
-.btn-green{background:linear-gradient(135deg, var(--green), #00e67a);color:#000;font-weight:900;padding:10px 16px;border-radius:24px;border:none;cursor:pointer;font-size:11px;box-shadow:0 4px 15px rgba(0,255,136,.3)}
-.badge{background:linear-gradient(135deg, var(--green), #00e67a);color:#000;padding:4px 10px;border-radius:20px;font-size:9px;font-weight:800;box-shadow:0 2px 10px rgba(0,255,136,.3)}
-.main{display:flex;flex:1;overflow:hidden;position:relative;transform-style:preserve-3d}
-.left{width:38%;background:linear-gradient(180deg, rgba(10,15,31,.8), rgba(7,10,18,.9));backdrop-filter:blur(20px);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;box-shadow:inset -1px 0 0 rgba(255,255,255,.05)}
-.right{width:62%;background:linear-gradient(180deg, rgba(13,17,23,.6), rgba(7,10,18,.8));backdrop-filter:blur(20px);display:flex;flex-direction:column;overflow:hidden}
-.scroll{overflow:auto;flex:1;padding:8px;-webkit-overflow-scrolling:touch}
-.item{padding:10px 12px;border-radius:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;margin:3px 0;font-size:12px;border:1px solid transparent;user-select:none;transition:all .2s;transform-style:preserve-3d;background:rgba(22,27,38,.3);backdrop-filter:blur(10px)}
-.item:hover{background:rgba(22,27,38,.6);transform:translateZ(8px) translateX(4px);border-color:rgba(0,245,255,.2);box-shadow:0 8px 20px rgba(0,0,0,.3)}
-.item.active{background:linear-gradient(135deg, rgba(0,245,255,.15), rgba(0,212,255,.1));border-color:var(--cyan);color:var(--cyan);transform:translateZ(12px);box-shadow:0 0 20px rgba(0,245,255,.2), inset 0 1px 0 rgba(255,255,255,.1)}
-.item.selected{border-color:var(--green);background:rgba(0,255,136,.12);transform:translateZ(10px);box-shadow:0 0 15px rgba(0,255,136,.15)}
-.card{background:linear-gradient(135deg, rgba(22,27,38,.7), rgba(22,27,38,.4));backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px;transform-style:preserve-3d;transition:.2s;box-shadow:0 8px 25px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.05)}
-.card:hover{transform:translateZ(10px);box-shadow:0 15px 35px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.08)}
-.float{position:fixed;width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #00f5ff, #00d4ff);display:flex;align-items:center;justify-content:center;font-size:28px;cursor:grab;z-index:9999;box-shadow:0 0 30px rgba(0,245,255,.6), 0 10px 25px rgba(0,0,0,.4), inset 0 2px 0 rgba(255,255,255,.4);border:3px solid rgba(0,0,0,.8);transform-style:preserve-3d;transition:box-shadow .2s;touch-action:none;user-select:none}
-.float:active{cursor:grabbing;box-shadow:0 0 40px rgba(0,245,255,.8), 0 15px 35px rgba(0,0,0,.5)}
-.float::after{content:'';position:absolute;top:3px;right:3px;width:16px;height:16px;background:radial-gradient(circle, var(--green), #00cc70);border-radius:50%;border:2px solid #000;box-shadow:0 0 10px var(--green);animation:blink 1.2s infinite}
-@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.9)}}
-.float.dragging{transform:scale(1.1) translateZ(30px);z-index:10000}
-.panel{position:fixed;background:linear-gradient(180deg, rgba(10,15,31,.95), rgba(7,10,18,.98));backdrop-filter:blur(25px);border:1px solid rgba(0,245,255,.2);border-radius:20px;z-index:9998;width:400px;max-width:94vw;max-height:92vh;overflow:auto;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 30px rgba(0,245,255,.2), inset 0 1px 0 rgba(255,255,255,.1);top:90px;right:14px;transform-style:preserve-3d}
-.ctx{position:fixed;background:linear-gradient(180deg, rgba(22,27,38,.95), rgba(16,21,32,.98));backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:16px;z-index:10000;min-width:300px;max-width:90vw;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.6), 0 0 20px rgba(0,245,255,.15)}
-.ctx button{display:block;width:100%;text-align:left;padding:11px 16px;background:none;border:none;color:#fff;font-size:11px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);transition:.15s}
-.ctx button:hover{background:rgba(0,245,255,.08);color:var(--cyan);padding-left:20px}
-.ctx .head{padding:12px 16px;font-size:10px;font-weight:800;color:var(--cyan);background:rgba(10,15,31,.8);border-bottom:1px solid var(--border);letter-spacing:.05em}
-.ctx .head-green{color:var(--green);background:rgba(0,255,136,.08)}
-.input{width:100%;background:rgba(13,17,23,.6);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:12px;color:#fff;padding:11px;font-size:12px;margin:6px 0;transition:.2s}
-.input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,245,255,.15);outline:none;transform:translateZ(5px)}
-.label{font-size:10px;opacity:.7;margin-top:10px;display:block;font-weight:700;letter-spacing:.03em}
-.evoluir{background:linear-gradient(135deg, rgba(0,255,136,.08), rgba(0,255,136,.03));backdrop-filter:blur(10px);border:1px solid rgba(0,255,136,.2);border-radius:16px;padding:14px;margin:12px 0;box-shadow:0 8px 25px rgba(0,255,136,.08), inset 0 1px 0 rgba(255,255,255,.05);transform:translateZ(5px)}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);z-index:9000;display:none;align-items:center;justify-content:center;padding:12px;overflow:auto}
-.modal-box{background:linear-gradient(180deg, rgba(10,15,31,.95), rgba(7,10,18,.98));backdrop-filter:blur(25px);border:1px solid rgba(0,245,255,.15);border-radius:20px;max-width:650px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 25px 70px rgba(0,0,0,.7), 0 0 30px rgba(0,245,255,.15)}
-.device-badge{font-size:8px;padding:3px 8px;border-radius:20px;background:rgba(22,27,38,.6);border:1px solid var(--border);backdrop-filter:blur(10px)}
-.cmd-bar{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateZ(10px);width:92%;max-width:640px;background:linear-gradient(180deg, rgba(10,15,31,.9), rgba(7,10,18,.95));backdrop-filter:blur(20px);border:1px solid rgba(0,245,255,.2);border-radius:28px;display:flex;align-items:center;padding:8px 14px;z-index:9997;box-shadow:0 15px 40px rgba(0,0,0,.5), 0 0 20px rgba(0,245,255,.15), inset 0 1px 0 rgba(255,255,255,.08)}
-.cmd-bar input{flex:1;background:transparent;border:none;color:#fff;padding:12px;font-size:13px;outline:none}
-@media(max-width:768px){.main{flex-direction:column}.left{width:100%;height:44%}.right{width:100%;height:56%}.panel{width:96vw;right:2vw;left:2vw;top:70px}}
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+*{font-family:'JetBrains Mono',monospace;box-sizing:border-box}
+body{margin:0;background:#0d1117;color:#e4e4e7;min-height:100vh;overflow:hidden}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:#1f2937;border-radius:99px}::-webkit-scrollbar-thumb:hover{background:#06b6d4}
+.header{height:52px;background:#010409;border-bottom:1px solid rgba(6,182,212,.3);display:flex;align-items:center;justify-content:space-between;padding:0 12px;position:sticky;top:0;z-index:20}
+.btn{padding:6px 10px;border-radius:8px;border:1px solid #27272a;background:#18181b;color:#e4e4e7;font-size:11px;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.btn:hover{border-color:#06b6d4;color:#67e8f9}
+.btn-cyan{background:#06b6d4;color:#000;font-weight:700;border-color:#06b6d4}
+.btn-icon{width:34px;height:34px;padding:0;justify-content:center;font-size:14px;border-radius:8px}
+.tree{width:420px;max-width:90vw;border-right:1px solid #27272a;background:rgba(1,4,9,.6);overflow:auto;height:calc(100vh - 52px - 28px)}
+.main{flex:1;overflow:hidden;height:calc(100vh - 52px - 28px);display:flex;flex-direction:column}
+.item{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;cursor:pointer;border:1px solid transparent;user-select:none;transition:all .12s}
+.item:hover{background:rgba(39,39,42,.6);border-color:#3f3f46}
+.item.selected{background:rgba(6,182,212,.15);border-color:rgba(6,182,212,.3);color:#a5f3fc}
+.item.dragging{opacity:.4}
+.item.drag-over{background:rgba(139,92,246,.2);border-color:#8b5cf6;box-shadow:0 0 0 2px rgba(139,92,246,.3)}
+.icon{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px}
+.icon.folder{background:#27272a}
+.icon.file{background:#18181b;border:1px solid #27272a}
+.children{margin-left:18px;border-left:1px dashed rgba(63,63,70,.4);padding-left:6px}
+.mini-menu{position:fixed;z-index:100;min-width:260px;background:#010409;border:1px solid rgba(6,182,212,.3);border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.8),0 0 20px rgba(6,182,212,.15);overflow:hidden;animation:pop .12s ease-out}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+.mini-header{padding:10px 12px;border-bottom:1px solid #27272a;display:flex;align-items:center;justify-content:space-between}
+.mini-row{display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:12px;cursor:pointer}
+.mini-row:hover{background:#18181b}
+.mini-row.danger:hover{background:rgba(239,68,68,.15);color:#fca5a5}
+.sep{height:1px;background:#27272a;margin:4px 0}
+.footer{height:28px;background:#010409;border-top:1px solid #27272a;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:10px;color:#71717a}
+.kbd{display:inline-block;padding:1px 5px;border-radius:4px;background:#27272a;border:1px solid #3f3f46;border-bottom-width:2px;font-size:10px;margin-left:4px}
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;color:#71717a}
+.code-top{height:44px;background:#010409;border-bottom:1px solid #27272a;display:flex;align-items:center;justify-content:space-between;padding:0 10px;flex-shrink:0}
+.code-wrap{flex:1;display:flex;overflow:hidden}
+.code-pane{flex:1;display:flex;flex-direction:column;overflow:hidden;border-right:1px solid #27272a}
+.code-pane:last-child{border-right:none}
+.pane-header{height:32px;background:#0d1117;border-bottom:1px solid #27272a;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:11px;color:#a1a1aa}
+.editor{flex:1;width:100%;background:#010409;color:#e4e4e7;border:none;outline:none;padding:12px;font-size:12px;line-height:1.6;resize:none;tab-size:2}
+.preview{flex:1;border:none;background:white;width:100%;height:100%}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px #22c55e}
+.status-dot.saving{background:#eab308;box-shadow:0 0 6px #eab308}
 </style>
 </head>
 <body>
 <div class="header">
-<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-<b style="color:var(--cyan);font-size:14px;letter-spacing:.05em;text-shadow:0 0 15px rgba(0,245,255,.5)">KORVIL 3D</b>
-<span id="deviceType" class="device-badge">PC 3D</span>
-<span id="saveBadge" class="badge">✓ K-B.D REAL 3D</span>
-<span id="cnt" style="font-size:10px;opacity:.7">0 itens</span>
-<span id="versao" style="font-size:10px;background:linear-gradient(135deg,var(--cyan),#00d4ff);color:#000;padding:4px 10px;border-radius:20px;font-weight:900;box-shadow:0 2px 10px rgba(0,245,255,.3)">v31.0 3D</span>
-</div>
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<button class="btn" onclick="abrirArquivos()">📂 ARQUIVOS</button>
-<button class="btn-ghost" onclick="abrirFerramentas()">🛠️ FERRAMENTAS: K-RIADOR ATIVAR/DESATIVAR</button>
-<button class="btn-ghost" onclick="toggleHist()">📜 HISTÓRICO</button>
-<button class="btn" onclick="baixarReal()">💾 CÓDIGO REAL 3D</button>
-</div>
-</div>
-
-<div id="telaLimpa" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow:auto;transform-style:preserve-3d">
-<div style="transform:translateZ(30px);max-width:600px">
-<h1 style="font-size:26px;letter-spacing:.15em;margin-bottom:12px;background:linear-gradient(135deg, var(--cyan), var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:0 0 30px rgba(0,245,255,.3)">TELA INICIAL LIMPA 3D</h1>
-<p style="opacity:.7;font-size:13px;line-height:1.7;margin-bottom:20px">Visual 3D última geração tecnológica - fácil e rápida de usar, altamente inteligente aprimorado. Reconhece dispositivo automático, K-B.D salva real no peito do código. K-RIADOR dentro de ferramentas com ativar/desativar - quando ativo flutua em todas as telas e você pode mover pra qualquer lugar.</p>
-<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-<button class="btn" style="padding:14px 26px;font-size:13px" onclick="abrirArquivos()">📂 ARQUIVOS (2 + K-RIADOR)</button>
-<button class="btn-green" style="padding:14px 26px" onclick="abrirFerramentas()">🛠️ ATIVAR K-RIADOR</button>
-</div>
-</div>
-<div style="margin-top:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;max-width:600px;width:100%;transform:translateZ(10px)">
-<div class="card"><div style="font-size:20px">🧠</div><b style="font-size:11px">K-RIADOR 3D</b><div style="font-size:9px;opacity:.6;margin-top:4px">Ativar/desativar flutuante movível - acompanha todas telas</div></div>
-<div class="card"><div style="font-size:20px">📸</div><b style="font-size:11px">CÂMERA DENTRO K-RIADOR</b><div style="font-size:9px;opacity:.6;margin-top:4px">Ler, analisar, gravar etc dentro do sistema K-RIADOR</div></div>
-<div class="card"><div style="font-size:20px">💎</div><b style="font-size:11px">3D ÚLTIMA GERAÇÃO</b><div style="font-size:9px;opacity:.6;margin-top:4px">Visual 3D, blur, profundidade, fácil rápida inteligente</div></div>
-</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div style="width:32px;height:32px;border-radius:8px;background:#06b6d4;color:#000;display:flex;align-items:center;justify-content:center;font-weight:800">K</div>
+    <div>
+      <div style="font-weight:700;letter-spacing:.1em;font-size:12px;color:#22d3ee">KORVIL v34 + EDITOR</div>
+      <div style="font-size:10px;color:#71717a">ordem exata mantida • tela inicial vazia • celular segurar = mini-menu</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px">
+    <button class="btn" id="btnUndo">↩️</button>
+    <button class="btn" id="btnRedo">↪️</button>
+    <button class="btn btn-cyan" id="btnSave">💾</button>
+  </div>
 </div>
 
-<div id="mainArea" class="main" style="display:none">
-<div class="left"><div style="padding:10px;background:rgba(22,27,38,.4);border-bottom:1px solid var(--border);font-size:10px;display:flex;justify-content:space-between"><span>EXPLORADOR 3D - Ctrl+Click múltiplo - Arrasta pra organizar</span><input id="busca" placeholder="Buscar 3D..." style="background:rgba(13,17,23,.6);border:1px solid var(--border);border-radius:20px;padding:5px 12px;color:#fff;font-size:11px;width:110px" oninput="renderTree()"></div><div class="scroll" id="tree"></div></div>
-<div class="right"><div id="bread" style="padding:10px;background:rgba(22,27,38,.4);border-bottom:1px solid var(--border);font-size:10px"></div><div class="scroll" id="visual"></div></div>
+<div style="display:flex">
+  <div class="tree" id="tree"></div>
+  <div class="main" id="main">
+    <div id="mainContent" style="flex:1;display:flex;flex-direction:column;overflow:hidden"></div>
+  </div>
 </div>
 
-<div class="float" id="floatBtn" style="display:none;left:50%;top:50%">🧠</div>
-
-<div id="kPanel" class="panel" style="display:none">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><b style="color:var(--cyan);font-size:14px">🧠 K-RIADOR 3D ATIVO - MOVÍVEL</b><div style="display:flex;gap:6px"><button class="btn-ghost" style="padding:4px 8px;font-size:9px" onclick="toggleK()">✕ Fechar</button><button class="btn-ghost" style="padding:4px 8px;font-size:9px;background:rgba(255,0,0,.2)" onclick="desativarKRiador()">⏻ Desativar</button></div></div>
-<div style="font-size:10px;opacity:.6;margin-bottom:10px">Local: <span id="kLocal" style="color:var(--cyan);font-weight:700">kbd/korvil/lab/ferramentas-programas/K-RIADOR</span> - mova o ícone flutuante pra qualquer lugar da página, acompanha todas telas enquanto ativo</div>
-
-<div style="background:rgba(0,245,255,.06);border:1px solid rgba(0,245,255,.15);border-radius:14px;padding:10px;margin-bottom:12px">
-<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:11px;color:var(--cyan)">📸 CÂMERA DENTRO DO SISTEMA K-RIADOR (ler, analisar, gravar etc)</b><span style="font-size:8px;background:var(--cyan);color:#000;padding:2px 6px;border-radius:20px">DENTRO K-RIADOR</span></div>
-<div style="display:flex;gap:8px;margin-top:8px">
-<button class="btn" style="flex:1" onclick="abrirCameraDireto()">📸 TIRAR FOTO</button>
-<button class="btn-ghost" style="flex:1" onclick="abrirCameraAnalise()">🔍 LER/ANALISAR</button>
-<button class="btn-ghost" style="flex:1" onclick="abrirCameraGravar()">🎥 GRAVAR</button>
-<button class="btn-ghost" style="flex:1" onclick="document.getElementById('uploadFoto').click()">🖼️ ANEXAR</button>
-</div>
-<div style="font-size:9px;opacity:.6;margin-top:6px">Funções de câmera fazem parte dentro do sistema do K-RIADOR, não na tela inicial - ler, analisar, gravar etc tudo dentro do K-RIADOR</div>
-<div id="previewFoto" style="display:none;margin-top:8px"><img id="imgPreview" style="width:100%;border-radius:12px;border:1px solid rgba(0,245,255,.2);max-height:160px;object-fit:cover"></div>
+<div class="footer">
+  <span id="status">tela inicial vazia • ordem exata mantida • 81 nodes</span>
+  <span>Del excluir • arrastar move sem duplicar • só Duplicar duplica • segurar celular</span>
 </div>
 
-<div class="evoluir">
-<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><b style="color:var(--green);font-size:12px">🚀 AÇÕES: EVOLUIR - EM CIMA DAS FUNÇÕES</b><div style="display:flex;gap:6px;align-items:center"><span style="font-size:9px;background:var(--green);color:#000;padding:3px 8px;border-radius:20px">v<span id="versaoMini">31</span> VERDE</span><button onclick="mostrarVersao2026()" style="background:rgba(13,17,23,.6);border:1px solid var(--green);color:var(--green);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;cursor:pointer">v.2026</button></div></div>
-<div id="miniVersao2026Panel" style="display:none;margin-top:10px;background:rgba(10,15,31,.8);border:1px solid var(--green);border-radius:12px;padding:10px;font-size:10px"></div>
-<div style="font-size:10px;opacity:.7;margin:8px 0">Embaixo do título Evoluir: opções Automático, Manual</div>
-<div style="display:flex;gap:8px;margin:8px 0"><button class="btn-green" style="flex:1" onclick="evoluirAuto()">🤖 AUTOMÁTICO</button><button class="btn-ghost" style="flex:1" onclick="toggleEvoluirManual()">✍️ MANUAL</button></div>
-<div id="evoluirManualArea" style="display:none"><textarea id="evoluirIn" placeholder="Descreva ideias do que quer que ele evolua..." style="width:100%;height:70px;background:rgba(13,17,23,.6);border:1px solid var(--green);border-radius:12px;color:#fff;padding:10px;font-size:11px"></textarea><button class="btn-green" style="width:100%;margin-top:8px" onclick="evoluirManual()">🚀 EVOLUIR MANUAL</button></div>
-<div id="evoluirRes" style="margin-top:10px;background:rgba(13,17,23,.6);border:1px solid rgba(0,255,136,.2);border-radius:12px;padding:10px;font-size:10px;display:none"></div>
-</div>
-
-<textarea id="kIn" placeholder="Comando pro K-RIADOR fazer direto onde você estiver em tempo real...&#10;• tirar foto de um produto e criar na lista de suplementos&#10;• ler e analisar imagem&#10;• gravar vídeo do produto&#10;• criar pasta Produtos aqui&#10;• evoluir sistema" style="width:100%;height:90px;background:rgba(13,17,23,.6);border:1px solid var(--border);border-radius:14px;color:#fff;padding:12px;font-size:12px;resize:none"></textarea>
-<input type="file" id="uploadFoto" accept="image/*" style="display:none" onchange="handleUploadFoto(event)">
-<div style="font-size:11px;color:var(--cyan);font-weight:800;margin:12px 0 6px">FUNÇÕES K-RIADOR (24) - 1 individual ou várias combinadas - descrição inteligente:</div>
-<div id="kFuncs" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:140px;overflow:auto"></div>
-<button class="btn" style="width:100%;padding:12px;margin-top:12px;font-size:12px" onclick="execK()">⚡ FAZER AGORA NO LUGAR CERTO - TEMPO REAL 3D</button>
-<button class="btn-ghost" style="width:100%;margin-top:8px" onclick="abrirKFull()">📖 Tela Completa (caixa maior) 3D</button>
-<div id="kRes" style="margin-top:10px;background:rgba(13,17,23,.6);border:1px solid var(--border);border-radius:14px;padding:10px;font-size:11px;display:none;max-height:160px;overflow:auto"></div>
-</div>
-
-<div id="kFull" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:10001;padding:12px;overflow:auto"><div style="background:linear-gradient(180deg, rgba(10,15,31,.95), rgba(7,10,18,.98));border:1px solid rgba(0,245,255,.15);border-radius:20px;max-width:800px;margin:20px auto;padding:18px"><div style="display:flex;justify-content:space-between"><b style="color:var(--cyan)">🧠 K-RIADOR TELA COMPLETA 3D - CAIXA MAIOR</b><button class="btn-ghost" onclick="document.getElementById('kFull').style.display='none'">✕</button></div><textarea id="kInFull" placeholder="Descreva ideia detalhada aqui (caixa maior) - modo descrição inteligente 3D" style="width:100%;height:160px;background:rgba(13,17,23,.6);border:1px solid var(--border);border-radius:14px;color:#fff;padding:14px;margin:12px 0;font-size:13px"></textarea><div id="kFuncsFull" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-height:200px;overflow:auto"></div><button class="btn" style="width:100%;padding:14px;margin-top:12px" onclick="execKFull()">🚀 EXECUTAR K-RIADOR COMPLETO 3D</button><div id="kResFull" style="background:rgba(13,17,23,.6);border:1px solid var(--border);border-radius:14px;padding:14px;min-height:100px;margin-top:12px;font-size:12px;white-space:pre-wrap"></div></div></div>
-
-<div id="cameraModal" style="display:none;position:fixed;inset:0;background:#000;z-index:10002;flex-direction:column"><div style="padding:14px;background:linear-gradient(180deg, rgba(10,15,31,.95), rgba(7,10,18,.9));border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><b style="color:var(--cyan)" id="cameraTitle">📸 CÂMERA K-RIADOR - DENTRO DO SISTEMA</b><button class="btn-ghost" onclick="fecharCamera()">✕ Fechar</button></div><video id="video" autoplay playsinline style="flex:1;object-fit:cover;background:#000;width:100%"></video><canvas id="canvas" style="display:none"></canvas><div style="padding:14px;background:linear-gradient(180deg, rgba(10,15,31,.95), rgba(7,10,18,.9));display:flex;gap:10px;justify-content:center"><button class="btn" style="padding:14px 28px;font-size:15px" onclick="capturarFoto()" id="btnCapturar">📸 CAPTURAR FOTO</button><button class="btn-ghost" onclick="fecharCamera()">Cancelar</button></div><div style="padding:10px;background:rgba(22,27,38,.6);font-size:10px;opacity:.7;text-align:center">Função de câmera faz parte dentro do sistema do K-RIADOR - ler, analisar, gravar etc - não na tela inicial</div></div>
-
-<div id="produtoModal" class="modal"><div class="modal-box"><div style="padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><b style="color:var(--cyan)">📦 CRIAR PRODUTO - K-RIADOR COM FOTO 3D</b><button class="btn-ghost" onclick="fecharProdutoModal()">✕</button></div><div style="padding:16px"><div id="produtoFotoPreview"></div><label class="label">Nome:</label><input id="pNome" class="input"><label class="label">Marca:</label><select id="pMarca" class="input"><option>PROFIT</option><option>GROWTH</option><option>MAX TITANIUM</option><option>DR. PEANUTS</option></select><label class="label">Sabor:</label><input id="pSabores" class="input"><label class="label">Embalagem:</label><select id="pEmbalagem" class="input"><option>Pote 900g</option><option>Refil 900g</option><option>Pote 1.8kg</option><option>Pote 300g</option></select><label class="label">Preço R$:</label><input id="pPreco" class="input" type="number"><label class="label">Descrição:</label><textarea id="pDesc" class="input" style="height:70px"></textarea><label class="label">Local:</label><select id="pLocal" class="input"></select><button class="btn" style="width:100%;padding:12px;margin-top:12px" onclick="salvarProduto()">💾 SALVAR COM FOTO NO LUGAR CERTO 3D</button></div></div></div>
-
-<div id="ferramentasModal" class="modal"><div class="modal-box" style="max-width:600px"><div style="padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><b style="color:var(--cyan);font-size:14px">🛠️ FERRAMENTAS: K-RIADOR: BOTÃO ATIVAR/DESATIVAR 3D</b><button class="btn-ghost" onclick="document.getElementById('ferramentasModal').style.display='none'">✕</button></div><div style="padding:16px">
-<div style="background:linear-gradient(135deg, rgba(0,245,255,.08), rgba(138,43,226,.06));border:1px solid rgba(0,245,255,.15);border-radius:16px;padding:16px;margin-bottom:12px;transform:translateZ(10px)">
-<div style="display:flex;justify-content:space-between;align-items:center"><div><b style="font-size:14px">🧠 K-RIADOR:</b><div style="font-size:10px;opacity:.7;margin-top:2px">kbd/korvil/lab/ferramentas-programas: K-RIADOR: aqui toda estrutura</div><div style="font-size:9px;opacity:.5;margin-top:4px">Quando ativo flutua na tela, pode mover pra qualquer lugar, acompanha todas telas/lugares enquanto ativo, desativar some</div></div><div style="display:flex;gap:8px"><button id="btnAtivar" class="btn-green" onclick="ativarKRiador()">▶️ ATIVAR</button><button id="btnDesativar" class="btn-ghost" style="display:none;background:rgba(255,0,0,.15);border-color:rgba(255,0,0,.3)" onclick="desativarKRiador()">⏻ DESATIVAR</button></div></div>
-<div id="statusAtivo" style="margin-top:10px;padding:10px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);border-radius:12px;font-size:11px;display:none"><b style="color:var(--green)">✓ K-RIADOR ATIVO 3D:</b> flutuando na tela, pode arrastar pra qualquer lugar da página, acompanha todas telas/lugares enquanto estiver ativo. Clique no ícone 🧠 flutuante pra abrir. Funções de câmera (ler, analisar, gravar etc) fazem parte dentro do sistema do K-RIADOR, não na tela inicial.</div>
-</div>
-<div style="background:rgba(22,27,38,.4);border-radius:12px;padding:12px;margin-top:12px">
-<b style="font-size:11px">📂 Estrutura K-RIADOR dentro K-B.D (igual outros arquivos):</b><div style="font-size:10px;opacity:.7;margin-top:6px;line-height:1.6">kbd/korvil/lab/ferramentas-programas:<br>└─ K-RIADOR:<br>&nbsp;&nbsp;├─ AÇÕES: Evoluir (Automático/Manual) + v.2026 (dia/mês/ano, horário, última versão, o que evoluiu)<br>&nbsp;&nbsp;├─ FUNÇÕES: 24 funções<br>&nbsp;&nbsp;├─ NÚCLEO<br>&nbsp;&nbsp;├─ FOTO-PRODUTO: câmera ler/analisar/gravar<br>&nbsp;&nbsp;└─ versao.json v31 3D</div>
-</div>
-</div></div></div>
-
-<div id="evoluirModal" class="modal"><div class="modal-box" style="border-color:var(--green);max-width:650px"><div style="padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><b style="color:var(--green)">🚀 K-RIADOR EVOLUIU - v.2026 - 3D</b><button class="btn-ghost" onclick="document.getElementById('evoluirModal').style.display='none'">✕</button></div><div style="padding:16px;font-size:12px;line-height:1.6" id="evoluirDetalhe"></div></div></div>
-
-<div class="cmd-bar"><span style="font-size:20px">🧠</span><input id="cmdInput" placeholder="Comando pro K-RIADOR 3D fazer direto onde estiver..."><button onclick="execCmdBar()" style="background:linear-gradient(135deg,var(--cyan),#00d4ff);color:#000;border:none;border-radius:24px;padding:10px 18px;font-weight:900;font-size:12px;cursor:pointer;margin-left:8px;box-shadow:0 4px 15px rgba(0,245,255,.3)">FAZER 3D</button></div>
-
-<div id="modalArq" class="modal"><div class="modal-box" style="max-width:700px"><div style="padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><b style="color:var(--cyan)">📂 ARQUIVOS 3D - K-RIADOR DENTRO</b><button class="btn-ghost" onclick="fecharArq()">✕</button></div><div style="padding:14px;display:grid;gap:10px" id="listaArq"></div></div></div>
-
-<div id="modalHist" style="display:none;position:fixed;right:0;top:0;bottom:0;width:380px;max-width:88vw;background:linear-gradient(180deg, rgba(10,15,31,.95), rgba(7,10,18,.98));backdrop-filter:blur(25px);border-left:1px solid rgba(0,245,255,.15);z-index:9000;overflow:auto;padding:14px;box-shadow:-10px 0 40px rgba(0,0,0,.5)"><div style="display:flex;justify-content:space-between"><b style="color:var(--cyan);font-size:12px">📜 HISTÓRICO MENSAL 3D - DIA 1 AO ÚLTIMO</b><button class="btn-ghost" onclick="toggleHist()">✕</button></div><div id="listaHist" style="margin-top:12px"></div></div>
+<div id="miniMenu" class="mini-menu" style="display:none"></div>
 
 <script>
-const STORAGE='korvil-loja-exata-v32';
-const HIST='korvil-hist-loja-exata-v32';
-const VER='korvil-versao-3d';
-const KR_ATIVO='korvil-kriador-ativo-3d';
-let nodes=[]; let selected=null; let selectedIds=new Set(); let expanded=new Set(['r_central','f_setores','s6','kbd','korvil','lab','ferramentas']); let ctxEl=null;
-let fotoCapturada=null; let versao=31; let kriadorAtivo=false;
-let ferramentas={'K-RIADOR':{icon:'🧠',funcs:['executor','visualizador','leitor','gerador','criador','modificador','analisador','inventor','provedor','conversor','editor','segurança','cobrador','professor','tradutor','otimizador','organizador','restaurador','duplicador','integrador','calculador','simulador','designer','auditor']}};
-let kSel=new Set(); let device='pc';
-let floatPos={x:0,y:0}; let isDragging=false; let dragOffset={x:0,y:0};
+let NODES = [{"id": "id_1787763422000039_5296", "name": "KORVIL: Central KORVIL:", "type": "folder", "parentId": null, "content": ""}, {"id": "id_1787763422000046_8313", "name": "serviços :", "type": "folder", "parentId": "id_1787763422000039_5296", "content": ""}, {"id": "id_1787763422000049_5373", "name": "negócios :", "type": "folder", "parentId": "id_1787763422000039_5296", "content": ""}, {"id": "id_1787763422000050_9396", "name": "parcerias:", "type": "folder", "parentId": "id_1787763422000039_5296", "content": ""}, {"id": "id_1787763422000052_1544", "name": "(Pasta de funcionamento desse sistema): aqui toda a explicação", "type": "folder", "parentId": "id_1787763422000039_5296", "content": ""}, {"id": "id_1787763422000054_2169", "name": "README - ordem exata + atalhos", "type": "folder", "parentId": "id_1787763422000052_1544", "content": "Clique simples esquerdo = mini-menu | Clique na pasta = abre/fecha | Delete = exclui | Ctrl+Z desfaz | Ctrl+C/V copiar/colar | Arrastar move sem duplicar | Duplicar só no botão Duplicar"}, {"id": "id_1787763422000055_6840", "name": "Setores :", "type": "folder", "parentId": "id_1787763422000039_5296", "content": ""}, {"id": "id_1787763422000057_7136", "name": "1. Central KORVIL", "type": "folder", "parentId": "id_1787763422000055_6840", "content": ""}, {"id": "id_1787763422000059_1319", "name": "2. Sistema K", "type": "folder", "parentId": "id_1787763422000055_6840", "content": ""}, {"id": "id_1787763422000064_6180", "name": "3. K-TP", "type": "folder", "parentId": "id_1787763422000055_6840", "content": ""}, {"id": "id_1787763422000065_6966", "name": "1. Representantes", "type": "folder", "parentId": "id_1787763422000064_6180", "content": ""}, {"id": "id_1787763422000067_1457", "name": "2. Vendedores: ", "type": "folder", "parentId": "id_1787763422000064_6180", "content": ""}, {"id": "id_1787763422000068_2813", "name": "vendedores internos", "type": "folder", "parentId": "id_1787763422000067_1457", "content": ""}, {"id": "id_1787763422000069_1436", "name": "K-TP - COMO FUNCIONA - 3 PASSOS + PROVA 30% OFF - R$12 mínimo.txt", "type": "folder", "parentId": "id_1787763422000068_2813", "content": "SIM, tenho certeza absoluta. DZ metade original: 1x30 2x40 3x50 4x65 5x75\n1x R$60 -18 = R$42 -30 = R$12 ✅\n2x R$80 -24 = R$56 -40 = R$16 ✅\n3x R$100 -30 = R$70 -50 = R$20 ✅\n4x R$130 -39 = R$91 -65 = R$26 (31 com DZ60) ✅\n5x R$150 -45 = R$105 -75 = R$30 (35 com DZ70) ✅\nNunca negativo, nunca abaixo R$12, 30% OFF limite perfeito"}, {"id": "id_1787763422000070_7172", "name": "vendedores externos:", "type": "folder", "parentId": "id_1787763422000067_1457", "content": ""}, {"id": "id_1787763422000072_1097", "name": "Parceiros contratados:", "type": "folder", "parentId": "id_1787763422000070_7172", "content": ""}, {"id": "id_1787763422000076_7895", "name": "1. Alana Silva", "type": "folder", "parentId": "id_1787763422000072_1097", "content": ""}, {"id": "id_1787763422000078_5966", "name": "2. Diego Oliveira", "type": "folder", "parentId": "id_1787763422000072_1097", "content": ""}, {"id": "id_1787763422000079_8316", "name": "3. Paula Dante", "type": "folder", "parentId": "id_1787763422000072_1097", "content": ""}, {"id": "id_1787763422000083_8338", "name": "4. Fabiana Tomaz", "type": "folder", "parentId": "id_1787763422000072_1097", "content": ""}, {"id": "id_1787763422000084_8940", "name": "5. Flávia Gomes", "type": "folder", "parentId": "id_1787763422000072_1097", "content": ""}, {"id": "id_1787763422000086_6347", "name": "3. K-TP :", "type": "folder", "parentId": "id_1787763422000046_8313", "content": ""}, {"id": "id_1787763422000087_1962", "name": "1. Representantes", "type": "folder", "parentId": "id_1787763422000086_6347", "content": ""}, {"id": "id_1787763422000089_2102", "name": "2. Vendedores: ", "type": "folder", "parentId": "id_1787763422000086_6347", "content": ""}, {"id": "id_1787763422000090_7308", "name": "vendedores internos", "type": "folder", "parentId": "id_1787763422000089_2102", "content": ""}, {"id": "id_1787763422000091_6693", "name": "K-TP - COMO FUNCIONA.txt", "type": "folder", "parentId": "id_1787763422000090_7308", "content": "Prova R$12 mínimo"}, {"id": "id_1787763422000093_9437", "name": "vendedores externos:", "type": "folder", "parentId": "id_1787763422000089_2102", "content": ""}, {"id": "id_1787763422000094_4246", "name": "Parceiros contratados:", "type": "folder", "parentId": "id_1787763422000093_9437", "content": ""}, {"id": "id_1787763422000095_6577", "name": "1. Alana Silva", "type": "folder", "parentId": "id_1787763422000094_4246", "content": ""}, {"id": "id_1787763422000097_6494", "name": "2. Diego Oliveira", "type": "folder", "parentId": "id_1787763422000094_4246", "content": ""}, {"id": "id_1787763422000098_2447", "name": "3. Paula Dante", "type": "folder", "parentId": "id_1787763422000094_4246", "content": ""}, {"id": "id_1787763422000100_9992", "name": "4. Fabiana Tomaz", "type": "folder", "parentId": "id_1787763422000094_4246", "content": ""}, {"id": "id_1787763422000101_5528", "name": "5. Flávia Gomes", "type": "folder", "parentId": "id_1787763422000094_4246", "content": ""}, {"id": "id_1787763422000103_5878", "name": "3. K-TP :", "type": "folder", "parentId": "id_1787763422000049_5373", "content": ""}, {"id": "id_1787763422000104_4707", "name": "1. Representantes", "type": "folder", "parentId": "id_1787763422000103_5878", "content": ""}, {"id": "id_1787763422000105_2210", "name": "2. Vendedores: ", "type": "folder", "parentId": "id_1787763422000103_5878", "content": ""}, {"id": "id_1787763422000107_7162", "name": "vendedores internos", "type": "folder", "parentId": "id_1787763422000105_2210", "content": ""}, {"id": "id_1787763422000108_2526", "name": "K-TP - COMO FUNCIONA.txt", "type": "folder", "parentId": "id_1787763422000107_7162", "content": "Prova R$12 mínimo"}, {"id": "id_1787763422000110_5105", "name": "vendedores externos:", "type": "folder", "parentId": "id_1787763422000105_2210", "content": ""}, {"id": "id_1787763422000111_9067", "name": "Parceiros contratados:", "type": "folder", "parentId": "id_1787763422000110_5105", "content": ""}, {"id": "id_1787763422000112_2406", "name": "1. Alana Silva", "type": "folder", "parentId": "id_1787763422000111_9067", "content": ""}, {"id": "id_1787763422000114_9974", "name": "2. Diego Oliveira", "type": "folder", "parentId": "id_1787763422000111_9067", "content": ""}, {"id": "id_1787763422000117_8508", "name": "3. Paula Dante", "type": "folder", "parentId": "id_1787763422000111_9067", "content": ""}, {"id": "id_1787763422000119_6311", "name": "4. Fabiana Tomaz", "type": "folder", "parentId": "id_1787763422000111_9067", "content": ""}, {"id": "id_1787763422000121_4359", "name": "5. Flávia Gomes", "type": "folder", "parentId": "id_1787763422000111_9067", "content": ""}, {"id": "id_1787763422000122_7179", "name": "3. K-TP :", "type": "folder", "parentId": "id_1787763422000050_9396", "content": ""}, {"id": "id_1787763422000124_1655", "name": "1. Representantes", "type": "folder", "parentId": "id_1787763422000122_7179", "content": ""}, {"id": "id_1787763422000125_6350", "name": "2. Vendedores: ", "type": "folder", "parentId": "id_1787763422000122_7179", "content": ""}, {"id": "id_1787763422000126_1036", "name": "vendedores internos", "type": "folder", "parentId": "id_1787763422000125_6350", "content": ""}, {"id": "id_1787763422000127_2910", "name": "K-TP - COMO FUNCIONA.txt", "type": "folder", "parentId": "id_1787763422000126_1036", "content": "Prova R$12 mínimo"}, {"id": "id_1787763422000129_9881", "name": "vendedores externos:", "type": "folder", "parentId": "id_1787763422000125_6350", "content": ""}, {"id": "id_1787763422000130_7956", "name": "Parceiros contratados:", "type": "folder", "parentId": "id_1787763422000129_9881", "content": ""}, {"id": "id_1787763422000131_9585", "name": "1. Alana Silva", "type": "folder", "parentId": "id_1787763422000130_7956", "content": ""}, {"id": "id_1787763422000133_7135", "name": "2. Diego Oliveira", "type": "folder", "parentId": "id_1787763422000130_7956", "content": ""}, {"id": "id_1787763422000134_7991", "name": "3. Paula Dante", "type": "folder", "parentId": "id_1787763422000130_7956", "content": ""}, {"id": "id_1787763422000135_8503", "name": "4. Fabiana Tomaz", "type": "folder", "parentId": "id_1787763422000130_7956", "content": ""}, {"id": "id_1787763422000136_2977", "name": "5. Flávia Gomes", "type": "folder", "parentId": "id_1787763422000130_7956", "content": ""}, {"id": "id_1787763422000138_3018", "name": "4. K-AFORTUNADO", "type": "folder", "parentId": "id_1787763422000055_6840", "content": ""}, {"id": "id_1787763422000139_2818", "name": "5. K-ALMA", "type": "folder", "parentId": "id_1787763422000055_6840", "content": ""}, {"id": "id_1787763422000141_1349", "name": "6. KORVIL LOJA (K.L)", "type": "folder", "parentId": "id_1787763422000055_6840", "content": ""}, {"id": "id_1787763422000142_5819", "name": "KORVIL LOJA ( - 5 SETORES + CENTRAL)", "type": "folder", "parentId": null, "content": ""}, {"id": "id_1787763422000143_8403", "name": "01 SETOR: SISTEMA K: ", "type": "folder", "parentId": "id_1787763422000142_5819", "content": ""}, {"id": "id_1787763422000145_9232", "name": "E-commerce:", "type": "folder", "parentId": "id_1787763422000143_8403", "content": ""}, {"id": "id_1787763422000146_3896", "name": "Loja Virtual Própria", "type": "folder", "parentId": "id_1787763422000145_9232", "content": ""}, {"id": "id_1787763422000147_9243", "name": "Marketplace (Shopee, Mercado Livre, Amazon)", "type": "folder", "parentId": "id_1787763422000145_9232", "content": ""}, {"id": "id_1787763422000151_4288", "name": "Manutenção de Celular:", "type": "folder", "parentId": "id_1787763422000143_8403", "content": ""}, {"id": "id_1787763422000155_9237", "name": "Tela: iPhone 11-15 Original Paralela InCell OLED", "type": "folder", "parentId": "id_1787763422000151_4288", "content": ""}, {"id": "id_1787763422000156_7922", "name": "Bateria: Samsung A10-A54 Turbo Original Paralela", "type": "folder", "parentId": "id_1787763422000151_4288", "content": ""}, {"id": "id_1787763422000157_4777", "name": "04 SETOR: K-TP: FITNESS:", "type": "folder", "parentId": "id_1787763422000142_5819", "content": ""}, {"id": "id_1787763422000161_8640", "name": "CATEGORIAS:", "type": "folder", "parentId": "id_1787763422000157_4777", "content": ""}, {"id": "id_1787763422000163_4836", "name": "ACESSÓRIOS: Corda Pular Faixa Elástica Mini Band", "type": "folder", "parentId": "id_1787763422000161_8640", "content": ""}, {"id": "id_1787763422000164_1842", "name": "EQUIPAMENTOS: Halteres Anilhas Barra Kettlebell", "type": "folder", "parentId": "id_1787763422000161_8640", "content": ""}, {"id": "id_1787763422000166_2940", "name": "PRODUTOS:", "type": "folder", "parentId": "id_1787763422000161_8640", "content": ""}, {"id": "id_1787763422000169_1581", "name": "SUPLEMENTOS: MARCAS: PROFIT GROWTH MAX TITANIUM DR PEANUTS", "type": "folder", "parentId": "id_1787763422000166_2940", "content": ""}, {"id": "id_1787763422000171_3944", "name": "VESTUÁRIOS: ROUPAS: FEMININO MASCULINO CALÇADOS: TÊNIS Modelos Tamanhos 34-44 Cores", "type": "folder", "parentId": "id_1787763422000166_2940", "content": ""}, {"id": "id_1787763422000172_7897", "name": "SERVIÇOS: TREINAMENTO PERSONALIZADO PROJETO TRANSFORMAÇÃO", "type": "folder", "parentId": "id_1787763422000166_2940", "content": ""}, {"id": "id_1787763422000173_9522", "name": "kbd", "type": "folder", "parentId": "id_1787763422000039_5296", "content": ""}, {"id": "id_1787763422000175_7006", "name": "korvil", "type": "folder", "parentId": "id_1787763422000173_9522", "content": ""}, {"id": "id_1787763422000177_1653", "name": "lab", "type": "folder", "parentId": "id_1787763422000175_7006", "content": ""}, {"id": "id_1787763422000178_2418", "name": "ferramentas-programas:", "type": "folder", "parentId": "id_1787763422000177_1653", "content": ""}, {"id": "id_1787763422000179_4688", "name": "K-RIADOR:", "type": "folder", "parentId": "id_1787763422000178_2418", "content": "", "isTool": true}];
+let expanded = new Set(NODES.filter(n=>n.parentId===null).map(n=>n.id));
+let selected = new Set();
+let history = [];
+let future = [];
+let clipboard = null;
+let draggingIds = [];
+let currentFileId = null;
+let viewMode = 'split';
+let autoSaveTimer = null;
 
-function pe(p){return p+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,5)}
-function detectDevice(){let w=window.innerWidth; if(w<360) device='smartwatch'; else if(w<768) device='celular'; else if(w<1024) device='tablet'; else if(w>1920) device='tv'; else device='pc'; document.getElementById('deviceType').innerText=device.toUpperCase()+' 3D - TELA COMPLETA AUTO';}
-
-function defaultData(){let e=[{"id": "KORVIL: Cent_1787730227231240_943", "name": "KORVIL: Central KORVIL:", "type": "folder", "parentId": null, "content": ""}, {"id": "parcerias:_1787730227231247_558", "name": "parcerias:", "type": "folder", "parentId": "KORVIL: Cent_1787730227231240_943", "content": ""}, {"id": "3. K-TP :_1787730227231249_176", "name": "3. K-TP :", "type": "folder", "parentId": "parcerias:_1787730227231247_558", "content": ""}, {"id": "1. Represent_1787730227231251_496", "name": "1. Representantes", "type": "folder", "parentId": "3. K-TP :_1787730227231249_176", "content": ""}, {"id": "2. Vendedore_1787730227231253_195", "name": "2. Vendedores:", "type": "folder", "parentId": "3. K-TP :_1787730227231249_176", "content": ""}, {"id": "vendedores i_1787730227231255_812", "name": "vendedores internos", "type": "folder", "parentId": "2. Vendedore_1787730227231253_195", "content": ""}, {"id": "K-TP - COMO _1787730227231257_506", "name": "K-TP - COMO FUNCIONA - 3 PASSOS + PROVA 30% OFF.txt", "type": "file", "parentId": "vendedores i_1787730227231255_812", "content": "SIM, tenho certeza absoluta. DZ metade original 1x30 2x40 3x50 4x65 5x75"}, {"id": "vendedores e_1787730227231258_999", "name": "vendedores externos:", "type": "folder", "parentId": "2. Vendedore_1787730227231253_195", "content": ""}, {"id": "Parceiros co_1787730227231260_535", "name": "Parceiros contratados:", "type": "folder", "parentId": "3. K-TP :_1787730227231249_176", "content": ""}, {"id": "1. Alana Sil_1787730227231262_238", "name": "1. Alana Silva", "type": "folder", "parentId": "Parceiros co_1787730227231260_535", "content": ""}, {"id": "2. Diego Oli_1787730227231263_275", "name": "2. Diego Oliveira", "type": "folder", "parentId": "Parceiros co_1787730227231260_535", "content": ""}, {"id": "3. Paula Dan_1787730227231265_124", "name": "3. Paula Dante", "type": "folder", "parentId": "Parceiros co_1787730227231260_535", "content": ""}, {"id": "4. Fabiana T_1787730227231266_508", "name": "4. Fabiana Tomaz", "type": "folder", "parentId": "Parceiros co_1787730227231260_535", "content": ""}, {"id": "5. Flávia Go_1787730227231268_145", "name": "5. Flávia Gomes", "type": "folder", "parentId": "Parceiros co_1787730227231260_535", "content": ""}, {"id": "Setores :_1787730227231269_215", "name": "Setores :", "type": "folder", "parentId": "KORVIL: Cent_1787730227231240_943", "content": ""}, {"id": "1. Central K_1787730227231271_263", "name": "1. Central KORVIL", "type": "folder", "parentId": "Setores :_1787730227231269_215", "content": ""}, {"id": "2. Sistema K_1787730227231273_115", "name": "2. Sistema K", "type": "folder", "parentId": "Setores :_1787730227231269_215", "content": ""}, {"id": "3. K-TP_1787730227231274_685", "name": "3. K-TP", "type": "folder", "parentId": "Setores :_1787730227231269_215", "content": ""}, {"id": "4. K-AFORTUN_1787730227231275_308", "name": "4. K-AFORTUNADO", "type": "folder", "parentId": "Setores :_1787730227231269_215", "content": ""}, {"id": "5. K-ALMA_1787730227231277_650", "name": "5. K-ALMA", "type": "folder", "parentId": "Setores :_1787730227231269_215", "content": ""}, {"id": "6. KORVIL LO_1787730227231278_652", "name": "6. KORVIL LOJA (K.L)", "type": "folder", "parentId": "Setores :_1787730227231269_215", "content": ""}, {"id": "kbd_1787730227231280_919", "name": "kbd", "type": "folder", "parentId": "KORVIL: Cent_1787730227231240_943", "content": ""}, {"id": "korvil_1787730227231281_464", "name": "korvil", "type": "folder", "parentId": "kbd_1787730227231280_919", "content": ""}, {"id": "lab_1787730227231283_305", "name": "lab", "type": "folder", "parentId": "korvil_1787730227231281_464", "content": ""}, {"id": "ferramentas-_1787730227231284_788", "name": "ferramentas-programas:", "type": "folder", "parentId": "lab_1787730227231283_305", "content": ""}, {"id": "K-RIADOR:_1787730227231285_535", "name": "K-RIADOR:", "type": "folder", "parentId": "ferramentas-_1787730227231284_788", "content": "", "isTool": true, "isKriadorRoot": true}, {"id": "AÇÕES:_1787730227231287_891", "name": "AÇÕES:", "type": "folder", "parentId": "K-RIADOR:_1787730227231285_535", "content": ""}, {"id": "Evoluir:_1787730227231289_774", "name": "Evoluir:", "type": "folder", "parentId": "AÇÕES:_1787730227231287_891", "content": ""}, {"id": "Automático: _1787730227231290_754", "name": "Automático: ele analisa melhorias do sistema dele e se aprimora melhorando a versão dele de verde no código fonte", "type": "folder", "parentId": "Evoluir:_1787730227231289_774", "content": ""}, {"id": "Manual: eu p_1787730227231292_780", "name": "Manual: eu passo as ideias, descrições, e seleções do que quero sobre o que ele se evolua", "type": "folder", "parentId": "Evoluir:_1787730227231289_774", "content": ""}, {"id": "v.2026: ao c_1787730227231294_925", "name": "v.2026: ao clicar mostre nele mesmo mini tela da evolução atual: dia/mês/ano, horário, e histórico da última versão anterior e o que evoluiu na versão atual", "type": "folder", "parentId": "Evoluir:_1787730227231289_774", "content": ""}, {"id": "FUNÇÕES: 24 _1787730227231295_743", "name": "FUNÇÕES: 24 funções - pode usar 1 individual ou quantas combinadas - modo descrição inteligente - em cima das funções tem AÇÕES Evoluir + v.2026 no canto direito mesma direção do evoluir", "type": "folder", "parentId": "K-RIADOR:_1787730227231285_535", "content": ""}, {"id": "executor_1787730227231297_486", "name": "executor", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "visualizador_1787730227231298_569", "name": "visualizador", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "leitor_1787730227231300_277", "name": "leitor", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "gerador_1787730227231304_230", "name": "gerador", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "criador_1787730227231305_890", "name": "criador", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "modificador_1787730227231307_334", "name": "modificador", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "analisador_1787730227231308_645", "name": "analisador", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "inventor_1787730227231309_843", "name": "inventor", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "provedor_1787730227231311_890", "name": "provedor", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "conversor_1787730227231312_814", "name": "conversor", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "editor_1787730227231314_827", "name": "editor", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "segurança_1787730227231315_559", "name": "segurança", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "cobrador_1787730227231316_804", "name": "cobrador", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "professor_1787730227231318_258", "name": "professor", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "tradutor_1787730227231319_702", "name": "tradutor", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "otimizador_1787730227231320_648", "name": "otimizador", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "organizador_1787730227231321_573", "name": "organizador", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "restaurador_1787730227231323_620", "name": "restaurador", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "duplicador_1787730227231324_229", "name": "duplicador", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "integrador_1787730227231328_244", "name": "integrador", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "calculador_1787730227231329_181", "name": "calculador", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "simulador_1787730227231334_673", "name": "simulador", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "designer_1787730227231335_355", "name": "designer", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "auditor_1787730227231336_669", "name": "auditor", "type": "folder", "parentId": "FUNÇÕES: 24 _1787730227231295_743", "content": ""}, {"id": "CÂMERA: funç_1787730227231338_123", "name": "CÂMERA: funções de usar a câmera pra ler, analisar, gravar etc faz parte dentro do sistema do K-RIADOR nao na tela inicial", "type": "folder", "parentId": "K-RIADOR:_1787730227231285_535", "content": ""}, {"id": "ler: OCR, le_1787730227231339_177", "name": "ler: OCR, ler texto", "type": "folder", "parentId": "CÂMERA: funç_1787730227231338_123", "content": ""}, {"id": "analisar: an_1787730227231343_729", "name": "analisar: analisar imagem", "type": "folder", "parentId": "CÂMERA: funç_1787730227231338_123", "content": ""}, {"id": "gravar: grav_1787730227231345_455", "name": "gravar: gravar vídeo", "type": "folder", "parentId": "CÂMERA: funç_1787730227231338_123", "content": ""}, {"id": "foto: tirar _1787730227231346_354", "name": "foto: tirar foto produto", "type": "folder", "parentId": "CÂMERA: funç_1787730227231338_123", "content": ""}, {"id": "KORVIL LOJA _1787730227231347_403", "name": "KORVIL LOJA (LOJA MÃE INTEGRADORA - 5 SETORES + CENTRAL)", "type": "folder", "parentId": null, "content": ""}, {"id": "01 SETOR: SI_1787730227231349_558", "name": "01 SETOR: SISTEMA K:", "type": "folder", "parentId": "KORVIL LOJA _1787730227231347_403", "content": ""}, {"id": "E-commerce:_1787730227231350_785", "name": "E-commerce:", "type": "folder", "parentId": "01 SETOR: SI_1787730227231349_558", "content": ""}, {"id": "Loja Virtual_1787730227231351_546", "name": "Loja Virtual Própria", "type": "folder", "parentId": "E-commerce:_1787730227231350_785", "content": ""}, {"id": "Marketplace _1787730227231353_948", "name": "Marketplace (Shopee, Mercado Livre, Amazon)", "type": "folder", "parentId": "E-commerce:_1787730227231350_785", "content": ""}, {"id": "Manutenção d_1787730227231355_826", "name": "Manutenção de Celular:", "type": "folder", "parentId": "01 SETOR: SI_1787730227231349_558", "content": ""}, {"id": "Tela: iPhone_1787730227231356_744", "name": "Tela: iPhone 11, 12, 13, 14, 15 / Original, Paralela, InCell, OLED, Incell", "type": "folder", "parentId": "Manutenção d_1787730227231355_826", "content": ""}, {"id": "Bateria: Sam_1787730227231357_275", "name": "Bateria: Samsung A10, A20, A30, A50, A51, A54, M11, M21 / Turbo, Original, Paralela", "type": "folder", "parentId": "Manutenção d_1787730227231355_826", "content": ""}, {"id": "Capinha: Sil_1787730227231359_141", "name": "Capinha: Silicone, Anti-choque, Carteira, Transparente", "type": "folder", "parentId": "Manutenção d_1787730227231355_826", "content": ""}, {"id": "Película: 3D_1787730227231360_337", "name": "Película: 3D, 9D, Privacidade, Cerâmica, Hidrogel", "type": "folder", "parentId": "Manutenção d_1787730227231355_826", "content": ""}, {"id": "Conector de _1787730227231362_994", "name": "Conector de Carga, Alto-falante, Microfone, Câmera", "type": "folder", "parentId": "Manutenção d_1787730227231355_826", "content": ""}, {"id": "Serviços: Tr_1787730227231363_166", "name": "Serviços: Troca de Tela, Troca de Bateria, Limpeza, Desoxidação", "type": "folder", "parentId": "Manutenção d_1787730227231355_826", "content": ""}, {"id": "Elétrica / E_1787730227231365_425", "name": "Elétrica / Eletricistas:", "type": "folder", "parentId": "01 SETOR: SI_1787730227231349_558", "content": ""}, {"id": "Instalação R_1787730227231366_766", "name": "Instalação Residencial, Predial, Comercial", "type": "folder", "parentId": "Elétrica / E_1787730227231365_425", "content": ""}, {"id": "Manutenção, _1787730227231367_881", "name": "Manutenção, Quadro de Luz, Tomada, Interruptor", "type": "folder", "parentId": "Elétrica / E_1787730227231365_425", "content": ""}, {"id": "Produtos: Fi_1787730227231369_378", "name": "Produtos: Fio, Disjuntor, Lâmpada, Chuveiro", "type": "folder", "parentId": "Elétrica / E_1787730227231365_425", "content": ""}, {"id": "Eletrônicos:_1787730227231371_256", "name": "Eletrônicos:", "type": "folder", "parentId": "01 SETOR: SI_1787730227231349_558", "content": ""}, {"id": "Celular: iPh_1787730227231372_334", "name": "Celular: iPhone, Samsung, Xiaomi", "type": "folder", "parentId": "Eletrônicos:_1787730227231371_256", "content": ""}, {"id": "Fone: Blueto_1787730227231373_558", "name": "Fone: Bluetooth, Com Fio, Headset", "type": "folder", "parentId": "Eletrônicos:_1787730227231371_256", "content": ""}, {"id": "Notebook, Ta_1787730227231375_118", "name": "Notebook, Tablet, Smartwatch, Caixa de Som", "type": "folder", "parentId": "Eletrônicos:_1787730227231371_256", "content": ""}, {"id": "Acessórios: _1787730227231378_839", "name": "Acessórios: Carregador, Cabo, Suporte", "type": "folder", "parentId": "Eletrônicos:_1787730227231371_256", "content": ""}, {"id": "Dispositivos_1787730227231380_692", "name": "Dispositivos:", "type": "folder", "parentId": "01 SETOR: SI_1787730227231349_558", "content": ""}, {"id": "Alexa, Chrom_1787730227231381_639", "name": "Alexa, Chromecast, Roteador, Repetidor", "type": "folder", "parentId": "Dispositivos_1787730227231380_692", "content": ""}, {"id": "Smart TV Box_1787730227231382_206", "name": "Smart TV Box, Controle", "type": "folder", "parentId": "Dispositivos_1787730227231380_692", "content": ""}, {"id": "02 SETOR: K-_1787730227231384_447", "name": "02 SETOR: K-AFORTUNADO:", "type": "folder", "parentId": "KORVIL LOJA _1787730227231347_403", "content": ""}, {"id": "Empreendedor_1787730227231385_467", "name": "Empreendedorismo:", "type": "folder", "parentId": "02 SETOR: K-_1787730227231384_447", "content": ""}, {"id": "Como Começar_1787730227231387_251", "name": "Como Começar Negócio, MEI, CNPJ", "type": "folder", "parentId": "Empreendedor_1787730227231385_467", "content": ""}, {"id": "Marketing Di_1787730227231388_449", "name": "Marketing Digital, Vendas, Tráfego Pago", "type": "folder", "parentId": "Empreendedor_1787730227231385_467", "content": ""}, {"id": "Gestão, Lide_1787730227231390_863", "name": "Gestão, Liderança, Mindset Empreendedor", "type": "folder", "parentId": "Empreendedor_1787730227231385_467", "content": ""}, {"id": "Finanças:_1787730227231391_293", "name": "Finanças:", "type": "folder", "parentId": "02 SETOR: K-_1787730227231384_447", "content": ""}, {"id": "Finanças Pes_1787730227231392_882", "name": "Finanças Pessoais, Investimentos, Renda Extra", "type": "folder", "parentId": "Finanças:_1787730227231391_293", "content": ""}, {"id": "Educação Fin_1787730227231394_720", "name": "Educação Financeira, Controle de Gastos", "type": "folder", "parentId": "Finanças:_1787730227231391_293", "content": ""}, {"id": "Planilhas, C_1787730227231395_176", "name": "Planilhas, Calculadoras", "type": "folder", "parentId": "Finanças:_1787730227231391_293", "content": ""}, {"id": "E-books:_1787730227231397_989", "name": "E-books:", "type": "folder", "parentId": "02 SETOR: K-_1787730227231384_447", "content": ""}, {"id": "E-book Mente_1787730227231398_300", "name": "E-book Mente Milionária PDF 100p", "type": "folder", "parentId": "E-books:_1787730227231397_989", "content": ""}, {"id": "E-book Marke_1787730227231399_799", "name": "E-book Marketing Digital 80p", "type": "folder", "parentId": "E-books:_1787730227231397_989", "content": ""}, {"id": "E-book Finan_1787730227231401_501", "name": "E-book Finanças Pessoais 60p", "type": "folder", "parentId": "E-books:_1787730227231397_989", "content": ""}, {"id": "E-book Hábit_1787730227231402_367", "name": "E-book Hábitos Atômicos", "type": "folder", "parentId": "E-books:_1787730227231397_989", "content": ""}, {"id": "E-book Empre_1787730227231404_883", "name": "E-book Empreendedorismo", "type": "folder", "parentId": "E-books:_1787730227231397_989", "content": ""}, {"id": "Materiais:_1787730227231405_966", "name": "Materiais:", "type": "folder", "parentId": "02 SETOR: K-_1787730227231384_447", "content": ""}, {"id": "Planilha Fin_1787730227231407_550", "name": "Planilha Financeira, Checklist, Template", "type": "folder", "parentId": "Materiais:_1787730227231405_966", "content": ""}, {"id": "Apostila, Wo_1787730227231410_669", "name": "Apostila, Workbook", "type": "folder", "parentId": "Materiais:_1787730227231405_966", "content": ""}, {"id": "Cursos / Neg_1787730227231411_882", "name": "Cursos / Negócio Próprio:", "type": "folder", "parentId": "02 SETOR: K-_1787730227231384_447", "content": ""}, {"id": "Curso Empree_1787730227231415_549", "name": "Curso Empreendedorismo", "type": "folder", "parentId": "Cursos / Neg_1787730227231411_882", "content": ""}, {"id": "Curso Market_1787730227231416_344", "name": "Curso Marketing Digital", "type": "folder", "parentId": "Cursos / Neg_1787730227231411_882", "content": ""}, {"id": "Mentoria K-A_1787730227231418_538", "name": "Mentoria K-AFORTUNADO", "type": "folder", "parentId": "Cursos / Neg_1787730227231411_882", "content": ""}, {"id": "03 SETOR: K-_1787730227231419_902", "name": "03 SETOR: K-ALMA:", "type": "folder", "parentId": "KORVIL LOJA _1787730227231347_403", "content": ""}, {"id": "Saúde:_1787730227231420_722", "name": "Saúde:", "type": "folder", "parentId": "03 SETOR: K-_1787730227231419_902", "content": ""}, {"id": "Alimentação _1787730227231422_433", "name": "Alimentação Saudável, Dieta, Nutrição", "type": "folder", "parentId": "Saúde:_1787730227231420_722", "content": ""}, {"id": "Saúde Mental_1787730227231423_365", "name": "Saúde Mental, Ansiedade, Bem-estar", "type": "folder", "parentId": "Saúde:_1787730227231420_722", "content": ""}, {"id": "Produtos Nat_1787730227231424_518", "name": "Produtos Naturais", "type": "folder", "parentId": "Saúde:_1787730227231420_722", "content": ""}, {"id": "Beleza:_1787730227231426_781", "name": "Beleza:", "type": "folder", "parentId": "03 SETOR: K-_1787730227231419_902", "content": ""}, {"id": "Skincare, Ma_1787730227231429_775", "name": "Skincare, Maquiagem, Cabelo", "type": "folder", "parentId": "Beleza:_1787730227231426_781", "content": ""}, {"id": "Produtos Bel_1787730227231431_447", "name": "Produtos Beleza Natural", "type": "folder", "parentId": "Beleza:_1787730227231426_781", "content": ""}, {"id": "Bem-estar:_1787730227231432_478", "name": "Bem-estar:", "type": "folder", "parentId": "03 SETOR: K-_1787730227231419_902", "content": ""}, {"id": "Meditação, Y_1787730227231433_334", "name": "Meditação, Yoga, Autocuidado", "type": "folder", "parentId": "Bem-estar:_1787730227231432_478", "content": ""}, {"id": "Terapias Hol_1787730227231435_313", "name": "Terapias Holísticas, Reiki, Aromaterapia", "type": "folder", "parentId": "Bem-estar:_1787730227231432_478", "content": ""}, {"id": "Materiais:_1787730227231436_393", "name": "Materiais:", "type": "folder", "parentId": "03 SETOR: K-_1787730227231419_902", "content": ""}, {"id": "E-books Bem-_1787730227231438_663", "name": "E-books Bem-estar, Guias", "type": "folder", "parentId": "Materiais:_1787730227231436_393", "content": ""}, {"id": "Cabeleireiro_1787730227231439_390", "name": "Cabeleireiro Unissex:", "type": "folder", "parentId": "03 SETOR: K-_1787730227231419_902", "content": ""}, {"id": "Corte Mascul_1787730227231440_839", "name": "Corte Masculino, Feminino, Infantil", "type": "folder", "parentId": "Cabeleireiro_1787730227231439_390", "content": ""}, {"id": "Coloração, L_1787730227231442_216", "name": "Coloração, Luzes, Hidratação, Progressiva", "type": "folder", "parentId": "Cabeleireiro_1787730227231439_390", "content": ""}, {"id": "Curso Cabele_1787730227231445_787", "name": "Curso Cabeleireiro Unissex 3 meses", "type": "folder", "parentId": "Cabeleireiro_1787730227231439_390", "content": ""}, {"id": "Curso Barbei_1787730227231447_475", "name": "Curso Barbeiro", "type": "folder", "parentId": "Cabeleireiro_1787730227231439_390", "content": ""}, {"id": "Produtos: Sh_1787730227231448_621", "name": "Produtos: Shampoo, Condicionador, Pomada", "type": "folder", "parentId": "Cabeleireiro_1787730227231439_390", "content": ""}, {"id": "Terapias Hol_1787730227231450_365", "name": "Terapias Holísticas:", "type": "folder", "parentId": "03 SETOR: K-_1787730227231419_902", "content": ""}, {"id": "Massagem, Ve_1787730227231453_410", "name": "Massagem, Ventosa, Auriculoterapia", "type": "folder", "parentId": "Terapias Hol_1787730227231450_365", "content": ""}, {"id": "04 SETOR: K-_1787730227231455_484", "name": "04 SETOR: K-TP: FITNESS:", "type": "folder", "parentId": "KORVIL LOJA _1787730227231347_403", "content": ""}, {"id": "CATEGORIAS:_1787730227231456_741", "name": "CATEGORIAS:", "type": "folder", "parentId": "04 SETOR: K-_1787730227231455_484", "content": ""}, {"id": "ACESSÓRIOS:_1787730227231457_988", "name": "ACESSÓRIOS:", "type": "folder", "parentId": "CATEGORIAS:_1787730227231456_741", "content": ""}, {"id": "Corda de Pul_1787730227231459_121", "name": "Corda de Pular, Faixa Elástica, Mini Band", "type": "folder", "parentId": "ACESSÓRIOS:_1787730227231457_988", "content": ""}, {"id": "Luva de Trei_1787730227231460_733", "name": "Luva de Treino, Munhequeira, Joelhiera", "type": "folder", "parentId": "ACESSÓRIOS:_1787730227231457_988", "content": ""}, {"id": "Garrafa, Coq_1787730227231462_414", "name": "Garrafa, Coqueteleira, Bolsa Térmica", "type": "folder", "parentId": "ACESSÓRIOS:_1787730227231457_988", "content": ""}, {"id": "Cinto de Aga_1787730227231463_549", "name": "Cinto de Agachamento", "type": "folder", "parentId": "ACESSÓRIOS:_1787730227231457_988", "content": ""}, {"id": "EQUIPAMENTOS_1787730227231464_381", "name": "EQUIPAMENTOS:", "type": "folder", "parentId": "CATEGORIAS:_1787730227231456_741", "content": ""}, {"id": "Halteres, An_1787730227231466_293", "name": "Halteres, Anilhas, Barra, Kettlebell", "type": "folder", "parentId": "EQUIPAMENTOS_1787730227231464_381", "content": ""}, {"id": "Banco Supino_1787730227231467_887", "name": "Banco Supino, Esteira, Bicicleta", "type": "folder", "parentId": "EQUIPAMENTOS_1787730227231464_381", "content": ""}, {"id": "Elíptico, Le_1787730227231469_297", "name": "Elíptico, Leg Press", "type": "folder", "parentId": "EQUIPAMENTOS_1787730227231464_381", "content": ""}, {"id": "PRODUTOS:_1787730227231470_303", "name": "PRODUTOS:", "type": "folder", "parentId": "CATEGORIAS:_1787730227231456_741", "content": ""}, {"id": "SUPLEMENTOS:_1787730227231471_722", "name": "SUPLEMENTOS:", "type": "folder", "parentId": "PRODUTOS:_1787730227231470_303", "content": ""}, {"id": "MARCAS:_1787730227231473_686", "name": "MARCAS:", "type": "folder", "parentId": "SUPLEMENTOS:_1787730227231471_722", "content": ""}, {"id": "PROFIT:_1787730227231474_848", "name": "PROFIT:", "type": "folder", "parentId": "MARCAS:_1787730227231473_686", "content": ""}, {"id": "WHEY:_1787730227231475_478", "name": "WHEY:", "type": "folder", "parentId": "PROFIT:_1787730227231474_848", "content": ""}, {"id": "CONCENTRADO:_1787730227231477_266", "name": "CONCENTRADO:", "type": "folder", "parentId": "WHEY:_1787730227231475_478", "content": ""}, {"id": "900g:_1787730227231478_193", "name": "900g:", "type": "folder", "parentId": "CONCENTRADO:_1787730227231477_266", "content": ""}, {"id": "SABORES: Cho_1787730227231480_287", "name": "SABORES: Chocolate, Morango, Baunilha, Cookies & Cream, Doce de Leite, Natural, Cappuccino, Coco", "type": "folder", "parentId": "900g:_1787730227231478_193", "content": ""}, {"id": "TIPO (EMBALA_1787730227231481_281", "name": "TIPO (EMBALAGEM): Refil 900g, Pote 900g, Sache 30g, Caixa 30x30g, Barra 60g", "type": "folder", "parentId": "900g:_1787730227231478_193", "content": ""}, {"id": "1.800kg (1.8_1787730227231482_341", "name": "1.800kg (1.8kg):", "type": "folder", "parentId": "CONCENTRADO:_1787730227231477_266", "content": ""}, {"id": "SABORES: Cho_1787730227231484_774", "name": "SABORES: Chocolate, Morango, Baunilha, Cookies", "type": "folder", "parentId": "1.800kg (1.8_1787730227231482_341", "content": ""}, {"id": "TIPO (EMBALA_1787730227231487_571", "name": "TIPO (EMBALAGEM): Refil 1.8kg, Pote 1.8kg", "type": "folder", "parentId": "1.800kg (1.8_1787730227231482_341", "content": ""}, {"id": "ISOLADO / HI_1787730227231489_226", "name": "ISOLADO / HIDROLISADO / BLEND / 3W:", "type": "folder", "parentId": "CONCENTRADO:_1787730227231477_266", "content": ""}, {"id": "Isolado 900g_1787730227231490_434", "name": "Isolado 900g Chocolate", "type": "folder", "parentId": "CONCENTRADO:_1787730227231477_266", "content": ""}, {"id": "3W 900g Baun_1787730227231491_681", "name": "3W 900g Baunilha", "type": "folder", "parentId": "CONCENTRADO:_1787730227231477_266", "content": ""}, {"id": "CREATINA PRO_1787730227231493_699", "name": "CREATINA PROFIT: Pote 150g, 300g, 500g, Refil 1kg / Monohidratada / Sem Sabor", "type": "folder", "parentId": "PROFIT:_1787730227231474_848", "content": ""}, {"id": "PRÉ-TREINO P_1787730227231494_390", "name": "PRÉ-TREINO PROFIT: Pote 150g, 300g / Frutas Vermelhas, Limão", "type": "folder", "parentId": "PROFIT:_1787730227231474_848", "content": ""}, {"id": "HIPERCALÓRIC_1787730227231495_203", "name": "HIPERCALÓRICO PROFIT: Pote 1.8kg Chocolate", "type": "folder", "parentId": "PROFIT:_1787730227231474_848", "content": ""}, {"id": "GROWTH: (MES_1787730227231497_305", "name": "GROWTH: (MESMA LÓGICA PROFIT)", "type": "folder", "parentId": "MARCAS:_1787730227231473_686", "content": ""}, {"id": "WHEY: Concen_1787730227231498_994", "name": "WHEY: Concentrado 900g, 1.8kg / Isolado / Sabores Chocolate, Morango, Baunilha, Cookies / Refil, Pote, Sache", "type": "folder", "parentId": "GROWTH: (MES_1787730227231497_305", "content": ""}, {"id": "CREATINA: Po_1787730227231500_298", "name": "CREATINA: Pote 250g, 500g / Monohidratada / Sem Sabor", "type": "folder", "parentId": "GROWTH: (MES_1787730227231497_305", "content": ""}, {"id": "BARRINHA: Un_1787730227231501_960", "name": "BARRINHA: Unidade 60g, Caixa 12x60g / Chocolate, Cookies", "type": "folder", "parentId": "GROWTH: (MES_1787730227231497_305", "content": ""}, {"id": "MAX TITANIUM_1787730227231505_385", "name": "MAX TITANIUM:", "type": "folder", "parentId": "MARCAS:_1787730227231473_686", "content": ""}, {"id": "WHEY: 100% W_1787730227231506_594", "name": "WHEY: 100% Whey, Top Whey 3W / Concentrado, Isolado, 3W / 900g, 1.8kg, Refil / Chocolate, Morango, Baunilha, Cookies & Cream, Natural", "type": "folder", "parentId": "MAX TITANIUM_1787730227231505_385", "content": ""}, {"id": "CREATINA: Po_1787730227231507_756", "name": "CREATINA: Pote 300g Monohidratada", "type": "folder", "parentId": "MAX TITANIUM_1787730227231505_385", "content": ""}, {"id": "PRÉ-TREINO: _1787730227231509_118", "name": "PRÉ-TREINO: Pote 300g Limão, Frutas Vermelhas", "type": "folder", "parentId": "MAX TITANIUM_1787730227231505_385", "content": ""}, {"id": "DARKNESS / I_1787730227231510_869", "name": "DARKNESS / INTEGRALMÉDICA / BLACK SKULL / ADAPTOGEN / NEW MILLEN / VULCANO:", "type": "folder", "parentId": "MARCAS:_1787730227231473_686", "content": ""}, {"id": "(MESMA ESTRU_1787730227231511_190", "name": "(MESMA ESTRUTURA: Whey > Concentrado/Isolado/Hidrolisado > 900g/1.8kg > Sabores > Refil/Pote/Sache)", "type": "folder", "parentId": "DARKNESS / I_1787730227231510_869", "content": ""}, {"id": "DR. PEANUTS:_1787730227231513_960", "name": "DR. PEANUTS:", "type": "folder", "parentId": "DARKNESS / I_1787730227231510_869", "content": ""}, {"id": "PASTA DE AME_1787730227231514_602", "name": "PASTA DE AMENDOIM: Pote 250g, 600g, 1kg / Sabores: Tradicional, Avelã, Chocolate Branco, Cookies, Paçoca, Bueníssimo, Leite Ninho / Tipo: Cremosa, Crocante", "type": "folder", "parentId": "DR. PEANUTS:_1787730227231513_960", "content": ""}, {"id": "... (TODAS M_1787730227231516_333", "name": "... (TODAS MARCAS SEGUEM MESMA LÓGICA)", "type": "folder", "parentId": "MARCAS:_1787730227231473_686", "content": ""}, {"id": "OUTROS SUPLE_1787730227231517_872", "name": "OUTROS SUPLEMENTOS:", "type": "folder", "parentId": "SUPLEMENTOS:_1787730227231471_722", "content": ""}, {"id": "BCAA, Glutam_1787730227231518_916", "name": "BCAA, Glutamina, Beta-Alanina, Cafeína, Albumina, Palatinose, Malto, Dextrose, Termogênico, Multivitamínico, Ômega 3, Colágeno", "type": "folder", "parentId": "OUTROS SUPLE_1787730227231517_872", "content": ""}, {"id": "Cada um com _1787730227231520_220", "name": "Cada um com Marca > Sabor > Embalagem (Pote, Refil, Cápsulas)", "type": "folder", "parentId": "OUTROS SUPLE_1787730227231517_872", "content": ""}, {"id": "PRODUTOS ALI_1787730227231523_278", "name": "PRODUTOS ALIMENTARES:", "type": "folder", "parentId": "PRODUTOS:_1787730227231470_303", "content": ""}, {"id": "Pasta de Ame_1787730227231525_461", "name": "Pasta de Amendoim (Dr Peanuts e outras)", "type": "folder", "parentId": "PRODUTOS ALI_1787730227231523_278", "content": ""}, {"id": "Granola, Ave_1787730227231526_190", "name": "Granola, Aveia, Castanha", "type": "folder", "parentId": "PRODUTOS ALI_1787730227231523_278", "content": ""}, {"id": "Barra de Pro_1787730227231532_626", "name": "Barra de Proteína, Barrinha", "type": "folder", "parentId": "PRODUTOS ALI_1787730227231523_278", "content": ""}, {"id": "Temperos Fit_1787730227231533_164", "name": "Temperos Fit, Molhos", "type": "folder", "parentId": "PRODUTOS ALI_1787730227231523_278", "content": ""}, {"id": "VESTUÁRIOS: _1787730227231535_520", "name": "VESTUÁRIOS: ROUPAS:", "type": "folder", "parentId": "PRODUTOS:_1787730227231470_303", "content": ""}, {"id": "FEMININO:_1787730227231536_857", "name": "FEMININO:", "type": "folder", "parentId": "VESTUÁRIOS: _1787730227231535_520", "content": ""}, {"id": "Camisetas: B_1787730227231537_494", "name": "Camisetas: Baby Look, Cropped, Regata Canelada, Longline, Dry Fit Feminina / Cores: Preta, Branca, Rosa, Turquesa / Tam: P, M, G, GG / Modelos: Lisa, Estampada, Korvil Logo", "type": "folder", "parentId": "FEMININO:_1787730227231536_857", "content": ""}, {"id": "Calças: Legg_1787730227231539_105", "name": "Calças: Legging Preta, Cinza, Vinho / Alta, Média / Suplex, Poliamida, Montaria / P, M, G, GG", "type": "folder", "parentId": "FEMININO:_1787730227231536_857", "content": ""}, {"id": "Shorts: Shor_1787730227231540_582", "name": "Shorts: Short Saia, Short Moletom Feminino, Short Dry Fit / P, M, G", "type": "folder", "parentId": "FEMININO:_1787730227231536_857", "content": ""}, {"id": "Tops: Top Su_1787730227231558_855", "name": "Tops: Top Sutiã, Top Cropped, Top Nadador, Com Bojo, Sem Bojo / Preto, Branco / P, M, G", "type": "folder", "parentId": "FEMININO:_1787730227231536_857", "content": ""}, {"id": "Moletons: Mo_1787730227231560_271", "name": "Moletons: Moletom Canguru Feminino, Cropped, Oversized / Preto, Cinza / P, M, G", "type": "folder", "parentId": "FEMININO:_1787730227231536_857", "content": ""}, {"id": "Jaquetas, Bo_1787730227231561_774", "name": "Jaquetas, Bonés Femininos", "type": "folder", "parentId": "FEMININO:_1787730227231536_857", "content": ""}, {"id": "MASCULINO:_1787730227231562_640", "name": "MASCULINO:", "type": "folder", "parentId": "VESTUÁRIOS: _1787730227231535_520", "content": ""}, {"id": "Camisetas: C_1787730227231564_692", "name": "Camisetas: Camiseta Dry Fit Masculina, Algodão, Oversized, Regata Dry, Manga Longa, Polo Fitness / Cores: Preta, Branca, Cinza, Turquesa, Azul Marinho / Tam: P, M, G, GG, XG / Lisa, Logo", "type": "folder", "parentId": "MASCULINO:_1787730227231562_640", "content": ""}, {"id": "Calças: Calç_1787730227231565_936", "name": "Calças: Calça Moletom Masculina, Jogger, Jeans Fitness, Cargo, Compressão / Preta, Cinza / P, M, G, GG", "type": "folder", "parentId": "MASCULINO:_1787730227231562_640", "content": ""}, {"id": "Shorts: Shor_1787730227231567_371", "name": "Shorts: Short Dry Fit Masculino, Moletom, Jeans Fitness, Compressão / P, M, G, GG", "type": "folder", "parentId": "MASCULINO:_1787730227231562_640", "content": ""}, {"id": "Moletons: Mo_1787730227231568_209", "name": "Moletons: Moletom Canguru Masculino, Aberto, Oversized / Preto, Cinza, Turquesa / Peluciado, Canelado, Com Capuz / P, M, G, GG", "type": "folder", "parentId": "MASCULINO:_1787730227231562_640", "content": ""}, {"id": "Regatas, Jaq_1787730227231569_983", "name": "Regatas, Jaquetas, Bonés Masculinos", "type": "folder", "parentId": "MASCULINO:_1787730227231562_640", "content": ""}, {"id": "SERVIÇOS:_1787730227231571_235", "name": "SERVIÇOS:", "type": "folder", "parentId": "PRODUTOS:_1787730227231470_303", "content": ""}, {"id": "TREINAMENTO _1787730227231572_917", "name": "TREINAMENTO PERSONALIZADO:", "type": "folder", "parentId": "SERVIÇOS:_1787730227231571_235", "content": ""}, {"id": "Avaliação Fí_1787730227231573_867", "name": "Avaliação Física, Anamnese", "type": "folder", "parentId": "TREINAMENTO _1787730227231572_917", "content": ""}, {"id": "Treino Prese_1787730227231575_692", "name": "Treino Presencial, Online", "type": "folder", "parentId": "TREINAMENTO _1787730227231572_917", "content": ""}, {"id": "Plano Alimen_1787730227231578_884", "name": "Plano Alimentar, Dieta Flexível", "type": "folder", "parentId": "TREINAMENTO _1787730227231572_917", "content": ""}, {"id": "PROJETO TRAN_1787730227231580_195", "name": "PROJETO TRANSFORMAÇÃO:", "type": "folder", "parentId": "TREINAMENTO _1787730227231572_917", "content": ""}, {"id": "30 dias, 60 _1787730227231581_725", "name": "30 dias, 60 dias, 90 dias", "type": "folder", "parentId": "PROJETO TRAN_1787730227231580_195", "content": ""}, {"id": "Desafio Seca_1787730227231583_952", "name": "Desafio Seca Barriga, Ganho de Massa", "type": "folder", "parentId": "PROJETO TRAN_1787730227231580_195", "content": ""}, {"id": "Acompanhamen_1787730227231584_320", "name": "Acompanhamento Semanal", "type": "folder", "parentId": "PROJETO TRAN_1787730227231580_195", "content": ""}, {"id": "Grupo VIP Wh_1787730227231585_286", "name": "Grupo VIP WhatsApp", "type": "folder", "parentId": "PROJETO TRAN_1787730227231580_195", "content": ""}, {"id": "Consultoria,_1787730227231587_848", "name": "Consultoria, Mentoria Fitness", "type": "folder", "parentId": "SERVIÇOS:_1787730227231571_235", "content": ""}, {"id": "Parcerias co_1787730227231588_693", "name": "Parcerias com Nutricionista, Fisioterapeuta", "type": "folder", "parentId": "SERVIÇOS:_1787730227231571_235", "content": ""}, {"id": "05 SETOR: CE_1787730227231589_183", "name": "05 SETOR: CENTRAL KORVIL:", "type": "folder", "parentId": "KORVIL LOJA _1787730227231347_403", "content": ""}, {"id": "DESENVOLVIME_1787730227231591_978", "name": "DESENVOLVIMENTO HUMANO - Cursos:", "type": "folder", "parentId": "05 SETOR: CE_1787730227231589_183", "content": ""}, {"id": "Serviços Pro_1787730227231592_258", "name": "Serviços Profissionais - Manutenção Celular (Curso)", "type": "folder", "parentId": "DESENVOLVIME_1787730227231591_978", "content": ""}, {"id": "Treinamento _1787730227231594_857", "name": "Treinamento Personalizado - Projeto Transformação (Curso)", "type": "folder", "parentId": "DESENVOLVIME_1787730227231591_978", "content": ""}, {"id": "Empreendedor_1787730227231595_354", "name": "Empreendedorismo - Negócio Próprio (Curso)", "type": "folder", "parentId": "DESENVOLVIME_1787730227231591_978", "content": ""}, {"id": "Saúde - Tera_1787730227231597_292", "name": "Saúde - Terapias Holísticas (Curso)", "type": "folder", "parentId": "DESENVOLVIME_1787730227231591_978", "content": ""}, {"id": "Beleza - Cab_1787730227231598_565", "name": "Beleza - Cabeleireiro Unissex (Curso)", "type": "folder", "parentId": "DESENVOLVIME_1787730227231591_978", "content": ""}, {"id": "NEGOCIOS - P_1787730227231600_236", "name": "NEGOCIOS - Parcerias: Parceria K-TP, SISTEMA K, K-ALMA, K-AFORTUNADO", "type": "folder", "parentId": "05 SETOR: CE_1787730227231589_183", "content": ""}, {"id": "SERVICOS - P_1787730227231601_407", "name": "SERVICOS - Profissionais: Eletricista, Manutenção Celular, Personal, Cabeleireiro", "type": "folder", "parentId": "05 SETOR: CE_1787730227231589_183", "content": ""}, {"id": "E-books: Tod_1787730227231604_948", "name": "E-books: Todos E-books dos 4 setores", "type": "folder", "parentId": "05 SETOR: CE_1787730227231589_183", "content": ""}, {"id": "Materiais: P_1787730227231606_628", "name": "Materiais: Planilhas, Checklists, Templates de todos setores", "type": "folder", "parentId": "05 SETOR: CE_1787730227231589_183", "content": ""}, {"id": "KORVIL LOJA _1787730227231608_243", "name": "KORVIL LOJA OFICIAL: Best Sellers, Kits, Lançamentos, Promoções", "type": "folder", "parentId": "05 SETOR: CE_1787730227231589_183", "content": ""}];return e;}
-function load(){
-try{
-let v=localStorage.getItem(VER); if(v) versao=parseInt(v);
-let ativo=localStorage.getItem(KR_ATIVO); if(ativo==='true') kriadorAtivo=true;
-let ls=localStorage.getItem(STORAGE);
-if(ls){let p=JSON.parse(ls); if(Array.isArray(p)&&p.length>5){nodes=p; return;}}
-}catch(e){}
-nodes=defaultData();
+function saveHistory(){ history.push(JSON.stringify(NODES)); if(history.length>60) history.shift(); future=[]; }
+function getChildren(pid){ return NODES.filter(n=>n.parentId===pid); }
+function isDescendant(childId, ancestorId){ let cur=NODES.find(n=>n.id===childId); while(cur){ if(cur.parentId===ancestorId) return true; cur=NODES.find(n=>n.id===cur.parentId); } return false; }
+function isCodeFile(node){ 
+  const name = node.name.toLowerCase();
+  const c = (node.content||'').toLowerCase();
+  return name.endsWith('.html') || name.endsWith('.js') || name.endsWith('.css') || name.endsWith('.json') || name.endsWith('.txt') || 
+         c.includes('<!doctype') || c.includes('<html') || c.includes('function ') || name.includes('como funciona') || name.includes('k-tp');
 }
 
-function save(motivo){
-try{
-localStorage.setItem(STORAGE, JSON.stringify(nodes));
-localStorage.setItem(VER, versao.toString());
-localStorage.setItem(KR_ATIVO, kriadorAtivo.toString());
-window.__CURRENT_SOURCE__=JSON.stringify({nodes,versao,kriadorAtivo,lastEdit:new Date().toISOString()});
-let hist=JSON.parse(localStorage.getItem(HIST)||'[]');
-let agora=new Date();
-hist.unshift({ts:Date.now(),hora:agora.toLocaleString('pt-BR'),motivo:motivo||'Alteração',mes:(agora.getMonth()+1).toString().padStart(2,'0')+'/'+agora.getFullYear(),dia:agora.getDate(),snapshot:JSON.parse(JSON.stringify(nodes)),versao:versao});
-if(hist.length>300) hist=hist.slice(0,300);
-localStorage.setItem(HIST, JSON.stringify(hist));
-document.getElementById('saveBadge').innerText='✓ K-B.D REAL 3D SALVO v'+versao+' '+new Date().toLocaleTimeString();
-document.getElementById('cnt').innerText=nodes.length+' itens';
-document.getElementById('versao').innerText='v'+versao+'.0 3D';
-let mini=document.getElementById('versaoMini'); if(mini) mini.innerText=versao;
-localStorage.setItem('korvil-lastData', JSON.stringify(nodes));
-}catch(e){console.error(e)}
+function render(){
+  const tree = document.getElementById('tree');
+  tree.innerHTML='';
+  NODES.filter(n=>n.parentId===null).forEach(r=> renderNode(r, tree, 0, [r.id]));
+  document.getElementById('status').textContent = `${NODES.length} nodes ordem exata mantida • ${selected.size} sel • tela inicial vazia`;
 }
 
-function getById(id){return nodes.find(n=>n.id===id)}
-function childrenOf(id){return nodes.filter(n=>n.parentId===id)}
-function isDesc(desc,anc){let cur=getById(desc); while(cur){if(cur.parentId===anc) return true; cur=cur.parentId?getById(cur.parentId):null} return false}
-
-function renderTree(){
-let tree=document.getElementById('tree'); let busca=document.getElementById('busca').value.toLowerCase(); let html='';
-function renderNode(id,depth){
-let node=getById(id); if(!node) return '';
-let childs=childrenOf(id).filter(c=>!busca||c.name.toLowerCase().includes(busca));
-let isFolder=node.type==='folder'; let isExp=expanded.has(id); let isAct=selected===id; let isSel=selectedIds.has(id);
-let pad=depth*14;
-let icon=node.isKriadorRoot?'🧠':node.isTool?'🧠':isFolder?(isExp?'📂':'📁'):(node.foto?'🖼️📄':'📄');
-let cls='item'+(isAct?' active':'')+(isSel?' selected':'')+(node.isKriadorRoot?' tool':'');
-let count=isFolder?` (${childs.length})`:'';
-let h=`<div class="${cls}" style="margin-left:${pad}px" draggable="true" data-id="${id}"
-ondblclick="handleDbl(event,'${id}')" onclick="handleClick(event,'${id}')" oncontextmenu="showCtx(event,'${id}');return false"
-ontouchstart="startHold(event,'${id}')" ontouchend="endHold()" ondragstart="dragStart(event,'${id}')" ondragover="dragOver(event)" ondrop="dropNode(event,'${id}')"
-><span>${icon} ${node.name}${count}${node.foto?' 📸':''}</span><span style="opacity:.4">⋮</span></div>`;
-if(isFolder&&isExp){for(let ch of childs.sort((a,b)=>a.name.localeCompare(b.name))){h+=renderNode(ch.id,depth+1)}}
-return h;
-}
-let roots=nodes.filter(n=>n.parentId===null);
-for(let r of roots) html+=renderNode(r.id,0);
-tree.innerHTML=html;
-}
-
-function renderVisual(){
-let vis=document.getElementById('visual'); let bread=document.getElementById('bread');
-if(!selected){
-vis.innerHTML=`<div style="padding:30px;opacity:.7;text-align:center;line-height:1.7">Selecione uma pasta<br><span style="font-size:11px">K-RIADOR dentro de ferramentas: ativar/desativar - quando ativo flutua e você pode mover pra qualquer lugar da página, acompanha todas telas</span><br><br><button class="btn" onclick="abrirFerramentas()">🛠️ FERRAMENTAS: K-RIADOR ATIVAR/DESATIVAR</button> <button class="btn-green" onclick="abrirKriadorEstrutura()">🧠 K-RIADOR ESTRUTURA 3D</button></div>`;
-bread.innerText='TELA INICIAL LIMPA 3D - FÁCIL RÁPIDA INTELIGENTE APRIMORADO';
-document.getElementById('kLocal').innerText='tela inicial - K-RIADOR faz aqui';
-return;
-}
-let node=getById(selected); if(!node) return;
-let cur=node; let path=[]; while(cur){path.unshift(cur.name); cur=cur.parentId?getById(cur.parentId):null}
-bread.innerText=path.join(' / ')+' • '+childrenOf(selected).length+' itens • v'+versao+' 3D • K-B.D REAL';
-document.getElementById('kLocal').innerText=node.name;
-let childs=childrenOf(selected);
-if(node.type==='file'){
-let fotoHtml=node.foto?`<img src="${node.foto}" style="width:100%;max-height:240px;object-fit:cover;border-radius:16px;border:2px solid var(--cyan);margin-bottom:12px;box-shadow:0 10px 30px rgba(0,245,255,.2)"><br>`:''; 
-vis.innerHTML=`<div class="card"><b>📄 ${node.name}</b><div style="font-size:10px;opacity:.6">Editável 3D - K-B.D salva real - pode editar tudo</div>${fotoHtml}
-<label class="label">Nome:</label><input class="input" value="${node.name.replace(/"/g,'&quot;')}" onchange="editField('${node.id}','name',this.value)">
-<label class="label">Marca/Sabor/Embalagem/Preço editáveis:</label><input class="input" value="${(node.marca||'')+' '+(node.sabor||'')+' '+(node.embalagem||'')+' R$'+(node.preco||'')}" onchange="editField('${node.id}','marca',this.value)">
-<label class="label">Descrição:</label><textarea class="input" style="height:100px" onchange="editField('${node.id}','content',this.value)">${node.content||''}</textarea>
-<div style="display:flex;gap:8px;margin-top:12px"><button class="btn" onclick="trocarFoto('${node.id}')">📸 Câmera K-RIADOR</button><button class="btn-ghost" onclick="baixar()">📄 Baixar</button><button class="btn-green" onclick="save('Editou ${node.name} 3D')">💾 Salvar real 3D</button></div>
-</div>`;
-} else if(node.isKriadorRoot){
-vis.innerHTML=`<div class="card" style="border-color:var(--green)"><b style="font-size:15px">🧠 ${node.name} 3D</b> - ${childs.length} itens - ESTRUTURA COMPLETA DENTRO DO K-B.D 3D - v${versao}<br><span style="font-size:11px;opacity:.7">kbd/korvil/lab/ferramentas-programas: K-RIADOR: aqui toda estrutura - dentro de ferramentas com botão ativar/desativar - flutuante movível acompanha todas telas - câmera dentro do sistema K-RIADOR</span></div>
-<div style="background:linear-gradient(135deg, rgba(0,245,255,.08), rgba(138,43,226,.06));border:1px solid rgba(0,245,255,.15);border-radius:16px;padding:14px;margin:10px 0">
-<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><div><b>🛠️ FERRAMENTAS: K-RIADOR: botão ativar/desativar</b><div style="font-size:10px;opacity:.7">Mostre ele flutuando na tela quando clicar nele, permita mover ele pra lugar na página, e ele já acompanha em todas as telas/lugares enquanto estiver ativo, se clicar em desativar ele some</div></div><div style="display:flex;gap:8px"><button class="btn-green" onclick="ativarKRiador()">▶️ ATIVAR FLUTUANTE 3D</button><button class="btn-ghost" style="background:rgba(255,0,0,.15)" onclick="desativarKRiador()">⏻ DESATIVAR</button></div></div>
-<div id="statusAtivoKriador" style="margin-top:10px;padding:10px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);border-radius:12px;font-size:11px;${kriadorAtivo?'':'display:none'}"><b style="color:var(--green)">✓ K-RIADOR ATIVO 3D:</b> flutuando, movível, acompanha todas telas - câmera dentro dele (ler, analisar, gravar etc não na tela inicial)</div>
-</div>
-<div class="evoluir"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><b style="color:var(--green);font-size:13px">🚀 AÇÕES: EVOLUIR - EM CIMA DAS FUNÇÕES</b><div style="display:flex;gap:6px;align-items:center"><span style="font-size:9px;background:var(--green);color:#000;padding:3px 8px;border-radius:20px">v${versao} VERDE</span><button onclick="mostrarVersao2026()" style="background:rgba(13,17,23,.6);border:1px solid var(--green);color:var(--green);padding:5px 12px;border-radius:20px;font-size:11px;font-weight:900;cursor:pointer">v.2026</button></div></div>
-<div id="miniVersao2026Root" style="display:none;margin-top:10px;background:rgba(10,15,31,.8);border:1px solid var(--green);border-radius:12px;padding:10px;font-size:10px"></div>
-<div style="font-size:10px;opacity:.7;margin:8px 0">Embaixo do título Evoluir as opções: automático, manual - Deixe no lado no canto direito na mesma direção do evoluir: Botão v.2026: ao clicar mostre nele mesmo mini tela da evolução atual: dia/mês/ano, horário, e histórico da última versão anterior e o que evoluiu na versão atual</div>
-<div style="display:flex;gap:8px;margin:10px 0"><button class="btn-green" style="flex:1" onclick="evoluirAuto()">🤖 AUTOMÁTICO</button><button class="btn-ghost" style="flex:1" onclick="toggleEvoluirManual()">✍️ MANUAL</button></div>
-<div id="evoluirManualVis" style="display:none"><textarea id="evoluirInVis" class="input" style="height:70px;border-color:var(--green)" placeholder="Descreva o que quer que ele evolua..."></textarea><button class="btn-green" style="width:100%;margin-top:8px" onclick="evoluirManualVis()">🚀 EVOLUIR</button></div>
-<div id="evoluirResVis" style="margin-top:10px;font-size:11px;background:rgba(13,17,23,.6);border:1px solid var(--green);border-radius:12px;padding:10px;display:none"></div>
-</div>
-<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">`+childs.map(ch=>`<div class="card" style="cursor:pointer;${ch.name.includes('AÇÕES')?'border-color:var(--green)':''}" data-id="${ch.id}" ondblclick="handleDbl(event,'${ch.id}')" onclick="handleClick(event,'${ch.id}')" oncontextmenu="showCtx(event,'${ch.id}');return false" draggable="true" ondragstart="dragStart(event,'${ch.id}')"><div style="font-size:22px">${ch.name.includes('AÇÕES')?'🚀':ch.name.includes('CÂMERA')?'📸':ch.name.includes('FUNÇÕES')?'⚙️':'🧠'}</div><b style="font-size:12px">${ch.name}</b><div style="font-size:9px;opacity:.6;margin-top:4px">${childrenOf(ch.id).length} itens</div></div>`).join('')+`</div>`;
-} else {
-let isEvoluir=node.name.includes('Evoluir');
-let extra=isEvoluir?`<div class="evoluir"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><b style="color:var(--green)">🚀 ${node.name}</b><button onclick="mostrarVersao2026()" style="background:rgba(13,17,23,.6);border:1px solid var(--green);color:var(--green);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800">v.2026</button></div><div id="miniVersao2026Main" style="display:none;margin-top:10px;background:rgba(10,15,31,.8);border:1px solid var(--green);border-radius:12px;padding:10px;font-size:10px"></div><div style="font-size:10px;opacity:.7;margin-top:8px">Embaixo do título Evoluir as opções: automático, manual - Deixe no canto direito na mesma direção do evoluir Botão v.2026</div><div style="display:flex;gap:8px;margin-top:8px"><button class="btn-green" onclick="evoluirAuto()">🤖 AUTOMÁTICO</button><button class="btn-ghost" onclick="toggleEvoluirManual()">✍️ MANUAL</button></div></div>`:'';
-let h=`<div class="card"><b>📁 ${node.name}</b> - ${childs.length} itens <span style="font-size:10px;opacity:.6">3D - K-RIADOR faz direto aqui</span><div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="abrirCameraDireto()">📸 Câmera K-RIADOR (ler/analisar/gravar)</button><button class="btn-ghost" onclick="abrirProdutoModal('${node.id}')">➕ Produto com foto</button></div></div>${extra}<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">`;
-for(let ch of childs.sort((a,b)=>a.name.localeCompare(b.name))){
-let fotoMini=ch.foto?`<img src="${ch.foto}" style="width:100%;height:70px;object-fit:cover;border-radius:12px;margin-bottom:6px">`:'';
-h+=`<div class="card" style="cursor:pointer" data-id="${ch.id}" ondblclick="handleDbl(event,'${ch.id}')" onclick="handleClick(event,'${ch.id}')" oncontextmenu="showCtx(event,'${ch.id}');return false" draggable="true" ondragstart="dragStart(event,'${ch.id}')">${fotoMini}${ch.isKriadorRoot?'🧠':ch.type==='folder'?'📁':'📄'} <b style="font-size:11px">${ch.name}</b></div>`;
-}
-h+=`</div>`; vis.innerHTML=h;
-}
+function renderNode(node, container, depth, path){
+  const row = document.createElement('div');
+  row.className='item'+(selected.has(node.id)?' selected':'');
+  row.draggable=true;
+  row.dataset.id=node.id;
+  const childs = getChildren(node.id);
+  const isFolder = childs.length>0 || node.type==='folder';
+  const isOpen = expanded.has(node.id);
+  const icon = document.createElement('div');
+  icon.className='icon '+(isFolder?'folder':'file');
+  icon.textContent = isFolder ? (isOpen?'📂':'📁') : (isCodeFile(node)?'💻':'📄');
+  icon.onclick = (e)=>{ e.stopPropagation(); if(isFolder){ if(expanded.has(node.id)) expanded.delete(node.id); else expanded.add(node.id); render(); if(expanded.has(node.id)) showFileView(node, path); } };
+  const label = document.createElement('div');
+  label.style.flex='1'; label.style.whiteSpace='nowrap'; label.style.overflow='hidden'; label.style.textOverflow='ellipsis'; label.style.fontSize='12px';
+  label.textContent = node.name;
+  const badge = document.createElement('div');
+  badge.style.fontSize='9px'; badge.style.color='#71717a';
+  badge.textContent = isFolder? `${childs.length}` : '';
+  row.appendChild(icon); row.appendChild(label); row.appendChild(badge);
+  
+  // PC: 1 clique esquerdo = mini-menu
+  row.addEventListener('click', (e)=>{
+    if(e.target===icon) return;
+    e.stopPropagation();
+    const isCtrl = e.ctrlKey || e.metaKey;
+    if(!isCtrl){ selected.clear(); selected.add(node.id); }
+    else{ if(selected.has(node.id)) selected.delete(node.id); else selected.add(node.id); }
+    showFileView(node, path);
+    // só PC mostra mini-menu no clique simples, celular só segurar
+    if(!('ontouchstart' in window)){ showMiniMenu(e.clientX, e.clientY, node, path); }
+    render();
+  });
+  
+  // Celular: segurar em cima do local = mini-menu
+  let touchTimer=null, tx=0, ty=0;
+  row.addEventListener('touchstart', (e)=>{
+    tx=e.touches[0].clientX; ty=e.touches[0].clientY;
+    touchTimer=setTimeout(()=>{ selected.clear(); selected.add(node.id); showFileView(node, path); render(); showMiniMenu(tx,ty,node,path); if(navigator.vibrate) navigator.vibrate(50); }, 600);
+  }, {passive:true});
+  row.addEventListener('touchmove', (e)=>{ const dx=Math.abs(e.touches[0].clientX-tx); const dy=Math.abs(e.touches[0].clientY-ty); if(dx>10||dy>10) clearTimeout(touchTimer); }, {passive:true});
+  row.addEventListener('touchend', ()=> clearTimeout(touchTimer));
+  
+  row.addEventListener('dblclick', (e)=>{ e.stopPropagation(); if(isFolder){ if(expanded.has(node.id)) expanded.delete(node.id); else expanded.add(node.id); render(); showFileView(node, path); } });
+  
+  row.addEventListener('dragstart', (e)=>{ hideMiniMenu(); const ids = selected.has(node.id) ? Array.from(selected) : [node.id]; draggingIds = ids; e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain', node.name); if(!isFolder){ const content = node.content || node.name; const blobUrl = 'data:text/plain;charset=utf-8,'+encodeURIComponent(content); try{ e.dataTransfer.setData('DownloadURL', 'text/plain:'+node.name+':'+blobUrl); }catch(_ ){} } setTimeout(()=> row.classList.add('dragging'),0); });
+  row.addEventListener('dragend', ()=>{ row.classList.remove('dragging'); draggingIds=[]; });
+  row.addEventListener('dragover', (e)=>{ e.preventDefault(); row.classList.add('drag-over'); });
+  row.addEventListener('dragleave', ()=>{ row.classList.remove('drag-over'); });
+  row.addEventListener('drop', (e)=>{ e.preventDefault(); row.classList.remove('drag-over'); const targetId=node.id; const targetIsFolder=getChildren(targetId).length>0 || NODES.find(n=>n.id===targetId).type==='folder'; if(!targetIsFolder) return; if(draggingIds.length===0) return; for(let did of draggingIds) if(did===targetId || isDescendant(targetId,did)) return; saveHistory(); draggingIds.forEach(did=>{ const n=NODES.find(x=>x.id===did); if(n) n.parentId=targetId; }); expanded.add(targetId); draggingIds=[]; render(); });
+  
+  container.appendChild(row);
+  if(isFolder && isOpen){
+    const childWrap=document.createElement('div'); childWrap.className='children';
+    childWrap.addEventListener('dragover', e=> e.preventDefault());
+    childWrap.addEventListener('drop', e=>{ e.preventDefault(); if(draggingIds.length===0) return; for(let did of draggingIds) if(did===node.id || isDescendant(node.id,did)) return; saveHistory(); draggingIds.forEach(did=>{ const n=NODES.find(x=>x.id===did); if(n) n.parentId=node.id; }); draggingIds=[]; render(); });
+    childs.forEach(ch=> renderNode(ch, childWrap, depth+1, [...path,ch.id]));
+    container.appendChild(childWrap);
+  }
 }
 
-function handleClick(e,id){if(e.ctrlKey||e.metaKey){if(selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);} else {selectedIds.clear(); selectedIds.add(id); selected=id;} renderTree(); renderVisual();}
-function handleDbl(e,id){e.preventDefault(); showCtx(e,id);}
-let holdTimer=null; function startHold(e,id){holdTimer=setTimeout(()=>{showCtx(e,id)},600)} function endHold(){if(holdTimer){clearTimeout(holdTimer); holdTimer=null;}}
-let dragged=null; function dragStart(e,id){dragged=id; if(!selectedIds.has(id)){selectedIds.clear(); selectedIds.add(id);} e.dataTransfer.setData('text/plain',id);} function dragOver(e){e.preventDefault(); e.currentTarget.style.outline='2px dashed var(--green)';} function dropNode(e,targetId){e.preventDefault(); if(e.currentTarget) e.currentTarget.style.outline=''; let target=getById(targetId); if(!target||target.type!=='folder') return; let idsToMove=selectedIds.size>0?Array.from(selectedIds):[dragged]; for(let mid of idsToMove){if(mid===targetId) continue; if(isDesc(targetId,mid)) continue; let n=getById(mid); if(n) n.parentId=targetId;} save('Moveu '+selectedIds.size+' para '+target.name); renderTree(); renderVisual();}
-
-function showCtx(e,id){
-e.preventDefault(); selected=id; if(!selectedIds.has(id)){selectedIds.clear(); selectedIds.add(id);} renderTree(); renderVisual();
-if(ctxEl) ctxEl.remove();
-let menu=document.createElement('div'); menu.className='ctx';
-let x=e.clientX||20; let y=e.clientY||100; if(x+320>window.innerWidth) x=window.innerWidth-320; if(y+500>window.innerHeight) y=window.innerHeight-500;
-menu.style.left=x+'px'; menu.style.top=y+'px';
-let node=getById(id); let isRoot=node.parentId===null; let cnt=selectedIds.size;
-let isKriador=node.isKriadorRoot||node.name.includes('K-RIADOR')||node.name.includes('AÇÕES')||node.name.includes('Evoluir')||node.name.includes('CÂMERA');
-let html=`<div class="head">FUNÇÕES PADRÃO DO SISTEMA 3D - funcionam pra tudo</div>
-<button onclick="criar();closeCtx()">➕ Criar</button>
-<button onclick="renomear();closeCtx()">🏷 Renomear</button>
-<button onclick="duplicar();closeCtx()">⧉ Duplicar</button>
-<button onclick="excluir();closeCtx()">✕ Excluir</button>
-<button onclick="baixar();closeCtx()" style="color:var(--cyan);font-weight:800">${isRoot?'📦 ZIP COMPLETO':cnt>1?'📁 Baixar '+cnt+' itens ZIP':node.type==='folder'?'📁 Baixar Pasta ZIP':'📄 Baixar Arquivo'}</button>
-`;
-if(isKriador){
-html+=`<div class="head head-green">🚀 AÇÕES: EVOLUIR - EM CIMA DAS FUNÇÕES - embaixo título: automático, manual - canto direito mesma direção: v.2026</div>
-<button onclick="evoluirAuto();closeCtx()" style="color:var(--green)">🤖 AUTOMÁTICO: Analisar melhorias e se aprimorar verde</button>
-<button onclick="toggleK();closeCtx()" style="color:var(--green)">✍️ MANUAL: Ideias, descrições, seleções do que evoluir</button>
-<button onclick="mostrarVersao2026();closeCtx()" style="color:var(--green);background:rgba(0,255,136,.08)">📅 v.2026: mini tela evolução atual: dia/mês/ano, horário, última versão anterior e o que evoluiu na versão atual</button>
-<div class="head">FUNÇÕES K-RIADOR (24) - dentro do sistema K-RIADOR</div>
-`;
-for(let fn of ferramentas['K-RIADOR'].funcs){html+=`<button class="tool" onclick="execToolFunc('K-RIADOR','${fn}','${id}');closeCtx()">🧠 ${fn}</button>`;}
-html+=`<div class="head">📸 CÂMERA DENTRO DO SISTEMA K-RIADOR - ler, analisar, gravar etc - não na tela inicial</div>
-<button onclick="abrirCameraDireto();closeCtx()">📸 Tirar foto produto</button>
-<button onclick="abrirCameraAnalise();closeCtx()">🔍 Ler / Analisar imagem</button>
-<button onclick="abrirCameraGravar();closeCtx()">🎥 Gravar vídeo/áudio produto</button>
-`;
-}
-html+=`<div class="head" style="color:var(--green)">K-RIADOR DIRETO AQUI - tempo real 3D</div><button onclick="abrirKNoLocal('${id}');closeCtx()" style="color:var(--green)">⚡ Comando e faz aqui em tempo real 3D</button>`;
-menu.innerHTML=html; document.body.appendChild(menu); ctxEl=menu;
-setTimeout(()=>{document.addEventListener('click',function h(ev){if(!menu.contains(ev.target)){closeCtx(); document.removeEventListener('click',h);}})},50);
-}
-function closeCtx(){if(ctxEl){ctxEl.remove(); ctxEl=null;}}
-function criar(){let nome=prompt('Nome?'); if(!nome) return; let isFile=confirm('Arquivo? OK=Arquivo'); let parentId=selected? (getById(selected).type==='folder'?selected:getById(selected).parentId):'r_central'; nodes.push({id:pe('new'),name:nome,type:isFile?'file':'folder',parentId:parentId,content:''}); save('Criou '+nome); renderTree(); renderVisual();}
-function renomear(){let n=getById(selected); if(!n) return; let nn=prompt('Novo nome?',n.name); if(!nn) return; n.name=nn; save('Renomeou '+nn); renderTree(); renderVisual();}
-function duplicar(){let ids=Array.from(selectedIds); let novos=[]; for(let id of ids){let orig=getById(id); if(!orig) continue; let copy={...orig,id:pe('dup'),name:orig.name+' cópia'}; novos.push(copy); let stack=[{old:orig.id,nw:copy.id}]; while(stack.length){let {old,nw}=stack.pop(); for(let ch of childrenOf(old)){let chCopy={...ch,id:pe('dup'),parentId:nw}; novos.push(chCopy); stack.push({old:ch.id,nw:chCopy.id});}}} nodes.push(...novos); save('Duplicou '+ids.length); renderTree(); renderVisual();}
-function excluir(){if(!confirm('Excluir '+selectedIds.size+'?')) return; let del=new Set(); for(let id of selectedIds){del.add(id); let stack=[id]; while(stack.length){let cur=stack.pop(); for(let ch of childrenOf(cur)){del.add(ch.id); stack.push(ch.id);}}} nodes=nodes.filter(n=>!del.has(n.id)); selectedIds.clear(); selected=null; save('Excluiu '+del.size); renderTree(); renderVisual();}
-function baixar(){let ids=Array.from(selectedIds); if(!ids.length) return; let n=getById(ids[0]); if(ids.length===1&&n.type==='file'){let blob=new Blob([n.content||''],{type:'text/plain'}); let url=URL.createObjectURL(blob); let a=document.createElement('a'); a.href=url; a.download=n.name+'.txt'; a.click();} else {let data=JSON.stringify(nodes.filter(x=>ids.includes(x.id)||ids.some(p=>isDesc(x.id,p))),null,2); let blob=new Blob([data],{type:'application/json'}); let url=URL.createObjectURL(blob); let a=document.createElement('a'); a.href=url; a.download='KORVIL_3D_'+Date.now()+'.json'; a.click();} save('Baixou');}
-function editField(id,field,val){let n=getById(id); if(!n) return; if(field==='name') n.name=val; else n[field]=val; save('Editou '+field); renderTree();}
-
-function abrirArquivos(){document.getElementById('modalArq').style.display='flex'; let lista=document.getElementById('listaArq'); let kriador=nodes.find(n=>n.isKriadorRoot); lista.innerHTML=`<button onclick="abrirKriadorEstrutura();fecharArq()" style="text-align:left;padding:14px;background:linear-gradient(135deg, rgba(0,255,136,.08), rgba(0,245,255,.06));border:2px solid var(--green);border-radius:16px;cursor:pointer;width:100%;color:#fff"><b style="color:var(--green)">🧠 kbd/korvil/lab/ferramentas-programas: K-RIADOR: aqui toda estrutura 3D</b><br><span style="font-size:11px;opacity:.8">FERRAMENTAS: K-RIADOR: botão ativar/desativar - flutuante movível acompanha todas telas - câmera dentro do sistema K-RIADOR (ler, analisar, gravar etc não na tela inicial) - AÇÕES Evoluir em cima funções + v.2026 canto direito mesma direção evoluir</span></button><button onclick="abrirFerramentas();fecharArq()" style="text-align:left;padding:12px;background:rgba(22,27,38,.6);border:1px solid var(--border);border-radius:14px;cursor:pointer;width:100%;color:#fff;margin-top:10px"><b style="color:var(--cyan)">🛠️ FERRAMENTAS: K-RIADOR ATIVAR/DESATIVAR 3D</b><br><span style="font-size:10px;opacity:.6">Ativar mostra flutuante, mover pra qualquer lugar, acompanha todas telas, desativar some</span></button><button onclick="abrirPath('s6');fecharArq()" style="text-align:left;padding:12px;background:rgba(22,27,38,.4);border:1px solid var(--border);border-radius:14px;cursor:pointer;width:100%;color:#fff;margin-top:10px"><b style="color:var(--cyan)">KORVIL LOJA MÃE 5 SETORES 3D</b></button>`;}
-function fecharArq(){document.getElementById('modalArq').style.display='none';}
-function abrirPath(id){selected=id; expanded.add(id); let cur=getById(id); while(cur&&cur.parentId){expanded.add(cur.parentId); cur=getById(cur.parentId);} document.getElementById('telaLimpa').style.display='none'; document.getElementById('mainArea').style.display='flex'; renderTree(); renderVisual(); save('Abriu '+getById(id).name);}
-function abrirKriadorEstrutura(){let kriador=nodes.find(n=>n.isKriadorRoot); if(kriador){abrirPath(kriador.id);} else abrirPath('kbd');}
-function abrirFerramentas(){document.getElementById('ferramentasModal').style.display='flex'; atualizarStatusFerramentas();}
-function atualizarStatusFerramentas(){
-let btnAtivar=document.getElementById('btnAtivar'); let btnDesativar=document.getElementById('btnDesativar'); let status=document.getElementById('statusAtivo');
-if(kriadorAtivo){btnAtivar.style.display='none'; btnDesativar.style.display='block'; status.style.display='block';} else {btnAtivar.style.display='block'; btnDesativar.style.display='none'; status.style.display='none';}
-}
-function toggleHist(){let el=document.getElementById('modalHist'); el.style.display=el.style.display==='none'?'block':'none'; if(el.style.display==='block'){let hist=JSON.parse(localStorage.getItem(HIST)||'[]'); let grouped={}; for(let h of hist){if(!grouped[h.mes]) grouped[h.mes]=[]; grouped[h.mes].push(h);} let html=''; for(let mes in grouped){html+=`<div style="margin-bottom:14px"><b style="color:var(--cyan);font-size:11px">📅 ${mes} - ${grouped[mes].length} (dia 1 ao último) v${grouped[mes][0].versao}</b>`; for(let it of grouped[mes].slice(0,20)){html+=`<div style="background:rgba(22,27,38,.6);border:1px solid var(--border);border-radius:12px;padding:8px;margin:6px 0;font-size:11px;cursor:pointer" onclick="restaurar(${it.ts})"><b>${it.motivo}</b><br><span style="font-size:9px;opacity:.6">${it.hora} dia ${it.dia} v${it.versao}</span></div>`} html+=`</div>`} document.getElementById('listaHist').innerHTML=html||'Vazio';}}
-function restaurar(ts){let hist=JSON.parse(localStorage.getItem(HIST)||'[]'); let it=hist.find(h=>h.ts===ts); if(!it) return; if(!confirm('Restaurar '+it.motivo+'?')) return; nodes=it.snapshot; versao=it.versao||versao; save('Restaurou '+it.motivo); renderTree(); renderVisual();}
-function baixarReal(){
-let dataStr=JSON.stringify(nodes);
-let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>KORVIL 3D REAL v${versao}</title></head><body><script>const RESTORED_NODES=${dataStr};const RESTORED_VERSAO=${versao};localStorage.setItem('${STORAGE}',JSON.stringify(RESTORED_NODES));localStorage.setItem('${VER}',RESTORED_VERSAO);localStorage.setItem('${KR_ATIVO}','${kriadorAtivo}');<\/script><div style="background:#070a12;color:#00ff88;padding:20px;border:2px solid #00ff88;border-radius:16px">KORVIL 3D REAL v${versao} - ${nodes.length} itens - K-RIADOR ativar/desativar flutuante movível 3D - câmera dentro K-RIADOR</div></body></html>`;
-let blob=new Blob([html],{type:'text/html'}); let url=URL.createObjectURL(blob); let a=document.createElement('a'); a.href=url; a.download=`KORVIL_3D_v${versao}_${Date.now()}.html`; a.click();
-save(`Baixou código fonte REAL 3D v${versao}`);
+function showEmpty(){
+  document.getElementById('mainContent').innerHTML = `<div class="empty"><div style="width:64px;height:64px;border-radius:16px;background:#010409;border:1px solid #27272a;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:16px">📂</div><h2 style="color:#e4e4e7;margin:0 0 8px 0">Tela inicial vazia</h2><div style="font-size:11px;max-width:360px;line-height:1.6">Clique em qualquer arquivo para mostrar toda estrutura dentro dele, com opção pra abrir cada um.<br><br><b>PC:</b> 1 clique esquerdo = mini-menu<br><b>Celular:</b> segurar em cima do local = mini-menu<br>💻 arquivo programação = editor código + preview tempo real com botões ícones no topo</div></div>`;
 }
 
-// K-RIADOR ATIVAR/DESATIVAR + MOVÍVEL
-function ativarKRiador(){
-kriadorAtivo=true;
-let floatBtn=document.getElementById('floatBtn');
-floatBtn.style.display='flex';
-floatBtn.style.left='calc(100% - 90px)';
-floatBtn.style.top='120px';
-save('🧠 K-RIADOR ATIVADO 3D - flutuante movível acompanha todas telas');
-atualizarStatusFerramentas();
-let status=document.getElementById('statusAtivoKriador'); if(status) status.style.display='block';
-alert('✓ K-RIADOR ATIVADO 3D\n\nÍcone 🧠 flutuando na tela - pode arrastar pra qualquer lugar da página\nAcompanha todas telas/lugares enquanto estiver ativo\nFunções de câmera (ler, analisar, gravar etc) dentro do sistema K-RIADOR\nSe clicar desativar ele some');
-}
-function desativarKRiador(){
-kriadorAtivo=false;
-document.getElementById('floatBtn').style.display='none';
-document.getElementById('kPanel').style.display='none';
-save('🧠 K-RIADOR DESATIVADO - sumiu');
-atualizarStatusFerramentas();
-let status=document.getElementById('statusAtivoKriador'); if(status) status.style.display='none';
-}
-
-function initFloatDrag(){
-let floatBtn=document.getElementById('floatBtn');
-floatBtn.addEventListener('mousedown', startDrag);
-floatBtn.addEventListener('touchstart', startDragTouch, {passive:false});
-function startDrag(e){
-isDragging=false;
-let rect=floatBtn.getBoundingClientRect();
-dragOffset.x=e.clientX-rect.left;
-dragOffset.y=e.clientY-rect.top;
-document.addEventListener('mousemove', onDrag);
-document.addEventListener('mouseup', stopDrag);
-}
-function startDragTouch(e){
-e.preventDefault();
-isDragging=false;
-let rect=floatBtn.getBoundingClientRect();
-let touch=e.touches[0];
-dragOffset.x=touch.clientX-rect.left;
-dragOffset.y=touch.clientY-rect.top;
-document.addEventListener('touchmove', onDragTouch, {passive:false});
-document.addEventListener('touchend', stopDragTouch);
-}
-function onDrag(e){
-isDragging=true;
-floatBtn.classList.add('dragging');
-let x=e.clientX-dragOffset.x;
-let y=e.clientY-dragOffset.y;
-x=Math.max(0,Math.min(window.innerWidth-64,x));
-y=Math.max(0,Math.min(window.innerHeight-64,y));
-floatBtn.style.left=x+'px';
-floatBtn.style.top=y+'px';
-floatPos={x,y};
-}
-function onDragTouch(e){
-e.preventDefault();
-isDragging=true;
-floatBtn.classList.add('dragging');
-let touch=e.touches[0];
-let x=touch.clientX-dragOffset.x;
-let y=touch.clientY-dragOffset.y;
-x=Math.max(0,Math.min(window.innerWidth-64,x));
-y=Math.max(0,Math.min(window.innerHeight-64,y));
-floatBtn.style.left=x+'px';
-floatBtn.style.top=y+'px';
-floatPos={x,y};
-}
-function stopDrag(e){
-document.removeEventListener('mousemove', onDrag);
-document.removeEventListener('mouseup', stopDrag);
-setTimeout(()=>{floatBtn.classList.remove('dragging');},100);
-if(!isDragging){
-toggleK();
-}
-isDragging=false;
-}
-function stopDragTouch(e){
-document.removeEventListener('touchmove', onDragTouch);
-document.removeEventListener('touchend', stopDragTouch);
-floatBtn.classList.remove('dragging');
-if(!isDragging){
-toggleK();
-}
-isDragging=false;
-}
-}
-
-// CAMERA DENTRO K-RIADOR
-let stream=null; let cameraModo='foto';
-function abrirCameraDireto(){cameraModo='foto'; document.getElementById('cameraTitle').innerText='📸 CÂMERA K-RIADOR - TIRAR FOTO - DENTRO DO SISTEMA (não na tela inicial)'; document.getElementById('btnCapturar').innerText='📸 CAPTURAR FOTO'; abrirCamera();}
-function abrirCameraAnalise(){cameraModo='analise'; document.getElementById('cameraTitle').innerText='🔍 CÂMERA K-RIADOR - LER / ANALISAR - DENTRO DO SISTEMA'; document.getElementById('btnCapturar').innerText='🔍 LER E ANALISAR'; abrirCamera();}
-function abrirCameraGravar(){cameraModo='gravar'; document.getElementById('cameraTitle').innerText='🎥 CÂMERA K-RIADOR - GRAVAR VÍDEO/ÁUDIO - DENTRO DO SISTEMA'; document.getElementById('btnCapturar').innerText='🎥 GRAVAR'; abrirCamera();}
-async function abrirCamera(){let modal=document.getElementById('cameraModal'); modal.style.display='flex'; try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:cameraModo==='gravar'}); document.getElementById('video').srcObject=stream;}catch(e){alert('Câmera não disponível: '+e.message+' - use ANEXAR'); fecharCamera(); document.getElementById('uploadFoto').click();}}
-function fecharCamera(){let modal=document.getElementById('cameraModal'); modal.style.display='none'; if(stream){stream.getTracks().forEach(t=>t.stop()); stream=null;}}
-function capturarFoto(){
-let video=document.getElementById('video'); let canvas=document.getElementById('canvas'); canvas.width=video.videoWidth||1280; canvas.height=video.videoHeight||720; let ctx=canvas.getContext('2d'); ctx.drawImage(video,0,0,canvas.width,canvas.height); fotoCapturada=canvas.toDataURL('image/jpeg',0.85); document.getElementById('imgPreview').src=fotoCapturada; document.getElementById('previewFoto').style.display='block'; fecharCamera();
-if(cameraModo==='analise'){
-let res=document.getElementById('kRes'); res.style.display='block';
-res.innerHTML=`🔍 K-RIADOR LEU E ANALISOU (dentro do sistema K-RIADOR):<br><br>📸 Foto capturada para análise<br>• Texto detectado: Produto ${selected?getById(selected).name:'suplemento'}<br>• Cores: predominante branco/preto<br>• Formato: pote 900g detectado<br>• Sugestão: criar como Whey Protein Profit Chocolate Pote 900g<br><br>✓ Análise feita dentro do sistema K-RIADOR - não na tela inicial`;
-abrirProdutoModal(selected||'s6',true);
-} else if(cameraModo==='gravar'){
-alert('🎥 Gravação capturada (foto como thumbnail) - dentro do sistema K-RIADOR\n\nEm versão completa gravaria vídeo/áudio do produto');
-abrirProdutoModal(selected||'s6',true);
-} else {
-abrirProdutoModal(selected||nodes.find(n=>n.name.includes('LISTA DE SUPLEMENTOS'))?.id||'s6',true);
-}
-}
-function handleUploadFoto(e){let file=e.target.files[0]; if(!file) return; let reader=new FileReader(); reader.onload=(ev)=>{fotoCapturada=ev.target.result; document.getElementById('imgPreview').src=fotoCapturada; document.getElementById('previewFoto').style.display='block'; abrirProdutoModal(selected||'s6',true);}; reader.readAsDataURL(file);}
-
-function abrirProdutoModal(targetId, comFoto=false){
-let target=getById(targetId); if(!target) target=getById('s6');
-let localSelect=document.getElementById('pLocal'); localSelect.innerHTML='';
-for(let f of nodes.filter(n=>n.type==='folder')){let opt=document.createElement('option'); opt.value=f.id; opt.textContent=(function(){let cur=f; let p=[]; while(cur&&p.length<4){p.unshift(cur.name); cur=cur.parentId?getById(cur.parentId):null} return p.join(' / ').slice(0,80)})(); if(f.id===targetId) opt.selected=true; localSelect.appendChild(opt);}
-if(comFoto && fotoCapturada){document.getElementById('produtoFotoPreview').innerHTML=`<img src="${fotoCapturada}" style="width:100%;max-height:200px;object-fit:cover;border-radius:16px;border:2px solid var(--cyan);margin-bottom:8px;box-shadow:0 10px 30px rgba(0,245,255,.2)"><div style="font-size:10px;color:var(--green)">✓ Foto capturada dentro K-RIADOR - será salva no lugar certo</div>`;} else {document.getElementById('produtoFotoPreview').innerHTML=`<div style="background:rgba(13,17,23,.6);border:1px dashed rgba(255,255,255,.15);border-radius:16px;padding:24px;text-align:center"><span style="font-size:32px">📸</span><br><span style="font-size:11px;opacity:.6">Sem foto - câmera dentro K-RIADOR</span><br><button class="btn" style="margin-top:10px" onclick="abrirCameraDireto()">📸 TIRAR FOTO K-RIADOR</button></div>`;}
-document.getElementById('pNome').value='Novo Produto 3D - '+new Date().toLocaleTimeString();
-document.getElementById('pMarca').value='PROFIT'; document.getElementById('pSabores').value='Chocolate'; document.getElementById('pEmbalagem').value='Pote 900g'; document.getElementById('pPreco').value='99'; document.getElementById('pDesc').value='Produto criado pelo K-RIADOR 3D com foto, sabor, valores, embalagem - câmera dentro do sistema K-RIADOR - fácil rápida inteligente';
-document.getElementById('produtoModal').style.display='flex';
-}
-function fecharProdutoModal(){document.getElementById('produtoModal').style.display='none';}
-function salvarProduto(){
-let localId=document.getElementById('pLocal').value; let nome=document.getElementById('pNome').value||'Produto'; let marca=document.getElementById('pMarca').value; let sabores=document.getElementById('pSabores').value; let emb=document.getElementById('pEmbalagem').value; let preco=parseFloat(document.getElementById('pPreco').value)||0; let desc=document.getElementById('pDesc').value; let localNode=getById(localId);
-let newNode={id:pe('produto'),name:nome,type:'file',parentId:localId,marca:marca,sabor:sabores,embalagem:emb,preco:preco,content:desc+`\nMarca:${marca} Sabor:${sabores} Embalagem:${emb} R$${preco}`,foto:fotoCapturada||null,createdAt:Date.now()};
-nodes.push(newNode); save(`K-RIADOR 3D criou produto "${nome}" com foto em ${localNode.name} - câmera dentro K-RIADOR`); renderTree(); renderVisual(); fecharProdutoModal(); fotoCapturada=null; document.getElementById('previewFoto').style.display='none';
-alert(`✅ K-RIADOR 3D criou tudo no lugar certo!\n${nome}\n${marca} ${sabores} ${emb} R$${preco}\nLocal: ${localNode.name}\nFoto: ${newNode.foto?'salva ✓':'sem'}\n\n✓ K-B.D salvou real 3D no peito do código\n✓ Câmera dentro do sistema K-RIADOR (não na tela inicial)`);
-}
-function trocarFoto(id){selected=id; abrirCameraDireto();}
-
-// K-RIADOR
-function toggleK(){let el=document.getElementById('kPanel'); let isHidden=el.style.display==='none'; el.style.display=isHidden?'block':'none'; if(isHidden) renderKFuncs();}
-function renderKFuncs(){
-let html=''; let funcs=ferramentas['K-RIADOR'].funcs;
-for(let f of funcs){let sel=kSel.has(f)?'background:linear-gradient(135deg,var(--cyan),#00d4ff);color:#000;border-color:var(--cyan)':'background:rgba(22,27,38,.6);color:#fff;border:1px solid var(--border)'; html+=`<button onclick="toggleKF('${f}')" style="${sel};padding:7px 10px;border-radius:20px;font-size:10px;cursor:pointer;font-weight:600;backdrop-filter:blur(10px)">🧠 ${f}</button>`;}
-document.getElementById('kFuncs').innerHTML=html; let full=document.getElementById('kFuncsFull'); if(full) full.innerHTML=html;
-}
-function toggleKF(f){if(kSel.has(f)) kSel.delete(f); else kSel.add(f); renderKFuncs();}
-function abrirKNoLocal(id){selected=id; expanded.add(id); let cur=getById(id); while(cur&&cur.parentId){expanded.add(cur.parentId); cur=getById(cur.parentId);} renderTree(); renderVisual(); if(kriadorAtivo) toggleK(); else {if(confirm('K-RIADOR está desativado. Ativar agora?')) ativarKRiador();}}
-function abrirKFull(){document.getElementById('kFull').style.display='block'; document.getElementById('kInFull').value=document.getElementById('kIn').value; renderKFuncs();}
-
-function mostrarVersao2026(){
-let hist=JSON.parse(localStorage.getItem(HIST)||'[]');
-let agora=new Date(); let diaMesAno=agora.toLocaleDateString('pt-BR'); let horario=agora.toLocaleTimeString('pt-BR');
-let ultimaVersao=hist.length>1?hist[1]:hist[0]||null; let versaoAnterior=ultimaVersao?ultimaVersao.versao||versao-1:versao-1; let motivoAnterior=ultimaVersao?ultimaVersao.motivo:'Versão inicial - sistema 3D criado'; let horaAnterior=ultimaVersao?ultimaVersao.hora:'Primeira versão';
-let oQueEvoluiuAtual=hist.length>0?[hist[0].motivo]:['Sistema 3D última geração - fácil rápida inteligente aprimorado - K-RIADOR ativar/desativar flutuante movível - câmera dentro K-RIADOR (ler, analisar, gravar)'];
-let html=`
-<div style="border-bottom:1px solid var(--green);padding-bottom:8px;margin-bottom:10px;display:flex;justify-content:space-between"><b style="color:var(--green)">📅 v.2026 - EVOLUÇÃO ATUAL 3D</b><button onclick="this.parentElement.parentElement.style.display='none'" style="background:rgba(22,27,38,.6);border:1px solid var(--border);border-radius:50%;width:22px;height:22px;color:#fff;cursor:pointer">✕</button></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-<div style="background:rgba(13,17,23,.6);border-radius:10px;padding:8px"><div style="font-size:8px;opacity:.6">DIA/MÊS/ANO</div><div style="font-size:13px;font-weight:800;color:var(--green)">${diaMesAno}</div></div>
-<div style="background:rgba(13,17,23,.6);border-radius:10px;padding:8px"><div style="font-size:8px;opacity:.6">HORÁRIO</div><div style="font-size:13px;font-weight:800;color:var(--cyan)">${horario}</div></div>
-</div>
-<div style="background:rgba(13,17,23,.6);border-radius:10px;padding:10px;margin-bottom:8px"><div style="font-size:9px;opacity:.6">VERSÃO ATUAL</div><div style="font-size:14px;font-weight:900;color:var(--green)">v${versao}.0 3D - VERDE NO CÓDIGO REAL</div></div>
-<div style="background:linear-gradient(135deg, rgba(0,255,136,.08), rgba(0,245,255,.06));border:1px solid rgba(0,255,136,.2);border-radius:12px;padding:10px;margin-bottom:8px"><div style="font-size:10px;font-weight:800;color:var(--green)">O QUE EVOLUIU NA VERSÃO ATUAL v${versao}:</div><div style="font-size:11px;margin-top:6px;line-height:1.6">${oQueEvoluiuAtual.map((m,i)=>`${i+1}. ${m}`).join('<br>')}</div></div>
-<div style="background:rgba(13,17,23,.6);border-radius:10px;padding:10px"><div style="font-size:10px;font-weight:800;color:var(--cyan)">HISTÓRICO ÚLTIMA VERSÃO ANTERIOR v${versaoAnterior}:</div><div style="font-size:11px;margin-top:6px"><b>Versão:</b> v${versaoAnterior}<br><b>Data:</b> ${horaAnterior}<br><b>O que foi:</b> ${motivoAnterior}</div></div>
-`;
-let ids=['miniVersao2026Panel','miniVersao2026Root','miniVersao2026Main'];
-for(let id of ids){let el=document.getElementById(id); if(el){el.innerHTML=html; el.style.display=el.style.display==='none'?'block':'none'; if(el.style.display==='block'){for(let other of ids){if(other!==id){let o=document.getElementById(other); if(o) o.style.display='none';}}}}}
+function showFileView(node, path){
+  currentFileId=node.id;
+  const childs=getChildren(node.id);
+  const isFolder=childs.length>0 || node.type==='folder';
+  const isCode=isCodeFile(node);
+  
+  if(isCode){ 
+    // EDITOR CÓDIGO COM BOTÕES ÍCONES NO TOPO DIRETO
+    document.getElementById('mainContent').innerHTML = `
+      <div class="code-top">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:12px;font-weight:700;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${node.name}</div>
+          <div id="saveDot" class="status-dot"></div>
+          <span style="font-size:9px;color:#71717a">${path.length} níveis</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <button class="btn btn-icon" id="btnCode" title="Código" style="${viewMode==='code'?'background:#06b6d4;color:#000':''}">📝</button>
+          <button class="btn btn-icon" id="btnPreview" title="Preview" style="${viewMode==='preview'?'background:#06b6d4;color:#000':''}">👁️</button>
+          <button class="btn btn-icon" id="btnSplit" title="Código + Preview" style="${viewMode==='split'?'background:#06b6d4;color:#000':''}">⚡</button>
+          <div style="width:1px;height:18px;background:#27272a;margin:0 4px"></div>
+          <button class="btn btn-icon" id="btnCopyCode" title="Copiar">📋</button>
+          <button class="btn btn-icon" id="btnDownloadCode" title="Baixar">⬇️</button>
+          <button class="btn btn-icon" id="btnRun" title="Run">▶️</button>
+        </div>
+      </div>
+      <div class="code-wrap" id="codeWrap">
+        <div class="code-pane" id="paneCode" style="${viewMode==='preview'?'display:none':''}">
+          <div class="pane-header"><span>📝 Código - edição direta - salva automático</span><span style="font-size:9px">💾 auto</span></div>
+          <textarea class="editor" id="editor" spellcheck="false"></textarea>
+        </div>
+        <div class="code-pane" id="panePreview" style="${viewMode==='code'?'display:none':''}">
+          <div class="pane-header"><span>👁️ Renderizado tempo real</span><span style="font-size:9px">⚡ live</span></div>
+          <iframe class="preview" id="preview"></iframe>
+        </div>
+      </div>
+      <div style="padding:6px 10px;background:#010409;border-top:1px solid #27272a;font-size:9px;color:#71717a;display:flex;justify-content:space-between">
+        <span>💻 programação • edição direta • salva automático sempre • botões ícones topo</span>
+        <span id="charCount">0</span>
+      </div>
+    `;
+    const editor=document.getElementById('editor');
+    editor.value=node.content||'';
+    document.getElementById('charCount').textContent=editor.value.length+' chars';
+    const updatePreview=()=>{
+      const code=editor.value;
+      const iframe=document.getElementById('preview');
+      if(!iframe) return;
+      if(node.name.toLowerCase().endsWith('.html') || code.trim().toLowerCase().startsWith('<!doctype') || code.toLowerCase().includes('<html')){
+        iframe.srcdoc=code;
+      } else if(node.name.toLowerCase().endsWith('.js')){
+        iframe.srcdoc=`<!DOCTYPE html><html><body style="background:#0d1117;color:#e4e4e7;font-family:monospace;padding:12px"><pre id="out" style="white-space:pre-wrap"></pre><script>const log=(...a)=>{document.getElementById('out').textContent+=a.join(' ')+'\n'};console.log=(...a)=>{log(...a)};try{${code}}catch(e){document.getElementById('out').textContent='Erro: '+e.message}<\/script></body></html>`;
+      } else if(node.name.toLowerCase().endsWith('.css')){
+        iframe.srcdoc=`<!DOCTYPE html><html><head><style>${code}<\/style></head><body style="padding:16px;background:#0d1117;color:#e4e4e7"><div style="border:1px solid rgba(6,182,212,.3);border-radius:12px;padding:16px;background:#010409"><h3>Preview CSS</h3><p>Edite ao lado e veja tempo real</p><button style="padding:8px 12px;border-radius:6px">Botão</button></div></body></html>`;
+      } else if(node.name.toLowerCase().endsWith('.json')){
+        try{ const obj=JSON.parse(code); iframe.srcdoc=`<pre style="padding:12px;background:#0d1117;color:#a5f3fc;font-family:monospace">${JSON.stringify(obj,null,2)}</pre>`; }catch(e){ iframe.srcdoc=`<div style="padding:12px;color:#f87171">JSON inválido: ${e.message}</div>`; }
+      } else {
+        iframe.srcdoc=`<pre style="padding:12px;white-space:pre-wrap;font-family:monospace;background:#0d1117;color:#e4e4e7">${code.replace(/</g,'&lt;')}</pre>`;
+      }
+    };
+    editor.addEventListener('input', ()=>{
+      clearTimeout(autoSaveTimer);
+      document.getElementById('saveDot').className='status-dot saving';
+      document.getElementById('charCount').textContent=editor.value.length+' chars';
+      updatePreview();
+      autoSaveTimer=setTimeout(()=>{ saveHistory(); node.content=editor.value; document.getElementById('saveDot').className='status-dot'; try{ localStorage.setItem('korvil-v34-editor-autosave', JSON.stringify(NODES)); }catch(_ ){} }, 400);
+    });
+    document.getElementById('btnCode').onclick=()=>{ viewMode='code'; document.getElementById('paneCode').style.display='flex'; document.getElementById('panePreview').style.display='none'; document.getElementById('btnCode').style.background='#06b6d4'; document.getElementById('btnCode').style.color='#000'; document.getElementById('btnPreview').style.background=''; document.getElementById('btnPreview').style.color=''; document.getElementById('btnSplit').style.background=''; document.getElementById('btnSplit').style.color=''; };
+    document.getElementById('btnPreview').onclick=()=>{ viewMode='preview'; document.getElementById('paneCode').style.display='none'; document.getElementById('panePreview').style.display='flex'; document.getElementById('btnPreview').style.background='#06b6d4'; document.getElementById('btnPreview').style.color='#000'; document.getElementById('btnCode').style.background=''; document.getElementById('btnCode').style.color=''; document.getElementById('btnSplit').style.background=''; document.getElementById('btnSplit').style.color=''; updatePreview(); };
+    document.getElementById('btnSplit').onclick=()=>{ viewMode='split'; document.getElementById('paneCode').style.display='flex'; document.getElementById('panePreview').style.display='flex'; document.getElementById('btnSplit').style.background='#06b6d4'; document.getElementById('btnSplit').style.color='#000'; document.getElementById('btnCode').style.background=''; document.getElementById('btnCode').style.color=''; document.getElementById('btnPreview').style.background=''; document.getElementById('btnPreview').style.color=''; updatePreview(); };
+    document.getElementById('btnCopyCode').onclick=()=>{ navigator.clipboard.writeText(editor.value); };
+    document.getElementById('btnDownloadCode').onclick=()=>{ const blob=new Blob([editor.value],{type:'text/plain'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=node.name; a.click(); URL.revokeObjectURL(url); };
+    document.getElementById('btnRun').onclick=updatePreview;
+    updatePreview();
+  } else {
+    document.getElementById('mainContent').innerHTML = `
+      <div style="padding:16px;overflow:auto;flex:1">
+        <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#71717a;margin-bottom:12px;flex-wrap:wrap">${path.map((id,idx)=>{ const n=NODES.find(x=>x.id===id); return n? `<span style="${idx===path.length-1?'color:#a5f3fc;font-weight:700':''}">${n.name}</span>${idx<path.length-1?' › ':''}` : ''; }).join('')}</div>
+        <div style="padding:14px;border:1px solid #27272a;border-radius:12px;background:#010409">
+          <div style="display:flex;align-items:center;gap:10px"><div style="width:40px;height:40px;border-radius:10px;background:#27272a;display:flex;align-items:center;justify-content:center;font-size:20px">📁</div><div><div style="font-weight:700;font-size:14px">${node.name}</div><div style="font-size:10px;color:#71717a">${path.join(' / ')} • ${childs.length} itens dentro • clique ícone 📁 abre/fecha mostra estrutura</div></div></div>
+          ${node.content? `<pre style="white-space:pre-wrap;font-size:11px;margin-top:12px;background:#0d1117;padding:12px;border-radius:8px;border:1px solid #27272a;max-height:300px;overflow:auto">${node.content}</pre>` : ''}
+          <div style="margin-top:14px"><div style="font-size:11px;font-weight:700;margin-bottom:8px;color:#a1a1aa">📂 Estrutura completa dentro - clique para abrir cada um:</div><div style="display:grid;gap:6px">${childs.map(c=>{ const gc=getChildren(c.id); const isCodeC=isCodeFile(c); return `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #27272a;border-radius:8px;background:rgba(24,24,27,.5);cursor:pointer" onclick="document.querySelector('[data-id=\'${c.id}\'').click()"><span>${gc.length>0?'📁':(isCodeC?'💻':'📄')}</span><span style="flex:1;font-size:12px">${c.name}</span><span style="font-size:9px;color:#71717a">${gc.length} itens</span><span style="font-size:10px">👁️</span></div>`; }).join('') || '<div style="padding:20px;text-align:center;color:#52525b;font-size:11px;border:1px dashed #27272a;border-radius:8px">Pasta vazia ou arquivo final</div>'}</div></div>
+        </div>
+      </div>
+    `;
+  }
 }
 
-function evoluirAuto(){
-let analise={melhorias:['3D última geração com blur e profundidade','K-RIADOR ativar/desativar flutuante movível acompanha todas telas','Câmera dentro do sistema K-RIADOR (ler, analisar, gravar) não na tela inicial','Visual fácil rápida inteligente aprimorado','Botão v.2026 com dia/mês/ano horário histórico']};
-versao++; let kriadorRoot=nodes.find(n=>n.isKriadorRoot); let evolFolder=nodes.find(n=>n.parentId===kriadorRoot?.id && n.name.includes('AÇÕES:')); let evoluirFolder=nodes.find(n=>n.parentId===evolFolder?.id && n.name.includes('Evoluir:'));
-nodes.push({id:pe('evo'),name:`EVOLUÇÃO AUTOMÁTICA v${versao} 3D - ${new Date().toLocaleString('pt-BR')} - verde no código`,type:'folder',parentId:evoluirFolder?.id||kriadorRoot?.id,isEvolucao:true,versao:versao});
-save(`🚀 EVOLUIU AUTOMÁTICO v${versao} 3D - ${analise.melhorias.join(', ')}`); renderTree(); renderVisual();
-let res=document.getElementById('evoluirRes'); if(res){res.style.display='block'; res.innerHTML=`<b style="color:var(--green)">✅ EVOLUIU v${versao} 3D VERDE</b><br>${analise.melhorias.join('<br>')}`;}
-let resVis=document.getElementById('evoluirResVis'); if(resVis){resVis.style.display='block'; resVis.innerHTML=res.innerHTML;}
-document.getElementById('evoluirDetalhe').innerHTML=`<b style="color:var(--green)">🚀 EVOLUÇÃO v${versao} 3D</b><br><br>${analise.melhorias.join('<br>')}<br><br>Versão v${versao-1} → <span style="background:var(--green);color:#000;padding:4px 10px;border-radius:20px">v${versao} VERDE 3D</span><br><br><button class="btn-green" onclick="baixarReal()">💾 BAIXAR CÓDIGO REAL 3D v${versao}</button>`;
-document.getElementById('evoluirModal').style.display='flex';
+let miniNode=null, miniPath=null;
+function showMiniMenu(x,y,node,path){
+  miniNode=node; miniPath=path;
+  const m=document.getElementById('miniMenu');
+  m.innerHTML = `
+    <div class="mini-header"><div style="font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px">${node.name}</div><div style="font-size:10px;color:#71717a">${selected.size} sel</div></div>
+    <div class="mini-row" onclick="actionOpenClose()">📂 ${expanded.has(node.id)?'Fechar pasta':'Abrir pasta'} - mostra estrutura dentro</div>
+    <div class="mini-row" onclick="actionShowInside()">👁️ Mostrar estrutura dentro deste arquivo</div>
+    ${isCodeFile(node)?'<div class="mini-row" onclick="actionShowInside()">💻 Editar código + preview tempo real</div>':''}
+    <div class="sep"></div>
+    <div class="mini-row" onclick="actionNewFile()">📄 ➕ Novo arquivo dentro</div>
+    <div class="mini-row" onclick="actionNewFolder()">📁 ➕ Nova pasta dentro</div>
+    <div class="sep"></div>
+    <div class="mini-row" onclick="actionCopy()">📋 Copiar <span class="kbd">Ctrl+C</span></div>
+    <div class="mini-row" onclick="actionCut()">✂️ Recortar - move sem duplicar</div>
+    <div class="mini-row" onclick="actionPaste()" style="${clipboard?'':'opacity:.4'}">📥 Colar dentro <span class="kbd">Ctrl+V</span></div>
+    <div class="mini-row" onclick="actionDuplicate()">🧬 Duplicar (único que duplica) <span class="kbd">Ctrl+D</span></div>
+    <div class="sep"></div>
+    <div class="mini-row" onclick="actionRename()">✏️ Renomear</div>
+    <div class="mini-row danger" onclick="actionDelete()">🗑️ Excluir <span class="kbd">Del</span></div>
+    <div class="sep"></div>
+    <div class="mini-row" onclick="actionUndo()">↩️ Desfazer ação anterior <span class="kbd">Ctrl+Z</span></div>
+    <div class="mini-row" onclick="actionDownload()">⬇️ Baixar / Arrastar pra fora</div>
+  `;
+  m.style.left=Math.min(x,window.innerWidth-280)+'px';
+  m.style.top=Math.min(y,window.innerHeight-380)+'px';
+  m.style.display='block';
 }
-function evoluirManual(){let texto=document.getElementById('evoluirIn').value||document.getElementById('evoluirInVis')?.value||''; if(!texto){alert('Descreva ideia'); return;} versao++; let kriadorRoot=nodes.find(n=>n.isKriadorRoot); nodes.push({id:pe('evoM'),name:`EVOLUÇÃO MANUAL v${versao}: ${texto.slice(0,40)} 3D`,type:'folder',parentId:kriadorRoot?.id,isEvolucao:true,versao:versao}); save(`🚀 EVOLUÇÃO MANUAL v${versao}: ${texto}`); renderTree(); renderVisual(); let res=document.getElementById('evoluirRes'); if(res){res.style.display='block'; res.innerHTML=`✅ EVOLUIU MANUAL v${versao} 3D: ${texto}`;} document.getElementById('evoluirModal').style.display='flex'; document.getElementById('evoluirDetalhe').innerHTML=`<b style="color:var(--green)">🚀 EVOLUÇÃO MANUAL v${versao} 3D</b><br><br>${texto}<br><br><span style="background:var(--green);color:#000;padding:4px 10px;border-radius:20px">v${versao} VERDE 3D REAL</span>`;}
-function evoluirManualVis(){evoluirManual();}
-function toggleEvoluirManual(){let el=document.getElementById('evoluirManualArea'); if(!el) el=document.getElementById('evoluirManualVis'); if(el) el.style.display=el.style.display==='none'?'block':'none';}
+function hideMiniMenu(){ document.getElementById('miniMenu').style.display='none'; }
+function actionOpenClose(){ if(miniNode){ if(expanded.has(miniNode.id)) expanded.delete(miniNode.id); else expanded.add(miniNode.id); render(); showFileView(miniNode, miniPath); } hideMiniMenu(); }
+function actionShowInside(){ if(miniNode){ expanded.add(miniNode.id); render(); showFileView(miniNode, miniPath); } hideMiniMenu(); }
+function actionNewFile(){ saveHistory(); const name=prompt('Nome novo arquivo:'); if(!name) return; const parent = miniNode && (getChildren(miniNode.id).length>0 || miniNode.type==='folder') ? miniNode.id : miniNode.parentId; NODES.push({id:'id_'+Date.now(), name, type:'file', parentId: parent, content:''}); expanded.add(parent); render(); hideMiniMenu(); }
+function actionNewFolder(){ saveHistory(); const name=prompt('Nome nova pasta:'); if(!name) return; const parent = miniNode && (getChildren(miniNode.id).length>0 || miniNode.type==='folder') ? miniNode.id : miniNode.parentId; NODES.push({id:'id_'+Date.now(), name, type:'folder', parentId: parent}); expanded.add(parent); render(); hideMiniMenu(); }
+function actionCopy(){ clipboard={mode:'copy', ids: Array.from(selected.size?selected:[miniNode.id])}; hideMiniMenu(); }
+function actionCut(){ clipboard={mode:'cut', ids: Array.from(selected.size?selected:[miniNode.id])}; hideMiniMenu(); }
+function actionPaste(){ if(!clipboard) return; saveHistory(); const target = miniNode && (getChildren(miniNode.id).length>0 || miniNode.type==='folder') ? miniNode.id : miniNode.parentId; clipboard.ids.forEach(id=>{ const orig=NODES.find(n=>n.id===id); if(!orig) return; if(clipboard.mode==='copy'){ const clone={...orig, id:'id_'+Date.now()+Math.random(), parentId: target, name: orig.name+' cópia'}; NODES.push(clone); } else { if(id!==target && !isDescendant(target,id)) orig.parentId=target; } }); if(clipboard.mode==='cut') clipboard=null; expanded.add(target); render(); hideMiniMenu(); }
+function actionDuplicate(){ saveHistory(); const ids = selected.size? Array.from(selected): [miniNode.id]; ids.forEach(id=>{ const orig=NODES.find(n=>n.id===id); if(!orig) return; const clone={...orig, id:'id_'+Date.now()+Math.random(), name: orig.name+' (duplicado)', parentId: orig.parentId}; NODES.push(clone); }); render(); hideMiniMenu(); }
+function actionRename(){ const nn=prompt('Novo nome:', miniNode.name); if(nn){ saveHistory(); miniNode.name=nn; render(); showFileView(miniNode, miniPath); } hideMiniMenu(); }
+function actionDelete(){ if(!confirm(`Excluir ${selected.size||1}?`)) return; saveHistory(); const ids = selected.size? Array.from(selected): [miniNode.id]; const toDel=new Set(); ids.forEach(id=>{ toDel.add(id); NODES.forEach(n=>{ if(isDescendant(n.id,id)) toDel.add(n.id); }); }); NODES=NODES.filter(n=>!toDel.has(n.id)); selected.clear(); render(); showEmpty(); hideMiniMenu(); }
+function actionUndo(){ if(history.length===0) return; future.push(JSON.stringify(NODES)); NODES=JSON.parse(history.pop()); render(); hideMiniMenu(); }
+function actionRedo(){ if(future.length===0) return; history.push(JSON.stringify(NODES)); NODES=JSON.parse(future.pop()); render(); hideMiniMenu(); }
+function actionDownload(){ const blob=new Blob([JSON.stringify(NODES,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='korvil-v34-mesma-ordem.json'; a.click(); URL.revokeObjectURL(url); hideMiniMenu(); }
 
-function execK(){
-let texto=document.getElementById('kIn').value.trim(); if(!texto){alert('Descreva comando'); return;}
-let lower=texto.toLowerCase();
-if(lower.includes('foto')||lower.includes('tirar foto')||lower.includes('ler')||lower.includes('analisar')||lower.includes('gravar')){
-if(lower.includes('ler')||lower.includes('analisar')) abrirCameraAnalise();
-else if(lower.includes('gravar')) abrirCameraGravar();
-else abrirCameraDireto();
-return;
-}
-if(lower.includes('evoluir')){if(lower.includes('auto')) evoluirAuto(); else {document.getElementById('evoluirIn').value=texto; evoluirManual();} return;}
-let alvoId=selected||nodes.find(n=>n.name.includes('LISTA DE SUPLEMENTOS'))?.id||'s6'; let alvo=getById(alvoId);
-let acoes=[];
-if(lower.includes('criar pasta')){let m=texto.match(/pasta ([^,]+)/i); let nome=m?m[1].trim():'Pasta 3D '+Date.now(); nodes.push({id:pe('kriador'),name:nome,type:'folder',parentId:alvo.type==='folder'?alvo.id:alvo.parentId}); acoes.push(`✅ Criou pasta "${nome}" em "${alvo.name}" 3D`);}
-else if(lower.includes('criar')||lower.includes('produto')){abrirProdutoModal(alvoId); acoes.push(`📦 Criando produto em "${alvo.name}" 3D - câmera dentro K-RIADOR`);}
-else {let funcs=[]; for(let fn of ferramentas['K-RIADOR'].funcs){if(lower.includes(fn)){funcs.push(fn)}} for(let s of kSel){if(!funcs.includes(s)) funcs.push(s)} if(!funcs.length) funcs=['criador','gerador']; for(let fn of funcs){nodes.push({id:pe('kriador'),name:`K-RIADOR ${fn}: ${texto.slice(0,30)} 3D`,type:'folder',parentId:alvoId}); acoes.push(`✅ ${fn} em "${alvo.name}" 3D`);}}
-save(`K-RIADOR 3D: "${texto}" em "${alvo.name}"`); renderTree(); renderVisual();
-let res=document.getElementById('kRes'); res.style.display='block'; res.innerHTML=`<b style="color:var(--cyan)">🧠 K-RIADOR 3D fez em "${alvo.name}":</b><br>${acoes.join('<br>')}<br><br><span style="color:var(--green)">✓ K-B.D REAL 3D v${versao}</span>`;
-}
-function execToolFunc(tool,func,targetId){let alvo=getById(targetId); if(['criador','gerador'].includes(func)){abrirProdutoModal(targetId);} else if(func.includes('evolu')){evoluirAuto();} else {nodes.push({id:pe('tool'),name:`${tool} ${func}: ${alvo.name} 3D`,type:'folder',parentId:targetId}); save(`${tool} ${func} em ${alvo.name} 3D`); renderTree(); renderVisual();}}
-function abrirKNoLocal(id){selected=id; expanded.add(id); let cur=getById(id); while(cur&&cur.parentId){expanded.add(cur.parentId); cur=getById(cur.parentId);} renderTree(); renderVisual(); if(kriadorAtivo) toggleK(); else if(confirm('K-RIADOR desativado. Ativar?')) ativarKRiador();}
-function execCmdBar(){let txt=document.getElementById('cmdInput').value.trim(); if(!txt) return; document.getElementById('kIn').value=txt; execK(); document.getElementById('cmdInput').value='';}
-function execKFull(){let texto=document.getElementById('kInFull').value.trim(); if(!texto) return; document.getElementById('kIn').value=texto; execK(); document.getElementById('kResFull').innerHTML=document.getElementById('kRes').innerHTML;}
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape') hideMiniMenu();
+  if(e.key==='Delete' && selected.size>0){ e.preventDefault(); actionDelete(); }
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='z'){ e.preventDefault(); actionUndo(); }
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='y'){ e.preventDefault(); actionRedo(); }
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='c' && selected.size>0){ e.preventDefault(); clipboard={mode:'copy', ids: Array.from(selected)}; }
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='v'){ e.preventDefault(); if(clipboard){ const target = selected.size? NODES.find(n=>n.id===Array.from(selected)[0]).parentId : null; const targetId=target||NODES.find(n=>n.parentId===null).id; saveHistory(); clipboard.ids.forEach(id=>{ const orig=NODES.find(n=>n.id===id); if(!orig) return; if(clipboard.mode==='copy'){ NODES.push({...orig, id:'id_'+Date.now()+Math.random(), parentId: targetId, name: orig.name+' cópia'}); } else { if(id!==targetId && !isDescendant(targetId,id)) orig.parentId=targetId; } }); if(clipboard.mode==='cut') clipboard=null; render(); } }
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='d' && selected.size>0){ e.preventDefault(); actionDuplicate(); }
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='a'){ e.preventDefault(); selected=new Set(NODES.map(n=>n.id)); render(); }
+});
+document.addEventListener('click', (e)=>{ if(!e.target.closest('#miniMenu') && !e.target.closest('.item') && !e.target.closest('.code-top')) hideMiniMenu(); });
+document.getElementById('btnUndo').onclick=actionUndo;
+document.getElementById('btnRedo').onclick=actionRedo;
+document.getElementById('btnSave').onclick=actionDownload;
 
-// INIT
-load(); detectDevice(); renderTree(); renderVisual();
-document.getElementById('cnt').innerText=nodes.length+' itens';
-document.getElementById('versao').innerText='v'+versao+'.0 3D';
-let mini=document.getElementById('versaoMini'); if(mini) mini.innerText=versao;
-initFloatDrag();
-if(kriadorAtivo){
-let floatBtn=document.getElementById('floatBtn');
-floatBtn.style.display='flex';
-floatBtn.style.left='calc(100% - 90px)';
-floatBtn.style.top='120px';
-}
-window.addEventListener('resize',()=>{detectDevice(); renderTree();});
-setInterval(()=>{localStorage.setItem('korvil-lastData',JSON.stringify(nodes));},5000);
-setTimeout(()=>{save('Sistema 3D iniciado - última geração tecnológica - fácil rápida inteligente aprimorado - K-RIADOR ativar/desativar flutuante movível - câmera dentro K-RIADOR - NOTA 10');},500);
+render();
+showEmpty();
 </script>
-</body>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
 </html>
