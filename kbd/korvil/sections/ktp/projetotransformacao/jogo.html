@@ -23,277 +23,452 @@
 }
 </style>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>P.T PLAYERS • PS5 DASHBOARD 8K</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>P.T PLAYERS • FINAL MÁXIMO SEM ERROS • REFLEX RUN + MEDIAPIPE POSE • K-TP 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
 <style>
-:root{--c:#00f5ff;--bg:#000;--ps5:#0e0e0e;--card:#1a1a1a;--card2:#242424;--white:#fff;--muted:#777;--ok:#00ff88;--blue:#0070cc}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Rajdhani',sans-serif}
-body{background:var(--bg);color:#fff;overflow:hidden;height:100vh;width:100vw;position:relative}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(100% 100% at 50% 0%,#1e1e2e 0%,#0a0a0a 40%,#000 100%);z-index:-2}
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.015) 2px,rgba(255,255,255,0.015) 3px);pointer-events:none;z-index:9999}
-.ps5-top{position:fixed;top:0;left:0;right:0;height:60px;display:flex;justify-content:space-between;align-items:center;padding:0 24px;z-index:100;background:linear-gradient(180deg,rgba(0,0,0,0.8) 0%,transparent 100%)}
-.ps5-time{font-size:10px;letter-spacing:1px;color:#fff;font-family:'Orbitron'}
-.ps5-icons{display:flex;gap:12px;align-items:center}
-.ps5-icon{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:12px}
-.dashboard{position:relative;width:100vw;height:100vh;display:flex;flex-direction:column;justify-content:center;padding:80px 40px 40px 40px;overflow:hidden}
-@media(max-width:800px){.dashboard{padding:70px 16px 20px 16px}}
-.hero-ps5{display:flex;gap:30px;align-items:center;min-height:50vh}
-@media(max-width:800px){.hero-ps5{flex-direction:column;align-items:flex-start;gap:20px}}
-.game-cover{width:280px;height:280px;min-width:280px;background:linear-gradient(135deg,#1a1a1a,#000);border-radius:24px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 0 1px rgba(255,255,255,0.05) inset;display:flex;align-items:center;justify-content:center}
-.game-cover::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,245,255,0.2) 0%,rgba(0,112,204,0.2) 50%,rgba(255,0,85,0.1) 100%)}
-.game-cover::after{content:'🎮';font-size:80px;position:relative;z-index:2;text-shadow:0 10px 30px rgba(0,0,0,0.8)}
-.game-info{flex:1;max-width:600px}
-.badge-ps5{display:inline-flex;align-items:center;gap:6px;background:#fff;color:#000;border-radius:20px;padding:6px 14px;font-size:9px;font-weight:900;letter-spacing:1px;font-family:'Orbitron';margin-bottom:12px}
-.game-title{font-family:'Orbitron';font-size:clamp(24px,4vw,38px);line-height:0.9;letter-spacing:-1px;font-weight:900;text-transform:uppercase}
-.game-title span{color:var(--c);display:block;font-size:0.7em;margin-top:4px;letter-spacing:2px}
-.game-desc{font-size:12px;color:#bbb;line-height:1.6;margin-top:14px;max-width:520px}
-.game-stats{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
-.stat{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:6px 12px;font-size:10px;font-weight:700}
-.ps5-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
-.btn-ps5{padding:14px 28px;border-radius:28px;border:0;font-weight:900;font-size:11px;cursor:pointer;font-family:'Orbitron';letter-spacing:1px;display:flex;align-items:center;gap:8px;transition:all .2s;position:relative}
-.btn-ps5.primary{background:#fff;color:#000;box-shadow:0 8px 30px rgba(255,255,255,0.2)}
-.btn-ps5.primary:hover{transform:scale(1.05);box-shadow:0 12px 40px rgba(255,255,255,0.3)}
-.btn-ps5.secondary{background:rgba(255,255,255,0.12);color:#fff;backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.15)}
-.btn-ps5.secondary:hover{background:rgba(255,255,255,0.2)}
-.ps5-dock{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:12px;background:rgba(0,0,0,0.6);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,0.1);border-radius:28px;padding:10px 16px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.8)}
-@media(max-width:600px){.ps5-dock{bottom:10px;padding:8px 12px;gap:8px}}
-.dock-item{width:56px;height:56px;border-radius:16px;background:var(--card);border:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative}
-.dock-item.active{background:#fff;border-color:#fff;transform:scale(1.15) translateY(-4px);box-shadow:0 10px 30px rgba(255,255,255,0.3)}
-.dock-item.active .dock-icon{color:#000}
-.dock-item:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.2)}
-.dock-icon{font-size:20px}
-.dock-label{font-size:7px;font-weight:800;letter-spacing:0.5px;margin-top:2px;font-family:'Orbitron';color:var(--muted)}
-.dock-item.active .dock-label{color:#000}
-.screen{position:fixed;inset:0;background:var(--bg);z-index:80;display:none;overflow-y:auto;padding:80px 24px 100px 24px}
+:root{--c:#00f5ff;--bg:#000;--card:#141414;--card2:#1e1e1e;--ok:#00ff88;--err:#ff0033;--blue:#0070cc}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Rajdhani',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#000;color:#fff;overflow:hidden;height:100vh;width:100vw;position:relative;overscroll-behavior:none}
+.top{position:fixed;top:0;left:0;right:0;height:50px;display:flex;justify-content:space-between;align-items:center;padding:0 14px;z-index:100;background:linear-gradient(180deg,rgba(0,0,0,0.95),transparent)}
+.badge{background:#fff;color:#000;border-radius:20px;padding:5px 12px;font-size:8px;font-weight:900;font-family:'Orbitron';letter-spacing:0.8px}
+.btn{padding:11px 20px;border-radius:22px;border:0;font-weight:900;font-size:10px;cursor:pointer;font-family:'Orbitron';letter-spacing:0.6px;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;user-select:none}
+.btn:active{transform:scale(0.96)}
+.btn.white{background:#fff;color:#000;box-shadow:0 4px 15px rgba(255,255,255,0.2)}
+.btn.cyan{background:var(--c);color:#000;box-shadow:0 4px 15px rgba(0,245,255,0.3)}
+.btn.dark{background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.15);backdrop-filter:blur(10px)}
+.dashboard{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:60px 16px 80px 16px;background:radial-gradient(100% 100% at 50% 0%,#1a1a2e 0%,#0a0a0a 45%,#000 80%);overflow-y:auto}
+.hero{display:flex;gap:20px;align-items:center;max-width:900px;width:100%}
+@media(max-width:700px){.hero{flex-direction:column;align-items:flex-start}}
+.cover{width:200px;height:200px;min-width:200px;background:linear-gradient(135deg,#1a1a1a,#000);border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:56px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 16px 50px rgba(0,0,0,0.8);position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,245,255,0.15),rgba(255,0,85,0.08))}
+.title{font-family:'Orbitron';font-size:clamp(18px,4vw,28px);line-height:0.9;font-weight:900;letter-spacing:-0.5px}
+.title span{color:var(--c);display:block;font-size:0.62em;margin-top:4px;letter-spacing:1.5px}
+.desc{font-size:10.5px;color:#aaa;line-height:1.55;margin-top:10px}
+.stats{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.stat{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:5px 9px;font-size:8.5px;font-weight:700}
+.dock{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:7px;background:rgba(0,0,0,0.75);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:7px 10px;z-index:90;box-shadow:0 10px 40px rgba(0,0,0,0.8)}
+.dock-item{width:46px;height:46px;border-radius:12px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+.dock-item.active{background:#fff;transform:scale(1.1) translateY(-3px);box-shadow:0 6px 20px rgba(255,255,255,0.3)}
+.dock-item.active .di{color:#000}
+.di{font-size:16px}
+.dl{font-size:5.5px;font-family:'Orbitron';color:#777;margin-top:1px;letter-spacing:0.3px}
+.screen{position:fixed;inset:0;background:#000;z-index:80;display:none;overflow-y:auto;padding:62px 12px 86px 12px;-webkit-overflow-scrolling:touch}
 .screen.ativo{display:block}
-.screen::-webkit-scrollbar{width:6px}
-.screen::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:10px}
-.ps5-grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:16px}
-.ps5-card{background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px;transition:all .2s}
-.ps5-card:hover{border-color:rgba(255,255,255,0.15);transform:translateY(-2px)}
-.card-head{font-family:'Orbitron';font-size:10px;letter-spacing:1px;display:flex;align-items:center;gap:8px;margin-bottom:10px;color:#fff}
-.card-head i{width:28px;height:28px;background:rgba(255,255,255,0.08);border-radius:8px;display:flex;align-items:center;justify-content:center}
-.input-ps5{width:100%;background:var(--card2);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 14px;color:#fff;font-size:12px;margin-bottom:8px}
-.input-ps5:focus{border-color:var(--c);outline:none;background:#2a2a2a}
-.obj-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
-@media(max-width:500px){.obj-grid{grid-template-columns:1fr}}
-.obj{padding:12px;background:var(--card2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-align:center;cursor:pointer;font-size:11px;font-weight:700;transition:all .2s}
-.obj.sel{background:#fff;color:#000;border-color:#fff;box-shadow:0 8px 25px rgba(255,255,255,0.2)}
+.card{background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px;margin-bottom:10px}
+.ch{font-family:'Orbitron';font-size:10px;display:flex;align-items:center;gap:7px;margin-bottom:8px;letter-spacing:0.5px}
+.input{width:100%;background:#1e1e1e;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px;color:#fff;font-size:11px;margin-bottom:6px;outline:none}
+.input:focus{border-color:var(--c);background:#252525}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+@media(max-width:500px){.grid{grid-template-columns:1fr}}
+.it{padding:10px;background:#1e1e1e;border:1px solid rgba(255,255,255,0.06);border-radius:10px;text-align:center;cursor:pointer;font-size:10px;font-weight:700;transition:all .12s;user-select:none}
+.it.sel{background:#fff;color:#000;border-color:#fff;transform:scale(1.02);box-shadow:0 6px 18px rgba(255,255,255,0.2)}
 .game-full{position:fixed;inset:0;background:#000;z-index:200;display:none}
 .game-full.ativo{display:block}
-.area{position:relative;width:100%;height:100vh;background:#000;overflow:hidden}
-.area video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);z-index:1}
-.vignette{position:absolute;inset:0;background:radial-gradient(80% 80% at 50% 50%,transparent 60%,rgba(0,0,0,0.7) 100%);z-index:2;pointer-events:none}
-.esteira{position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(180deg,#222 0%,#000 100%);border-top:2px solid rgba(255,255,255,0.15);z-index:3;overflow:hidden}
-.esteira::before{content:'';position:absolute;top:50%;left:-100%;width:300%;height:6px;background:repeating-linear-gradient(90deg,#fff 0 40px,transparent 40px 80px);transform:translateY(-50%);animation:move var(--speed,3.5s) linear infinite}
-@keyframes move{from{transform:translate(-50%,-50%) translateX(0)} to{transform:translate(-50%,-50%) translateX(80px)}}
-.hud{position:absolute;top:0;left:0;right:0;padding:16px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;z-index:5;pointer-events:none}
-.hud-item{background:rgba(0,0,0,0.7);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:8px 14px;font-size:10px;font-weight:800;display:flex;gap:6px}
-.enemy{position:absolute;width:72px;height:72px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px;font-weight:900;cursor:pointer;z-index:4;animation:fall linear;box-shadow:0 8px 25px rgba(0,0,0,0.6)}
-.enemy.ruim{background:linear-gradient(135deg,#ff0040,#ff2a6d);border:2px solid #fff;color:#fff}
-.enemy.bom{background:linear-gradient(135deg,#00ff88,#00ffaa);border:2px solid #fff;color:#000}
-.enemy.sup{background:linear-gradient(135deg,#00f5ff,#0070cc);border:2px solid #fff;color:#000}
-@keyframes fall{from{top:-80px} to{top:110%}}
-.tip{position:absolute;bottom:140px;left:50%;transform:translateX(-50%);background:#fff;color:#000;border-radius:20px;padding:10px 20px;font-size:11px;font-weight:900;z-index:6;display:none;font-family:'Orbitron'}
-.ex{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(20,20,20,0.96);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:20px;text-align:center;z-index:10;display:none;min-width:300px}
+#gameCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+#video{position:absolute;bottom:8px;right:8px;width:150px;height:112px;border-radius:10px;border:2px solid var(--c);z-index:10;transform:scaleX(-1);object-fit:cover;box-shadow:0 8px 25px rgba(0,0,0,0.8);background:#000}
+#poseCanvas{position:absolute;bottom:8px;right:8px;width:150px;height:112px;z-index:11;transform:scaleX(-1);border-radius:10px;pointer-events:none}
+.hud{position:absolute;top:0;left:0;right:0;padding:10px;display:flex;justify-content:space-between;gap:6px;z-index:5;pointer-events:none;flex-wrap:wrap}
+.hud-item{background:rgba(0,0,0,0.78);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.15);border-radius:18px;padding:6px 11px;font-size:9.5px;font-weight:800;display:flex;gap:5px;align-items:center}
+.tip{position:absolute;top:46%;left:50%;transform:translate(-50%,-50%);background:#fff;color:#000;border-radius:18px;padding:10px 18px;font-size:11px;font-weight:900;z-index:8;display:none;font-family:'Orbitron';box-shadow:0 10px 30px rgba(0,0,0,0.6);text-align:center;max-width:86vw;animation:pop .25s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(0.8);opacity:0} to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+.ex{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);background:rgba(18,18,18,0.96);backdrop-filter:blur(20px);border:1px solid var(--c);border-radius:18px;padding:16px;text-align:center;z-index:9;display:none;min-width:280px;max-width:90vw;box-shadow:0 16px 50px rgba(0,0,0,0.9)}
+.skeleton-hint{position:absolute;bottom:130px;left:10px;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);border-radius:12px;padding:8px 10px;font-size:8px;z-index:6;border:1px solid rgba(255,255,255,0.1);line-height:1.4}
 </style>
 </head>
 <body>
-<div class="ps5-top"><div class="ps5-time" id="time">00:00</div><div class="ps5-icons"><div class="ps5-icon">🔍</div><div class="ps5-icon">⚙️</div><div class="ps5-icon">👤</div></div></div>
+<div class="top"><div class="badge">🎮 PS5 • MEDIAPIPE POSE REAL • REFLEX RUN • 3D 8K • SEM ERROS</div><div style="font-family:Orbitron;font-size:9px" id="clock">00:00</div></div>
 
 <div class="dashboard" id="dashboard">
-  <div class="hero-ps5">
-    <div class="game-cover"></div>
-    <div class="game-info">
-      <div class="badge-ps5">🎮 PS5 • 3D 8K FULL HD • CÂMERA GIGANTE • ESTEIRA ADAPTATIVA</div>
-      <div class="game-title">P.T PLAYERS <span>JOGO DO K-TP PROJETO TRANSFORMAÇÃO 2026</span></div>
-      <div class="game-desc">
-        <b style="color:#fff">ESTE É O JOGO, NÃO É O PROJETO ORIGINAL</b> - Faz parte do mesmo projeto, é a gamificação. Visual totalmente diferente pra não confundir, sistema PS5 puro desde o início apresentando o jogo.<br><br>
-        <b style="color:var(--c)">ESTEIRA É O CAMINHO EM TODAS FASES:</b> Velocidade adaptada por objetivo - Emagrecimento/Definição/Condicionamento = acelerada pra gastar calorias e potência corrida. Saúde/Reabilitação/Ganho Peso + limitações Q6/Q7/Q8/Q9 = devagar pra evitar lesões. Cálculo inteligente sem dizer operacional.<br><br>
-        <b>GOLPES:</b> Pode dar golpes de várias formas gerais individuais ou combinadas nos movimentos que quiser nos inimigos alimentos ruins de acordo com cada objetivos do usuário, mas quando tiver que fazer os exercícios no tempo tem que ser corretos sem erros execução, sem lesões.<br><br>
-        <b>CÂMERA:</b> Ativa automaticamente quando tiver na tela sincronizar ou quando começar fase no primeiro uso do jogo já salva permissões automaticamente. Serve pra qualquer dispositivo já reconhecendo automático.
+  <div class="hero">
+    <div class="cover">🏃</div>
+    <div>
+      <div class="title">P.T PLAYERS <span>FINAL MÁXIMO SEM ERROS - REFLEX RUN + MEDIAPIPE POSE REAL</span></div>
+      <div class="desc">
+        <b style="color:#fff">COMPLETO LEVE RÁPIDO DESDE O INÍCIO, TUDO E TODAS AS COISAS FUNCIONANDO CERTOS - APOSTANDO COM TODAS INFORMAÇÕES DADOS CONTEÚDO DO PROJETO</b><br><br>
+        <b style="color:var(--c)">EXATAMENTE TIPO DO VÍDEO QUE MANDOU:</b> Jogador em frente telão gigante, pista 3D indo pro horizonte com árvores verdes, céu azul, faixas, obstáculos vindo de frente direção real, socando, chutando, joelhada, agachando, desviando, correndo - igual Reflex Run.<br><br>
+        <b>MEDIAPIPE POSE REAL - RASTREAMENTO ESQUELÉTICO:</b> 33 pontos do corpo detectados em tempo real - ombro, cotovelo, punho, quadril, joelho, tornozelo. Soco esq/dir detectado quando punho ultrapassa ombro rápido, chute quando tornozelo sobe, agachar quando quadril desce, pulo quando quadris sobem, desvio esq/dir quando quadril move X. Câmera reconhece automático, não precisa sincronizar, já salva permissões automaticamente no primeiro uso.<br><br>
+        <b>ESTEIRA HORIZONTAL TELA TODA:</b> Embaixo de um lado ao outro simulando jogador correndo nas fases, velocidade adaptada desacelerada coerente por objetivo - Emagrecimento/Definição/Condicionamento = média acelerada pra gastar calorias melhorar potência corrida, Saúde/Reabilitação/Ganho Peso + limitações Q6 joelho/mobilidade = devagar pra evitar lesões, tudo baseado em todos dados originais.<br><br>
+        <b>BASEADO EM TODOS DADOS ORIGINAIS SEM TIRAR NADA:</b> Objetivos 1-7, peso, altura, nível, Q1-Q9 anamnese, plano, dias, freq, horário, objetivo, valor, matrícula, total, venc, status, CPF, nasc, idade, gênero, whats, email, nível atividade, endereço, todas fases linha tempo projeto Off Season Jan-Fev Manutenção/Resistência/Força/Hipertrofia, Bulking Mar-Mai, Maintenance Jun-Ago, Cutting Set-Nov, Férias Dez, mesma ordem etapas métodos semanas de acordo com quantidade dias treinos, combina tudo de acordo com escolha dos dias de treinos dos novos usuários ou os que já estão salvos nos dados que já participam no projeto original. Botão Projeto Transformação só quando pessoa se inscreveu no jogo. Permite todos alunos que já participam do projeto real acessar jogo com mesmo ID. Não participante joga quantas vezes quiser, participante real joga quantas vezes quiser mas com sinalizações fora dias/horários plano pra não exagerar, até 7x seguidas mesmo dia, depois mensagem descansar, 7 dias direto bloqueia 7 dias pra focar treino físico real.<br><br>
+        <b>MÚSICAS SONS ANIMAÇÕES MENSAGENS PONTUAÇÕES MOVIMENTOS:</b> Música fundo 350ms, sons coin 800Hz, hit 180Hz square, jump 600→900Hz, squat 300Hz, lose 120Hz sawtooth, animações esteiraMove, fall com scale, pop, roadOffset, vignette, tip, ex, skeleton overlay, hud, controles hint, tudo funcionando sem erros, leve rápido, visual PS5 3D 8K Full HD com slides transições etapas automáticas interativo imersivo, serve qualquer dispositivo já reconhecendo automático.
       </div>
-      <div class="game-stats">
-        <div class="stat">🎯 7 Objetivos</div>
-        <div class="stat">🏃 Esteira Adaptativa</div>
-        <div class="stat">📅 Timeline Original</div>
-        <div class="stat">🎮 1P Tela Cheia</div>
-        <div class="stat">💪 5 Exercícios</div>
-      </div>
-      <div class="ps5-actions">
-        <button class="btn-ps5 primary" onclick="abrirScreen('inscricao')">🎮 CRIAR PERFIL DO JOGO</button>
-        <button class="btn-ps5 secondary" onclick="abrirScreen('id')">🔑 JÁ SOU ALUNO K-TP</button>
-        <button class="btn-ps5 secondary" onclick="mostrarGame()">▶️ JOGAR AGORA</button>
+      <div class="stats"><div class="stat">🎯 7 Objetivos</div><div class="stat">🏃 Esteira Horizontal 3D</div><div class="stat">🦴 MediaPipe Pose 33 pontos</div><div class="stat">📹 Câmera Auto Real</div><div class="stat">🥊 Soco/Chute/Agachar/Pular/Desvio</div><div class="stat">📅 Timeline Original Completa</div></div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn white" onclick="abrirScreen('inscricao')">🎮 CRIAR PERFIL DO JOGO</button>
+        <button class="btn dark" onclick="abrirScreen('id')">🔑 JÁ SOU ALUNO K-TP</button>
+        <button class="btn cyan" onclick="mostrarGame()">▶️ JOGAR TIPO VÍDEO - POSE REAL</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="ps5-dock">
-  <div class="dock-item active" onclick="abrirDashboard()"><div class="dock-icon">🏠</div><div class="dock-label">HOME</div></div>
-  <div class="dock-item" onclick="abrirScreen('inscricao')"><div class="dock-icon">🎮</div><div class="dock-label">NOVO</div></div>
-  <div class="dock-item" onclick="abrirScreen('id')"><div class="dock-icon">🔑</div><div class="dock-label">ID</div></div>
-  <div class="dock-item" onclick="abrirScreen('semanas')"><div class="dock-icon">📅</div><div class="dock-label">FASES</div></div>
-  <div class="dock-item" onclick="abrirScreen('cronograma')"><div class="dock-icon">📋</div><div class="dock-label">CRONO</div></div>
-  <div class="dock-item" onclick="mostrarGame()"><div class="dock-icon">▶️</div><div class="dock-label">JOGAR</div></div>
+<div class="dock">
+  <div class="dock-item active" onclick="abrirDashboard()"><div class="di">🏠</div><div class="dl">HOME</div></div>
+  <div class="dock-item" onclick="abrirScreen('inscricao')"><div class="di">🎮</div><div class="dl">NOVO</div></div>
+  <div class="dock-item" onclick="abrirScreen('id')"><div class="di">🔑</div><div class="dl">ID</div></div>
+  <div class="dock-item" onclick="abrirScreen('semanas')"><div class="di">📅</div><div class="dl">FASES</div></div>
+  <div class="dock-item" onclick="abrirScreen('cronograma')"><div class="di">📋</div><div class="dl">CRONO</div></div>
+  <div class="dock-item" onclick="mostrarGame()"><div class="di">▶️</div><div class="dl">JOGAR</div></div>
 </div>
 
 <div class="screen" id="screen-inscricao">
-  <div class="ps5-card" style="max-width:800px;margin:0 auto">
-    <div class="card-head"><i>🎯</i> CONFIGURE SEU JOGO - ORIENTAÇÕES PARA OBJETIVOS - VISUAL PS5</div>
-    <div style="background:rgba(0,245,255,0.08);border:1px solid rgba(0,245,255,0.2);border-radius:12px;padding:10px;font-size:10px;margin-bottom:12px;color:#ccc">Preencha para jogo calcular lógica personalizada. Serve pra calcular funcionamento nos objetivos de cada pessoa. Não é inscrição do projeto original - é do JOGO. Mostra diferente sendo jogo, tela como sistema de jogo de PlayStation 5 3D 8k full HD etc. Mantém todas informações mas não copia uso de apresentar coisas como projeto original, mostra diferente sendo jogo.</div>
-    <div class="card-head"><i>🔥</i> OBJETIVOS 1 A 7 - PRIORIDADE - CLIQUE NA ORDEM</div>
-    <div id="listaObj" style="background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:8px;min-height:36px;font-size:10px;color:var(--ok);font-weight:800;margin-bottom:10px"></div>
-    <div class="obj-grid">
-      <div class="obj" onclick="toggleObj(this)" data-obj="Ganho de Peso">Ganho de Peso</div>
-      <div class="obj" onclick="toggleObj(this)" data-obj="Emagrecimento">Emagrecimento</div>
-      <div class="obj" onclick="toggleObj(this)" data-obj="Definição Muscular">Definição</div>
-      <div class="obj" onclick="toggleObj(this)" data-obj="Saúde">Saúde</div>
-      <div class="obj" onclick="toggleObj(this)" data-obj="Condicionamento Físico">Condicionamento</div>
-      <div class="obj" onclick="toggleObj(this)" data-obj="Hipertrofia">Hipertrofia</div>
-      <div class="obj" onclick="toggleObj(this)" data-obj="Reabilitação Física">Reabilitação</div>
+  <div class="card" style="max-width:720px;margin:0 auto">
+    <div class="ch">🎯 CONFIGURE SEU JOGO - ORIENTAÇÕES PARA OBJETIVOS - VISUAL PS5 REFLEX RUN + MEDIAPIPE POSE - SEM ERROS</div>
+    <div style="background:rgba(0,245,255,0.08);border:1px solid rgba(0,245,255,0.2);border-radius:10px;padding:8px;font-size:9px;color:#ccc;margin-bottom:8px">Apostando com todas informações dados conteúdo do projeto, mantém todas informações mas mostra diferente sendo jogo, tela como sistema de jogo de PlayStation 5 3D 8k full HD etc, gráfico máximo parecido PS5 3D 8K Full HD, serve pra qualquer dispositivo já reconhecendo automático sem precisar dizer, desde o início apresentando o jogo e segue as coisas. Crie completo leve rápido desde o início, tudo e todas as coisas funcionando certos.</div>
+    <div class="ch">🔥 OBJETIVOS 1 A 7 - PRIORIDADE - CLIQUE NA ORDEM</div>
+    <div id="listaObj" style="background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);border-radius:8px;padding:6px;min-height:28px;font-size:9px;color:var(--ok);font-weight:800;margin-bottom:8px"></div>
+    <div class="grid">
+      <div class="it" onclick="toggleObj(this)" data-obj="Ganho de Peso">Ganho de Peso</div>
+      <div class="it" onclick="toggleObj(this)" data-obj="Emagrecimento">Emagrecimento</div>
+      <div class="it" onclick="toggleObj(this)" data-obj="Definição Muscular">Definição</div>
+      <div class="it" onclick="toggleObj(this)" data-obj="Saúde">Saúde</div>
+      <div class="it" onclick="toggleObj(this)" data-obj="Condicionamento Físico">Condicionamento</div>
+      <div class="it" onclick="toggleObj(this)" data-obj="Hipertrofia">Hipertrofia</div>
+      <div class="it" onclick="toggleObj(this)" data-obj="Reabilitação Física">Reabilitação</div>
     </div>
-    <div style="margin-top:14px">
-      <input class="input-ps5" id="nomeJogo" placeholder="Nome completo *">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><input class="input-ps5" id="pesoJogo" type="number" placeholder="Peso kg * Ex:100"><input class="input-ps5" id="alturaJogo" type="number" placeholder="Altura cm * Ex:175"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><input class="input-ps5" id="idadeJogo" type="number" placeholder="Idade"><select class="input-ps5" id="nivelJogo"><option value="">Nível *</option><option>Iniciante</option><option>Intermediário</option><option>Avançado</option></select></div>
-      <input class="input-ps5" id="q6Jogo" placeholder="Q6 Limitação? Ex: joelho, mobilidade (calcula velocidade esteira)">
-      <input class="input-ps5" id="q4Jogo" placeholder="Q4 Restrição alimentar?">
-      <button class="btn-ps5 primary" style="width:100%;margin-top:10px;justify-content:center" onclick="irDias()">CONTINUAR → DIAS DE TREINO</button>
-    </div>
-    <div class="ps5-card" id="telaDias" style="display:none;margin-top:14px">
-      <div class="card-head"><i>📅</i> DIAS DE TREINO POR SEMANA NO JOGO - MESMA LINHA TEMPO PROJETO - ORDENS QUE PEDIU</div>
-      <div style="font-size:10px;color:#aaa;margin-bottom:10px">Off Season Jan-Fev, Bulking Mar-Mai, Maintenance Jun-Ago, Cutting Set-Nov, Férias Dez. Mesmas semanas, mesmas datas do projeto, só permite escolher dias de quantidades de treino por semana. Fases seguindo mesmas ordens etapas, métodos semanas de acordo com quantidade dias treinos.</div>
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px">
-        <div class="obj plano" onclick="selPlano(this,1)">1x SEMANA</div>
-        <div class="obj plano" onclick="selPlano(this,2)">2x SEMANA</div>
-        <div class="obj plano" onclick="selPlano(this,3)">3x SEMANA</div>
-        <div class="obj plano" onclick="selPlano(this,4)">4x SEMANA</div>
-        <div class="obj plano" onclick="selPlano(this,5)">5x SEMANA</div>
+    <input class="input" id="nomeJogo" placeholder="Nome completo *">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><input class="input" id="pesoJogo" type="number" placeholder="Peso kg * Ex:100"><input class="input" id="alturaJogo" type="number" placeholder="Altura cm * Ex:175"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><input class="input" id="idadeJogo" type="number" placeholder="Idade"><select class="input" id="nivelJogo"><option value="">Nível Atividade *</option><option>Iniciante</option><option>Intermediário</option><option>Avançado</option></select></div>
+    <input class="input" id="q6Jogo" placeholder="Q6 Limitação física? Ex: joelho, mobilidade reduzida (calcula velocidade esteira devagar pra evitar lesão)">
+    <input class="input" id="q4Jogo" placeholder="Q4 Restrição alimentar? Q1-Q9 anamnese completa do projeto original">
+    <button class="btn white" style="width:100%;margin-top:8px" onclick="irDias()">CONTINUAR → DIAS DE TREINO - MESMA LINHA TEMPO PROJETO</button>
+    <div class="card" id="telaDias" style="display:none;margin-top:10px">
+      <div class="ch">📅 DIAS DE TREINO POR SEMANA NO JOGO - MESMA LINHA TEMPO PROJETO - FASES ORDEM ETAPAS MÉTODOS SEMANAS</div>
+      <div style="font-size:9px;color:#aaa;margin-bottom:8px">Off Season Jan-Fev Manutenção/Resistência/Força/Hipertrofia, Bulking Mar-Mai, Maintenance Jun-Ago, Cutting Set-Nov, Férias Dez. Mesmas semanas, mesmas datas, métodos: Manutenção, Resistência, Força, Hipertrofia. Fases seguindo mesmas ordens etapas, métodos semanas de acordo com quantidade dias treinos. Combina tudo de acordo com escolha dos dias de treinos dos novos usuários ou os que já estão salvos nos dados que já participam no projeto original.</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px">
+        <div class="it plano" onclick="selPlano(this,1)">1x SEMANA</div><div class="it plano" onclick="selPlano(this,2)">2x SEMANA</div><div class="it plano" onclick="selPlano(this,3)">3x SEMANA</div><div class="it plano" onclick="selPlano(this,4)">4x SEMANA</div><div class="it plano" onclick="selPlano(this,5)">5x SEMANA</div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px" id="diasGrid">
-        <div class="obj dia" data-dia="Segunda">SEG</div><div class="obj dia" data-dia="Terça">TER</div><div class="obj dia" data-dia="Quarta">QUA</div><div class="obj dia" data-dia="Quinta">QUI</div><div class="obj dia" data-dia="Sexta">SEX</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px" id="diasGrid">
+        <div class="it dia" data-dia="Segunda">SEG</div><div class="it dia" data-dia="Terça">TER</div><div class="it dia" data-dia="Quarta">QUA</div><div class="it dia" data-dia="Quinta">QUI</div><div class="it dia" data-dia="Sexta">SEX</div>
       </div>
-      <div id="avisoDias" style="font-size:10px;color:var(--c);text-align:center;margin:10px 0">Selecione plano primeiro</div>
-      <button class="btn-ps5 primary" style="width:100%;justify-content:center" onclick="finalizarJogo()">FINALIZAR E IR PARA JOGO →</button>
-      <div style="font-size:9px;color:#555;text-align:center;margin-top:8px">No botão finalizar, em vez de WhatsApp, segue pra tela continuar jogo. Botões iniciar começa jogo seguindo lógicas objetivos escolhidos preenchido nos dados inscrição. Sincronizar: testar golpes, exercícios, movimentos, etc. Editar dados: mostra mesmas telas inscrição podendo editar tudo.</div>
+      <div id="avisoDias" style="font-size:9px;color:var(--c);text-align:center;margin:8px 0">Selecione plano primeiro</div>
+      <button class="btn white" style="width:100%" onclick="finalizarJogo()">FINALIZAR E IR PARA JOGO TIPO VÍDEO → MEDIAPIPE POSE REAL</button>
+      <div style="font-size:8px;color:#555;text-align:center;margin-top:6px">No botão finalizar, em vez de WhatsApp, segue pra tela continuar jogo. Botões iniciar começa jogo seguindo lógicas objetivos escolhidos preenchido nos dados inscrição. Sincronizar: testar golpes, exercícios, movimentos, etc. Editar dados: mostra mesmas telas inscrição podendo editar tudo. Botão Projeto Transformação só quando pessoa se inscreveu no jogo, quem não se inscreveu não mostra. Permite todos alunos que já participam do projeto real acessar jogo com mesmo ID.</div>
     </div>
   </div>
 </div>
 
 <div class="screen" id="screen-id">
-  <div class="ps5-card" style="max-width:600px;margin:0 auto">
-    <div class="card-head"><i>🔑</i> ACESSAR ID - CRONOGRAMA EXATO - VISUAL PS5</div>
-    <div style="display:flex;gap:8px;margin-bottom:12px"><input class="input-ps5" id="inputId" placeholder="ID ex: mag1, mcarla2" style="margin:0" onkeypress="if(event.key==='Enter') buscar()"><button class="btn-ps5 primary" onclick="buscar()">ENTRAR</button></div>
-    <div id="resultado" style="font-size:10px;margin-bottom:10px"></div>
+  <div class="card" style="max-width:560px;margin:0 auto">
+    <div class="ch">🔑 ACESSAR ID - CRONOGRAMA EXATO - VISUAL PS5 REFLEX RUN - TODAS INFORMAÇÕES DADOS CONTEÚDO PROJETO</div>
+    <div style="display:flex;gap:6px;margin-bottom:8px"><input class="input" id="inputId" placeholder="ID ex: mag1, mcarla2, hvitoria3, katia21, edna23, gon38, nicol39" style="margin:0;flex:1" onkeypress="if(event.key==='Enter') buscar()"><button class="btn white" onclick="buscar()">ENTRAR</button></div>
+    <div id="resultado" style="font-size:10px;margin-bottom:8px"></div>
     <div id="cronogramaId"></div>
-    <div style="margin-top:12px;font-size:9px;color:#666;line-height:1.5">Mostra uso como tudo que pediu, mantém todas informações mas não copia uso de apresentar coisas como projeto original, mostra diferente sendo jogo. Mostra cronograma de cada aluno quando clicar em acessar ID no mesmo lugar na tela do Projeto Transformação, quando acessar com ID mostra exatamente como tá no código original. IDs: ktp0, mag1, mcarla2, hvitoria3, katia21, edna23, gon38, nicol39, adriana7, joss8<br><br>Botão Projeto Transformação só quando pessoa se inscreveu no jogo, quem não se inscreveu não mostra. Permite todos alunos que já participam do projeto real acessar jogo com mesmo ID. Sistema e visual totalmente diferente pra ser visual de jogo pra não confundir as pessoas achando que é projeto original.</div>
+    <div style="margin-top:10px;font-size:8px;color:#666;line-height:1.4">Mostra uso como tudo que pedi, mantém todas informações mas não copia uso de apresentar coisas como projeto original, mostra diferente sendo jogo, tela como sistema de jogo de PlayStation 5 3D 8k full HD etc. Mostra cronograma de cada aluno quando clicar em acessar ID no mesmo lugar na tela do Projeto Transformação, quando acessar com ID mostra exatamente como tá no código original com todas informações: plano, dias, freq, horário, objetivo, valor, matrícula, total, venc, status, CPF, nasc, idade, gênero, whats, email, nível atividade, Q1-Q9 anamnese, endereço. Botão Projeto Transformação só quando pessoa se inscreveu no jogo. Permite todos alunos que já participam do projeto real acessar jogo com mesmo ID. Visual PS5 3D 8K Full HD com slides transições, etapas automáticas, interativo e imersivo, leve rápido desde o início, tudo funcionando certos.</div>
   </div>
 </div>
 
-<div class="screen" id="screen-semanas">
-  <div class="ps5-card" style="max-width:800px;margin:0 auto">
-    <div class="card-head"><i>📅</i> FASES E SEMANAS - MESMA ORDEM ETAPAS MÉTODOS SEMANAS - VISUAL PS5</div>
-    <div id="listaFases"></div>
-    <div id="semanaDetalhe" style="margin-top:14px"></div>
-  </div>
-</div>
-
-<div class="screen" id="screen-cronograma">
-  <div class="ps5-card" style="max-width:800px;margin:0 auto">
-    <div class="card-head"><i>📋</i> CRONOGRAMA E PERFIL - VISUAL PS5 3D 8K</div>
-    <div id="cronogramaGeral"></div>
-  </div>
-</div>
+<div class="screen" id="screen-semanas"><div class="card" style="max-width:720px;margin:0 auto"><div class="ch">📅 FASES E SEMANAS - MESMA ORDEM ETAPAS MÉTODOS - TODOS DADOS ORIGINAIS - SEM ERROS</div><div id="listaFases"></div><div id="semanaDetalhe" style="margin-top:10px"></div></div></div>
+<div class="screen" id="screen-cronograma"><div class="card" style="max-width:720px;margin:0 auto"><div class="ch">📋 CRONOGRAMA E PERFIL - PS5 3D 8K - TODAS INFORMAÇÕES DADOS CONTEÚDO PROJETO - SEM ERROS</div><div id="cronogramaGeral"></div></div></div>
 
 <div class="game-full" id="game">
-  <div class="area" id="area">
-    <video id="video" autoplay muted playsinline></video>
-    <div class="vignette"></div>
-    <div style="position:absolute;top:0;left:0;right:0;height:8px;background:linear-gradient(90deg,var(--c),var(--blue));z-index:3;animation:move var(--speed,3.5s) linear infinite"></div>
-    <div class="hud"><div class="hud-item"><span id="hudL">3 Vidas • 0m • 0cal • 15:00</span></div><div class="hud-item"><span id="hudC">FASE OFF • Esteira Normal</span></div><div class="hud-item"><span id="hudR">0 Nutrição • Combo 0</span></div></div>
-    <div class="tip" id="tip"></div>
-    <div class="ex" id="exercise"><b id="exTitle" style="font-family:Orbitron">POLICHINELO 12x</b><div id="exDesc" style="font-size:11px;color:#aaa;margin-top:8px">Faça correto sem erros execução, sem lesões. Personalizado peso e objetivo.</div><button class="btn-ps5 primary" style="width:100%;margin-top:14px;justify-content:center" onclick="fecharEx()">CONCLUÍDO ✅</button></div>
-    <div class="esteira" id="esteira"><div style="width:100%;text-align:center;font-size:8px;color:var(--c);font-family:'Orbitron';letter-spacing:1px;position:relative;z-index:2">ESTEIRA • CAMINHO DO JOGO • VELOCIDADE ADAPTADA • PS5 8K • GOLPES COMBINADOS LIBERADOS</div></div>
+  <canvas id="gameCanvas"></canvas>
+  <video id="video" autoplay muted playsinline></video>
+  <canvas id="poseCanvas" width="150" height="112"></canvas>
+  <div class="hud"><div class="hud-item">❤️ <span id="hudL">3 Vidas • 0m • 0cal • 15:00</span></div><div class="hud-item">🎯 <span id="hudC">FASE OFF • Esteira Normal • MediaPipe Pose Real</span></div><div class="hud-item">⭐ <span id="hudR">0 Nutrição • Combo 0 • Socos 0</span></div></div>
+  <div class="skeleton-hint" id="skeletonHint">🦴 MediaPipe Pose: 33 pontos<br>👊 Soco: punho ultrapassa ombro rápido<br>🦵 Chute: tornozelo sobe > quadril<br>🦵 Agachar: quadril desce > 15%<br>🦘 Pulo: quadris sobem rápido<br>↔️ Desvio: quadril move X<br>📹 Câmera auto sem sincronizar</div>
+  <div class="tip" id="tip"></div>
+  <div class="ex" id="exercise"><b id="exTitle" style="font-family:Orbitron">POLICHINELO 12x</b><div id="exDesc" style="font-size:10px;color:#aaa;margin-top:6px">Faça correto sem erros execução, sem lesões, personalizado peso e objetivo. MediaPipe Pose detecta pular, agachar, socar, chutar, desvio com esqueleto real.</div><button class="btn white" style="width:100%;margin-top:10px" onclick="fecharEx()">CONCLUÍDO ✅</button></div>
+  <div style="position:absolute;top:10px;left:10px;z-index:10"><button class="btn dark" onclick="fecharGame()">✕ FECHAR</button></div>
+  <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
+    <button class="btn white" onclick="startGame()">▶️ COMEÇAR CORRIDA TIPO VÍDEO - POSE REAL</button>
+    <button class="btn dark" onclick="limpar()">⏸️ PAUSAR</button>
+    <button class="btn dark" onclick="mostrarEx()">💪 EXERCÍCIO</button>
   </div>
-  <div style="position:absolute;top:20px;left:20px;z-index:10"><button class="btn-ps5 secondary" onclick="fecharGame()">✕ FECHAR</button></div>
-  <div style="position:absolute;bottom:140px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
-    <button class="btn-ps5 primary" onclick="startGame()">▶️ COMEÇAR CORRIDA 1000m</button>
-    <button class="btn-ps5 secondary" onclick="limpar()">⏸️ PAUSAR</button>
-    <button class="btn-ps5 secondary" onclick="mostrarEx()">💪 EXERCÍCIO</button>
-  </div>
-  <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:10;text-align:center"><div id="personalMsg" style="font-size:10px;color:#fff;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);border-radius:20px;padding:8px 16px;border:1px solid rgba(255,255,255,0.1)">PS5 3D 8K - Esteira como caminho do jogo em todas fases. Pode dar golpes de várias formas gerais individuais ou combinadas nos movimentos que quiser nos inimigos alimentos ruins de acordo com cada objetivos do usuário, mas quando tiver que fazer os exercícios no tempo tem que ser corretos sem erros execução, sem lesões.</div></div>
+  <div style="position:absolute;bottom:48px;left:50%;transform:translateX(-50%);z-index:10;text-align:center;max-width:92vw"><div id="personalMsg" style="font-size:7.5px;color:#fff;background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);border-radius:14px;padding:6px 10px;border:1px solid rgba(255,255,255,0.1)">Final máximo sem erros: Reflex Run Style pista indo pro horizonte, obstáculos vindo de frente direção real, jogador em frente telão gigante socando chutando agachando desviando. MediaPipe Pose real 33 pontos esqueleto, câmera reconhece automático, esteira horizontal tela toda de um lado ao outro simulando jogador correndo nas fases, velocidades adaptadas desaceleradas coerentes por objetivo, baseado em todos dados originais, todas fases linha tempo projeto, coerência jogar na ordem a cada método de cada semana com cada foco diferentes, combina tudo de acordo com escolha dos dias de treinos dos novos usuários ou os que já estão salvos nos dados que já participam no projeto original, músicas sons animações mensagens pontuações pular agachar socar chutar etc, visual PS5 3D 8K Full HD com slides transições etapas automáticas interativo imersivo, leve rápido desde o início, tudo funcionando certos, apostando com todas informações dados conteúdo do projeto.</div></div>
 </div>
 
 <script>
-const MENU={"2026-01-05":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE MANUTENÇÃO","2026-01-12":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE RESISTÊNCIA","2026-01-19":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE FORÇA","2026-01-26":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE HIPERTROFIA","2026-03-02":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE MANUTENÇÃO","2026-03-16":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE FORÇA","2026-03-23":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE HIPERTROFIA","2026-06-01":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE MANUTENÇÃO","2026-08-24":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE HIPERTROFIA","2026-09-07":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE RESISTÊNCIA","2026-12-07":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - DEZEMBRO: FÉRIAS\nSEMANA DE RESISTÊNCIA"};
-const MENS={"2026-01-05":"OFF SEASON - MANUTENÇÃO\nRegeneração | Adaptações | Aprendizados - Semana mais leve, sustenta evolução.","2026-08-24":"MAINTENANCE - HIPERTROFIA\nManter ganhos Bulking | Preservar massa magra","2026-09-07":"CUTTING - RESISTÊNCIA\nEliminar gordura | Manter massa magra"};
-const FASES={"FASE 1: OFF SEASON":["2026-01-05","2026-01-12","2026-01-19","2026-01-26"],"FASE 2: BULKING":["2026-03-02","2026-03-16","2026-03-23"],"FASE 3: MAINTENANCE":["2026-06-01","2026-08-24"],"FASE 4: CUTTING":["2026-09-07"],"DEZEMBRO: FÉRIAS":["2026-12-07"]};
+// DADOS ORIGINAIS COMPLETOS - TODAS INFORMAÇÕES SEM TIRAR NADA
+const MENU={
+"2026-01-05":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE MANUTENÇÃO","2026-01-12":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE RESISTÊNCIA","2026-01-19":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE FORÇA","2026-01-26":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE HIPERTROFIA",
+"2026-02-02":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE MANUTENÇÃO","2026-02-09":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE RESISTÊNCIA","2026-02-16":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE FORÇA","2026-02-23":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 1: OFF SEASON\nSEMANA DE HIPERTROFIA",
+"2026-03-02":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE MANUTENÇÃO","2026-03-09":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE RESISTÊNCIA","2026-03-16":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE FORÇA","2026-03-23":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE HIPERTROFIA",
+"2026-03-30":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE MANUTENÇÃO","2026-04-06":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE RESISTÊNCIA","2026-04-13":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE FORÇA","2026-04-20":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE HIPERTROFIA",
+"2026-04-27":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE MANUTENÇÃO","2026-05-04":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE RESISTÊNCIA","2026-05-11":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE FORÇA","2026-05-18":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE HIPERTROFIA",
+"2026-05-25":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 2: BULKING\nSEMANA DE MANUTENÇÃO","2026-06-01":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE MANUTENÇÃO","2026-06-08":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE RESISTÊNCIA","2026-06-15":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE FORÇA","2026-06-22":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE HIPERTROFIA",
+"2026-06-29":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE MANUTENÇÃO","2026-07-06":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE RESISTÊNCIA","2026-07-13":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE FORÇA","2026-07-20":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE HIPERTROFIA",
+"2026-07-27":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE MANUTENÇÃO","2026-08-03":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE RESISTÊNCIA","2026-08-10":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE FORÇA","2026-08-17":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE MANUTENÇÃO","2026-08-24":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 3: MAINTENANCE\nSEMANA DE HIPERTROFIA",
+"2026-08-31":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE MANUTENÇÃO","2026-09-07":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE RESISTÊNCIA","2026-09-14":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE FORÇA","2026-09-21":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE HIPERTROFIA",
+"2026-09-28":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE MANUTENÇÃO","2026-10-05":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE RESISTÊNCIA","2026-10-12":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE FORÇA","2026-10-19":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE HIPERTROFIA",
+"2026-10-26":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE MANUTENÇÃO","2026-11-02":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE RESISTÊNCIA","2026-11-09":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE FORÇA","2026-11-16":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE HIPERTROFIA","2026-11-23":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - FASE 4: CUTTING\nSEMANA DE MANUTENÇÃO",
+"2026-11-30":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - DEZEMBRO: FÉRIAS\nSEMANA DE MANUTENÇÃO","2026-12-07":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - DEZEMBRO: FÉRIAS\nSEMANA DE RESISTÊNCIA","2026-12-14":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - DEZEMBRO: FÉRIAS\nSEMANA DE FORÇA","2026-12-21":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - DEZEMBRO: FÉRIAS\nSEMANA DE HIPERTROFIA","2026-12-28":"K-TP | PROJETO TRANSFORMAÇÃO 11° ANO - DEZEMBRO: FÉRIAS\nSEMANA DE MANUTENÇÃO"
+};
+const MENS={
+"2026-01-05":"OFF SEASON - MANUTENÇÃO\nRegeneração | Adaptações | Aprendizados - Semana mais leve, sustenta evolução. Foco: Manutenção.",
+"2026-01-12":"OFF SEASON - RESISTÊNCIA\nResistência muscular - mais repetições, menos peso - 15-20 reps - Foco: Resistência.",
+"2026-01-19":"OFF SEASON - FORÇA\nFicar mais forte de verdade - 3 a 6 reps pesado - 70% carga - Foco: Força.",
+"2026-01-26":"OFF SEASON - HIPERTROFIA\nCrescer - 10 a 12 reps até falha - Foco: Hipertrofia.",
+"2026-03-02":"BULKING - MANUTENÇÃO\nRecuperação estratégica pra suportar cargas altas que virão - Proteína média Carbo ALTO.",
+"2026-03-16":"BULKING - FORÇA\nFoco ficar mais forte - 3 a 6 reps carga alta 70% - Proteína média Carbo ALTO.",
+"2026-03-23":"BULKING - HIPERTROFIA\nFoco principal CRESCER - 10 a 12 reps até falha - Proteína ALTA Carbo ALTO.",
+"2026-06-01":"MAINTENANCE - MANUTENÇÃO\nManter todos ganhos Bulking - Preservar massa magra - Proteína ALTA.",
+"2026-08-24":"MAINTENANCE - HIPERTROFIA\nÚltimo estímulo pra manter músculo - Proteína ALTA Carbo MÉDIO.",
+"2026-09-07":"CUTTING - RESISTÊNCIA\nEliminar gordura | Manter massa magra - Proteína ALTA Carbo BAIXO - Acelerar metabolismo.",
+"2026-12-07":"FÉRIAS - RESISTÊNCIA\nMostrar resultados - Movimentar corpo nas festas - Manter hábitos."
+};
+const FASES={"FASE 1: OFF SEASON":["2026-01-05","2026-01-12","2026-01-19","2026-01-26","2026-02-02","2026-02-09","2026-02-16","2026-02-23"],"FASE 2: BULKING":["2026-03-02","2026-03-09","2026-03-16","2026-03-23","2026-03-30","2026-04-06","2026-04-13","2026-04-20","2026-04-27","2026-05-04","2026-05-11","2026-05-18","2026-05-25"],"FASE 3: MAINTENANCE":["2026-06-01","2026-06-08","2026-06-15","2026-06-22","2026-06-29","2026-07-06","2026-07-13","2026-07-20","2026-07-27","2026-08-03","2026-08-10","2026-08-17","2026-08-24"],"FASE 4: CUTTING":["2026-08-31","2026-09-07","2026-09-14","2026-09-21","2026-09-28","2026-10-05","2026-10-12","2026-10-19","2026-10-26","2026-11-02","2026-11-09","2026-11-16","2026-11-23"],"DEZEMBRO: FÉRIAS":["2026-11-30","2026-12-07","2026-12-14","2026-12-21","2026-12-28"]};
 let ALUNOS={"ktp0":{nome:"SAY KORVIL",tipo:"ADMIN"},"mag1":{nome:"Magda Gomes",tipo:"ADMIN"},"mcarla2":{nome:"Maria Carla",tipo:"ALUNO"},"hvitoria3":{nome:"Hellem Vitória",tipo:"ALUNO"},"katia21":{nome:"Katia Paoli",tipo:"ALUNO"},"edna23":{nome:"Edna Paoli",tipo:"ALUNO"},"gon38":{nome:"José Gonzaga",tipo:"ALUNO"},"nicol39":{nome:"Nicoli Guedes",tipo:"ALUNO"},"adriana7":{nome:"Adriana",tipo:"ALUNO"},"joss8":{nome:"Jossiane",tipo:"ALUNO"}};
-let CRONO={"PRESENCIAL":[{"hora":"08h00 🐢",status:"ATIVOS",alunos:[{id:"mag1",aluno:"Magda Gomes",dias:"Segunda, Terça, Quarta, Quinta, Sexta",freq:"5x",objetivo:"Definição Muscular",valor:"R$150",matricula:"R$50",total:"R$200",venc:"13/05/26",status:"Ativo",plano:"Presencial 5x"},{id:"mcarla2",aluno:"Maria Carla",dias:"Segunda, Quinta, Sexta",freq:"3x",objetivo:"Emagrecimento | Saúde | Hipertrofia",valor:"R$100",matricula:"R$50",total:"R$150",venc:"06/08/26",status:"Ativo",plano:"Presencial 3x"}]},{"hora":"17h00 🌙",status:"ATIVOS",alunos:[{id:"katia21",aluno:"Katia Paoli",dias:"Terça, Quinta, Sexta",freq:"3x",objetivo:"Emagrecimento | Saúde | Definição",valor:"R$100",matricula:"R$50",total:"R$150",venc:"27/07/26",status:"Ativo",plano:"Presencial 3x"}]}]};
-let idLogado='', planoAtivo='PRESENCIAL', objs=[], diasJogo=[], maxDias=0, dadosJogo=null, stream=null, gameInt=null, timeInt=null, pontos=0, vidas=3, dist=0, cal=0, combo=0, tempo=900;
+let CRONO={"PRESENCIAL":[{"hora":"08h00 🐢 MANHÃ","status":"ATIVOS - PRESENCIAL 08h","alunos":[
+{id:"mag1",aluno:"Magda Gomes",dias:"Segunda, Terça, Quarta, Quinta, Sexta",freq:"5x",objetivo:"Definição Muscular",valor:"R$150",matricula:"R$50",total:"R$200",venc:"13/05/26",status:"Ativo",cpf:"112.505.24",nasc:"27/07",idade:"--",genero:"Feminino",whats:"(13) 99636-4009",email:"magdagomes998@gmail.com",nivel_atividade:"Intermediário",q1:"Sim - 3x semana",q2:"Irregular - 2 dias",q3:"9h por noite",q4:"Não",q5:"Abdômen e pernas",q6:"Não",q7:"Sim - ansiedade",q8:"Sim - faz terapia",q9:"Anti depressivo - sertralina",plano:"Presencial 5x - 08h00",endereco:"Bertioga - SP"},
+{id:"mcarla2",aluno:"Maria Carla",dias:"Segunda, Quinta, Sexta",freq:"3x",objetivo:"Emagrecimento | Saúde | Hipertrofia",valor:"R$100",matricula:"R$50",total:"R$150",venc:"06/08/26",status:"Ativo",cpf:"--",nasc:"--",idade:"28",genero:"Feminino",whats:"(13) 9xxxx",email:"maria@email.com",nivel_atividade:"Iniciante",q1:"Não",q2:"Regular",q3:"7h",q4:"Lactose",q5:"Perder barriga",q6:"Joelho esquerdo",q7:"Não",q8:"Não",q9:"Não",plano:"Presencial 3x - 08h00",endereco:"Bertioga"}
+]},{"hora":"17h00 🌙 TARDE","status":"ATIVOS - PRESENCIAL 17h","alunos":[
+{id:"katia21",aluno:"Katia Paoli",dias:"Terça, Quinta, Sexta",freq:"3x",objetivo:"Emagrecimento | Saúde | Definição",valor:"R$100",matricula:"R$50",total:"R$150",venc:"27/07/26",status:"Ativo",cpf:"--",nasc:"--",idade:"45",genero:"Feminino",whats:"--",email:"--",nivel_atividade:"Intermediário",q1:"Sim",q2:"Regular",q3:"8h",q4:"Não",q5:"Emagrecer",q6:"Sim no joelho direito - condromalácia",q7:"Sim",q8:"Sim",q9:"Losartana",plano:"Presencial 3x - 17h00",endereco:"Bertioga"},
+{id:"edna23",aluno:"Edna Paoli",dias:"Terça, Sexta, Quinta",freq:"3x",objetivo:"Saúde | Condicionamento | Reabilitação",valor:"R$100",matricula:"R$50",total:"R$150",venc:"27/07/26",status:"Ativo",cpf:"--",nasc:"--",idade:"62",genero:"Feminino",whats:"--",email:"--",nivel_atividade:"Iniciante",q1:"Não",q2:"Regular",q3:"8h",q4:"Não",q5:"Saúde",q6:"Mão mobilidade reduzida - artrite",q7:"Não",q8:"Sim",q9:"Pressão",plano:"Presencial 3x - 17h00",endereco:"Bertioga"}
+]}]};
+let idLogado='', objs=[], diasJogo=[], maxDias=0, dadosJogo=null, stream=null, gameRunning=false, pontos=0, vidas=3, dist=0, cal=0, combo=0, tempo=900, socos=0, gameLoop=null, timeLoop=null, obstacles=[], audioCtx=null, bgMusic=null, pose=null, camera=null;
+let canvas, ctx, roadOffset=0, playerLane=1, playerAction='run', lastPunchTime=0, lastKickTime=0, lastSquatTime=0, lastJumpTime=0;
+let poseLandmarks=null;
 
-function updateTime(){document.getElementById('time').innerText=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
-setInterval(updateTime,1000); updateTime();
-
-function abrirDashboard(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('ativo'));document.getElementById('dashboard').style.display='flex';document.querySelectorAll('.dock-item').forEach(d=>d.classList.remove('active'));document.querySelector('.dock-item').classList.add('active');}
-function abrirScreen(id){document.getElementById('dashboard').style.display='none';document.querySelectorAll('.screen').forEach(s=>s.classList.remove('ativo'));document.getElementById('screen-'+id).classList.add('ativo');document.querySelectorAll('.dock-item').forEach(d=>d.classList.remove('active'));if(id==='inscricao') document.querySelectorAll('.dock-item')[1].classList.add('active');if(id==='id') document.querySelectorAll('.dock-item')[2].classList.add('active');if(id==='semanas'){carregarFases();document.querySelectorAll('.dock-item')[3].classList.add('active');}if(id==='cronograma'){mostrarCronogramaGeral();document.querySelectorAll('.dock-item')[4].classList.add('active');}}
-function mostrarGame(){document.getElementById('game').classList.add('ativo');if(!stream) iniciarCam();document.querySelectorAll('.dock-item').forEach(d=>d.classList.remove('active'));document.querySelectorAll('.dock-item')[5].classList.add('active');}
-function fecharGame(){document.getElementById('game').classList.remove('ativo');limpar();if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}abrirDashboard();}
-
+function abrirDashboard(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('ativo'));document.getElementById('dashboard').style.display='flex';document.querySelectorAll('.dock-item').forEach(d=>d.classList.remove('active'));document.querySelectorAll('.dock-item')[0].classList.add('active');}
+function abrirScreen(id){document.getElementById('dashboard').style.display='none';document.querySelectorAll('.screen').forEach(s=>s.classList.remove('ativo'));document.getElementById('screen-'+id).classList.add('ativo');document.querySelectorAll('.dock-item').forEach(d=>d.classList.remove('active'));const map={inscricao:1,id:2,semanas:3,cronograma:4};if(map[id]!==undefined) document.querySelectorAll('.dock-item')[map[id]].classList.add('active');if(id==='semanas') carregarFases();if(id==='cronograma') mostrarCronogramaGeral();}
+function mostrarGame(){document.getElementById('game').classList.add('ativo');if(!stream) iniciarCam();document.querySelectorAll('.dock-item').forEach(d=>d.classList.remove('active'));document.querySelectorAll('.dock-item')[5].classList.add('active');initGameCanvas();}
+function fecharGame(){document.getElementById('game').classList.remove('ativo');limpar();if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}if(camera) {try{camera.stop();}catch(e){}}abrirDashboard();}
 function formatarData(d){return new Date(d+'T12:00:00').toLocaleDateString('pt-BR');}
 function getSegunda(){const agora=new Date();let base=new Date(agora);if(agora.getDay()===1&&agora.getHours()<1) base.setDate(agora.getDate()-7);const diff=base.getDate()-base.getDay()+(base.getDay()===0?-6:1);const seg=new Date(base.setDate(diff));return `${seg.getFullYear()}-${String(seg.getMonth()+1).padStart(2,'0')}-${String(seg.getDate()).padStart(2,'0')}`;}
 function getFase(){const hoje=getSegunda();let melhor=null;for(let d in MENU){if(d<=hoje){if(!melhor||d>melhor) melhor=d;}}if(!melhor) melhor=Object.keys(MENU)[0];for(let f in FASES){if(FASES[f].includes(melhor)) return {fase:f,data:melhor};}return {fase:Object.keys(FASES)[0],data:melhor};}
-function carregarFases(){const {fase,data}=getFase();let html='';for(let f in FASES){const eh=f===fase;html+=`<div style="background:${eh?'#fff':'var(--card)'};color:${eh?'#000':'#fff'};border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer" onclick="toggleFase(this)"><b style="font-family:Orbitron;font-size:10px">${f}</b><div style="font-size:9px;opacity:0.7;margin-top:4px">${FASES[f].length} semanas • Clique para abrir</div><div class="semanas-lista" style="display:${eh?'block':'none'};margin-top:10px">`;FASES[f].forEach(dt=>{const linha=(MENU[dt]||'').split('\n')[1]||'SEMANA';const atual=dt===data?' • ATUAL':'';html+=`<div style="padding:8px;background:${dt===data?'#000':'rgba(255,255,255,0.05)'};color:${dt===data?'#fff':'#aaa'};border-radius:8px;margin-bottom:4px;font-size:9px;cursor:pointer" onclick="mostrarSemanaDetalhe('${dt}')">${formatarData(dt)} - ${linha}${atual}</div>`});html+=`</div></div>`;}document.getElementById('listaFases').innerHTML=html;mostrarSemanaDetalhe(data);}
-function toggleFase(el){const lista=el.querySelector('.semanas-lista');lista.style.display=lista.style.display==='none'?'block':'none';}
-function mostrarSemanaDetalhe(data){const titulo=(MENU[data]||'').split('\n')[0]||'SEMANA';const sub=(MENU[data]||'').split('\n')[1]||'SEMANA';const msg=MENS[data]||'Mensagem da semana - Mesma linha do tempo do projeto original';document.getElementById('semanaDetalhe').innerHTML=`<div class="ps5-card"><div class="card-head"><i>📅</i> ${titulo}</div><p style="font-size:11px;color:#fff"><b>${sub}</b></p><div style="margin-top:10px;padding:10px;background:rgba(0,112,204,0.15);border:1px solid rgba(0,112,204,0.3);border-radius:10px;font-size:10px;white-space:pre-line">${msg}</div><p style="margin-top:8px;font-size:9px;color:var(--muted)">Semana inicia em: ${formatarData(data)} - Mesma data do projeto original - Fases seguindo mesmas ordens etapas, métodos semanas de acordo com quantidade dias treinos</p></div>`;}
+function carregarFases(){const {fase,data}=getFase();let html='';for(let f in FASES){const eh=f===fase;html+=`<div style="background:${eh?'#fff':'#141414'};color:${eh?'#000':'#fff'};border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer;border:1px solid ${eh?'#fff':'rgba(255,255,255,0.08)'}" onclick="this.querySelector('.lista').style.display=this.querySelector('.lista').style.display==='none'?'block':'none'"><b style="font-family:Orbitron;font-size:10px">${f} - ${FASES[f].length} SEMANAS - MESMA ORDEM ETAPAS MÉTODOS</b><div style="font-size:8px;opacity:0.7;margin-top:4px">Timeline: Off Season Jan-Fev, Bulking Mar-Mai, Maintenance Jun-Ago, Cutting Set-Nov, Férias Dez - Mesma linha tempo projeto - Fases seguindo mesmas ordens etapas, métodos semanas de acordo com quantidade dias treinos</div><div class="lista" style="display:${eh?'block':'none'};margin-top:8px">`;FASES[f].forEach(dt=>{const linha=(MENU[dt]||'').split('\n')[1]||'SEMANA';const atual=dt===data?' • ATUAL - SEGUIR ORDEM':'';html+=`<div style="padding:7px;background:${dt===data?'#000':'rgba(255,255,255,0.05)'};color:${dt===data?'#fff':'#aaa'};border-radius:7px;margin-bottom:4px;font-size:8.5px;cursor:pointer" onclick="event.stopPropagation();mostrarSemanaDetalhe('${dt}')">${formatarData(dt)} - ${linha}${atual}</div>`});html+=`</div></div>`;}document.getElementById('listaFases').innerHTML=html;mostrarSemanaDetalhe(data);}
+function mostrarSemanaDetalhe(data){const titulo=(MENU[data]||'').split('\n')[0]||'SEMANA';const sub=(MENU[data]||'').split('\n')[1]||'SEMANA';const msg=MENS[data]||`Semana ${sub} - Método: ${sub.split(' ')[3]||'Manutenção'} - Mesma linha do tempo do projeto original - Foco: ${sub}`;document.getElementById('semanaDetalhe').innerHTML=`<div class="card"><div style="font-family:Orbitron;font-size:11px">📅 ${titulo}</div><p style="font-size:10px;color:#fff;margin-top:4px"><b>${sub}</b></p><div style="margin-top:8px;padding:8px;background:rgba(0,112,204,0.15);border:1px solid rgba(0,112,204,0.3);border-radius:8px;font-size:9px;white-space:pre-line">${msg}</div><p style="margin-top:6px;font-size:8px;color:#777">Semana inicia em: ${formatarData(data)} - Mesma data do projeto original - Fases seguindo mesmas ordens etapas, métodos semanas de acordo com quantidade dias treinos - Baseado em todos dados originais dos usuários, todas fases linha tempo projeto, coerência jogar na ordem a cada método de cada semana com cada foco diferentes, combina tudo de acordo com escolha dos dias de treinos</p></div>`;}
 function encontrar(id){for(let tipo in CRONO){for(let bloco of CRONO[tipo]){let ach=bloco.alunos.find(a=>a.id===id);if(ach) return {dados:ach,tipo,bloco};}}return null;}
-function buscar(){const id=document.getElementById('inputId').value.toLowerCase().trim();if(!id){document.getElementById('resultado').innerHTML='<span style="color:var(--c)">Digite ID</span>';return;}if(ALUNOS[id]){idLogado=id;const enc=encontrar(id);if(enc) planoAtivo=enc.tipo;const aluno=ALUNOS[id];document.getElementById('resultado').innerHTML=`<div style="background:#fff;color:#000;border-radius:12px;padding:12px"><b style="font-family:Orbitron">✅ ${aluno.nome} - ID CONFIRMADO</b><br><span style="font-size:10px">${enc?enc.dados.plano+' | '+enc.bloco.hora+' | '+enc.dados.objetivo:'Acesso liberado'}<br>Botão Projeto Transformação liberado - Pode jogar quantas vezes quiser mas com sinalizações fora dias/horários plano pra não exagerar</span></div>`;document.getElementById('cronogramaId').innerHTML=enc?`<div class="ps5-card" style="margin-top:12px"><div class="card-head"><i>📋</i> CRONOGRAMA EXATO - ${enc.dados.aluno}</div><div style="font-size:10px;color:#aaa">PLANO: ${enc.dados.plano}<br>DIAS: ${enc.dados.dias}<br>FREQ: ${enc.dados.freq}<br>HORÁRIO: ${enc.bloco.hora}<br>OBJETIVO: ${enc.dados.objetivo}<br>STATUS: ${enc.dados.status}<br><br>EXATAMENTE como tá no código original, mas visual PS5 3D 8K Full HD totalmente diferente pra ser jogo</div></div>`:'<div class="ps5-card" style="margin-top:12px"><div class="card-head"><i>👑</i> ADMIN - Acesso total</div></div>';localStorage.setItem('ptplayers_id',id);mostrarCronogramaGeral();}else{document.getElementById('resultado').innerHTML='<span style="color:#ff0033">ID não encontrado - Tente: ktp0, mag1, mcarla2, hvitoria3, katia21, edna23</span>';}}
-function toggleObj(el){let obj=el.dataset.obj;let idx=objs.indexOf(obj);if(idx>-1){objs.splice(idx,1);el.classList.remove('sel');}else{if(objs.length>=7) return;objs.push(obj);el.classList.add('sel');}document.querySelectorAll('.obj').forEach(it=>{let pos=objs.indexOf(it.dataset.obj);if(pos>-1) it.innerHTML=`<b>${pos+1}.</b> ${it.dataset.obj}`;else it.innerHTML=it.dataset.obj;});document.getElementById('listaObj').innerText=objs.length? 'PRIORIDADE: '+objs.map((o,i)=>`${i+1}º ${o}`).join(' > '):'';}
+function campo(l,v){let val=(v===undefined||v===null||v===''||v==='--')?'<span style="color:#555">--</span>':`<span>${v}</span>`;return `<div style="background:#000;border:1px solid #1a1a1a;border-radius:6px;padding:6px 8px;margin-bottom:4px"><label style="font-size:6.5px;color:var(--c);font-weight:900;display:block;text-transform:uppercase">${l}</label><span style="font-size:9.5px;color:#fff;word-break:break-word">${val}</span></div>`;}
+function renderBox(a){const ativo=(a.status||'').toLowerCase().includes('ativo')&&!a.status.toLowerCase().includes('desativado');return `<div style="background:#141414;border:1px solid ${ativo?'var(--c)':'rgba(255,255,255,0.08)'};border-radius:12px;padding:10px;margin-bottom:10px;box-shadow:${ativo?'0 0 20px rgba(0,245,255,0.1)':''}"><div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:6px;margin-bottom:6px"><h2 style="font-family:Orbitron;font-size:9px;color:var(--c)">👤 ${a.aluno}</h2><div style="background:#fff;color:#000;padding:2px 7px;border-radius:20px;font-size:8px;font-weight:900">${a.id}</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">${campo('PLANO',a.plano)}${campo('DIAS',a.dias)}${campo('FREQ',a.freq)}${campo('HORÁRIO',a.hora)}<div style="grid-column:1/-1">${campo('OBJETIVO',a.objetivo)}</div><div style="grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">${campo('VALOR',a.valor)}${campo('MATRÍCULA',a.matricula)}${campo('TOTAL',a.total)}</div>${campo('VENC',a.venc)}<div style="grid-column:1/-1;padding:6px;border-radius:6px;text-align:center;font-weight:900;font-size:9px;background:${ativo?'rgba(0,255,136,0.1)':'rgba(255,0,51,0.1)'};border:1px solid ${ativo?'var(--ok)':'var(--err)'};color:${ativo?'var(--ok)':'var(--err)'}">${ativo?'✅ ATIVO - Botão Projeto Transformação liberado':'❌ DESATIVADO'}</div>${campo('CPF',a.cpf)}${campo('NASC',a.nasc)}${campo('IDADE',a.idade)}${campo('GÊNERO',a.genero)}<div style="grid-column:1/-1">${campo('WHATS',a.whats)}</div><div style="grid-column:1/-1">${campo('EMAIL',a.email)}</div>${campo('NÍVEL',a.nivel_atividade)}<div style="grid-column:1/-1">${campo('Q1 Frequência treino',a.q1)}</div><div style="grid-column:1/-1">${campo('Q2 Sono',a.q2)}</div>${campo('Q3 Horas sono',a.q3)}${campo('Q4 Restrição alimentar',a.q4)}<div style="grid-column:1/-1">${campo('Q5 Objetivo principal',a.q5)}</div>${campo('Q6 Limitação física',a.q6)}${campo('Q7 Psicológico',a.q7)}${campo('Q8 Tratamento',a.q8)}<div style="grid-column:1/-1">${campo('Q9 Medicação',a.q9)}</div><div style="grid-column:1/-1">${campo('ENDEREÇO',a.endereco)}</div></div></div>`;}
+function buscar(){const id=document.getElementById('inputId').value.toLowerCase().trim();if(!id){document.getElementById('resultado').innerHTML='<span style="color:var(--c)">Digite ID</span>';return;}if(ALUNOS[id]){idLogado=id;const enc=encontrar(id);const aluno=ALUNOS[id];document.getElementById('resultado').innerHTML=`<div style="background:#fff;color:#000;border-radius:10px;padding:10px"><b style="font-family:Orbitron;font-size:10px">✅ ${aluno.nome} - ID CONFIRMADO - VISUAL PS5 REFLEX RUN</b><br><span style="font-size:9px">${enc?enc.dados.plano+' | '+enc.bloco.hora+' | '+enc.dados.objetivo+' | Dias: '+enc.dados.dias+' | Freq: '+enc.dados.freq+' | Q6: '+(enc.dados.q6||'Não'):'ADMIN Acesso total - Todas fases linha tempo projeto'}<br>Botão Projeto Transformação liberado - Pode jogar quantas vezes quiser mas com sinalizações fora dias/horários plano pra não exagerar - Baseado em todos dados originais</span></div>`;document.getElementById('cronogramaId').innerHTML=enc?renderBox({...enc.dados,hora:enc.bloco.hora}):'<div class="card">👑 ADMIN - Acesso total - Todas fases linha tempo projeto - 52 semanas - Métodos Manutenção/Resistência/Força/Hipertrofia na ordem</div>';localStorage.setItem('ptplayers_id',id);mostrarCronogramaGeral();}else{document.getElementById('resultado').innerHTML='<span style="color:#ff0033">ID não encontrado - Tente: ktp0, mag1, mcarla2, hvitoria3, katia21, edna23, gon38, nicol39</span>';}}
+function toggleObj(el){let obj=el.dataset.obj;let idx=objs.indexOf(obj);if(idx>-1){objs.splice(idx,1);el.classList.remove('sel');}else{if(objs.length>=7) return;objs.push(obj);el.classList.add('sel');}document.querySelectorAll('.it').forEach(it=>{if(!it.dataset.obj) return;let pos=objs.indexOf(it.dataset.obj);if(pos>-1) it.innerHTML=`<b>${pos+1}.</b> ${it.dataset.obj}`;else it.innerHTML=it.dataset.obj;});document.getElementById('listaObj').innerText=objs.length? 'PRIORIDADE: '+objs.map((o,i)=>`${i+1}º ${o}`).join(' > '):'';}
 function irDias(){if(objs.length==0){alert('Selecione 1 objetivo');return;}if(!document.getElementById('pesoJogo').value||!document.getElementById('alturaJogo').value||!document.getElementById('nomeJogo').value){alert('Peso, altura, nome obrigatórios');return;}document.getElementById('telaDias').style.display='block';document.getElementById('telaDias').scrollIntoView({behavior:'smooth'});}
-function selPlano(el,freq){document.querySelectorAll('.plano').forEach(p=>p.classList.remove('sel'));el.classList.add('sel');maxDias=freq;diasJogo=[];document.querySelectorAll('#diasGrid .dia').forEach(d=>{d.classList.remove('sel');});if(freq==5){document.querySelectorAll('#diasGrid .dia').forEach(d=>{d.classList.add('sel');diasJogo.push(d.dataset.dia);});document.getElementById('avisoDias').innerText='Seg a Sex (5x) - Mesma linha tempo projeto';}else{document.getElementById('avisoDias').innerText=`Selecione ${freq} dia(s) - Faltam ${freq}`;}}
-document.querySelectorAll('#diasGrid .dia').forEach(d=>{d.addEventListener('click',function(){if(maxDias==0||maxDias==5) return;if(this.classList.contains('sel')){this.classList.remove('sel');diasJogo=diasJogo.filter(x=>x!=this.dataset.dia);}else{if(diasJogo.length>=maxDias) return;this.classList.add('sel');diasJogo.push(this.dataset.dia);}let faltam=maxDias-diasJogo.length;document.getElementById('avisoDias').innerText=faltam>0?`Faltam ${faltam} dia(s)`: `Dias: ${diasJogo.join(', ')}`;});});
-function finalizarJogo(){if(maxDias==0){alert('Selecione plano');return;}if(diasJogo.length!=maxDias){alert(`Selecione ${maxDias} dia(s)`);return;}dadosJogo={nome:document.getElementById('nomeJogo').value,peso:document.getElementById('pesoJogo').value,altura:document.getElementById('alturaJogo').value,idade:document.getElementById('idadeJogo').value,nivel:document.getElementById('nivelJogo').value||'Iniciante',objetivos:objs.join(' | '),freq:maxDias,dias:diasJogo,q6:document.getElementById('q6Jogo').value,q4:document.getElementById('q4Jogo').value};localStorage.setItem('ptplayers_jogo',JSON.stringify(dadosJogo));localStorage.setItem('ptplayers_perm','true');idLogado='';document.getElementById('screen-inscricao').innerHTML=`<div class="ps5-card" style="max-width:600px;margin:0 auto;text-align:center"><div style="font-size:40px;margin-bottom:12px">✅</div><div class="card-head" style="justify-content:center"><i>🎮</i> JOGO CONFIGURADO - ${dadosJogo.nome}</div><p style="font-size:11px;color:#aaa">${dadosJogo.objetivos} | ${dadosJogo.freq}x ${dadosJogo.dias.join(', ')} | Cálculo inteligente | Visual PS5 3D 8K | Não precisa se inscrever de novo - mostra outras telas seguintes</p><br><button class="btn-ps5 primary" style="width:100%;justify-content:center" onclick="mostrarGame();iniciarCam()">🏃 INICIAR JOGO AGORA - ESTEIRA ADAPTADA</button></div>`;mostrarCronogramaGeral();}
-function mostrarCronogramaGeral(){const cont=document.getElementById('cronogramaGeral');if(!idLogado&&!dadosJogo){cont.innerHTML='<div style="text-align:center;color:#777;padding:20px">Nenhum perfil configurado. Crie perfil do jogo ou acesse com ID.</div>';return;}if(dadosJogo&&!idLogado){const peso=parseFloat(dadosJogo.peso)||70;const altura=parseFloat(dadosJogo.altura)||170;const imc=(peso/((altura/100)*(altura/100))).toFixed(1);cont.innerHTML=`<div class="ps5-card"><div class="card-head"><i>🎮</i> PERFIL JOGADOR - ${dadosJogo.nome} - VISUAL PS5</div><p style="font-size:10px;color:#aaa">Pesa ${peso}kg IMC ${imc} - ${dadosJogo.objetivos} - ${dadosJogo.freq}x ${dadosJogo.dias.join(', ')}<br>Esteira adaptada - Emagrecimento/Definição/Condicionamento acelerada, Saúde/Reabilitação/Ganho Peso devagar evitando lesão<br>Não participante joga quantas vezes quiser. Participante real joga quantas vezes quiser mas com sinalizações fora dias/horários plano.</p><br><button class="btn-ps5 primary" onclick="mostrarGame();iniciarCam()">🏃 JOGAR</button></div>`;return;}const aluno=ALUNOS[idLogado];const enc=encontrar(idLogado);cont.innerHTML=`<div class="ps5-card"><div class="card-head"><i>📋</i> ${aluno.nome} - CRONOGRAMA EXATO VISUAL PS5</div><p style="font-size:10px;color:#aaa">${enc?enc.dados.plano+' | '+enc.bloco.hora+' | '+enc.dados.objetivo:'ADMIN'}<br>EXATO código original mas visual PS5 3D 8K totalmente diferente pra ser jogo, não confundir com projeto original</p><br><button class="btn-ps5 primary" onclick="mostrarGame();iniciarCam()">🎮 JOGAR COM SEUS DADOS</button></div>`;}
+function selPlano(el,freq){document.querySelectorAll('.plano').forEach(p=>p.classList.remove('sel'));el.classList.add('sel');maxDias=freq;diasJogo=[];document.querySelectorAll('#diasGrid .dia').forEach(d=>{d.classList.remove('sel');});if(freq==5){document.querySelectorAll('#diasGrid .dia').forEach(d=>{d.classList.add('sel');diasJogo.push(d.dataset.dia);});document.getElementById('avisoDias').innerText='Seg a Sex (5x) - Mesma linha tempo projeto - Combina tudo de acordo com escolha dias treinos';}else{document.getElementById('avisoDias').innerText=`Selecione ${freq} dia(s) - Faltam ${freq} - Baseado em todos dados originais`;}}
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('#diasGrid .dia').forEach(d=>{d.addEventListener('click',function(){if(maxDias==0||maxDias==5) return;if(this.classList.contains('sel')){this.classList.remove('sel');diasJogo=diasJogo.filter(x=>x!=this.dataset.dia);}else{if(diasJogo.length>=maxDias) return;this.classList.add('sel');diasJogo.push(this.dataset.dia);}let faltam=maxDias-diasJogo.length;document.getElementById('avisoDias').innerText=faltam>0?`Faltam ${faltam} dia(s)`: `Dias: ${diasJogo.join(', ')} - Coerência jogar na ordem a cada método semana com foco diferentes - Baseado todos dados originais`;});});});
+function finalizarJogo(){if(maxDias==0){alert('Selecione plano');return;}if(diasJogo.length!=maxDias){alert(`Selecione ${maxDias} dia(s)`);return;}dadosJogo={nome:document.getElementById('nomeJogo').value,peso:document.getElementById('pesoJogo').value,altura:document.getElementById('alturaJogo').value,idade:document.getElementById('idadeJogo').value,nivel:document.getElementById('nivelJogo').value||'Iniciante',objetivos:objs.join(' | '),freq:maxDias,dias:diasJogo,q6:document.getElementById('q6Jogo').value,q4:document.getElementById('q4Jogo').value};localStorage.setItem('ptplayers_jogo',JSON.stringify(dadosJogo));localStorage.setItem('ptplayers_perm','true');idLogado='';document.getElementById('screen-inscricao').innerHTML=`<div class="card" style="max-width:600px;margin:0 auto;text-align:center"><div style="font-size:32px">✅</div><div style="font-family:Orbitron;font-size:11px;margin-top:8px">JOGO CONFIGURADO - ${dadosJogo.nome} - FINAL MÁXIMO SEM ERROS - MEDIAPIPE POSE REAL</div><p style="font-size:10px;color:#aaa;margin-top:6px">${dadosJogo.objetivos} | ${dadosJogo.freq}x ${dadosJogo.dias.join(', ')} | Peso ${dadosJogo.peso}kg | Altura ${dadosJogo.altura}cm | Q6: ${dadosJogo.q6||'Não'} - Calcula velocidade esteira devagar pra evitar lesão<br><br>Completo leve rápido desde o início, tudo e todas as coisas funcionando certos, apostando com todas informações dados conteúdo do projeto, visual PS5 3D 8K Full HD, gráfico máximo parecido PS5 3D 8K Full HD, serve pra qualquer dispositivo já reconhecendo automático, tela como sistema de jogo de PlayStation 5 3D 8k full HD etc, esteira horizontal embaixo tela toda de um lado ao outro simulando jogador correndo nas fases, inimigos visão de jogo vindo de frente na direção real do jogador, câmera reconhece movimentos automático não precisa sincronizar já deixa automático reconhecer, velocidades adaptadas desaceleradas coerentes por objetivo, baseado em todos dados originais dos usuários, todas fases linha tempo projeto, coerência jogar na ordem a cada método de cada semana com cada foco diferentes, combina tudo de acordo com escolha dos dias de treinos dos novos usuários ou os que já estão salvos nos dados que já participam no projeto original, músicas sons animações mensagens pontuações pular agachar socar chutar etc, slides transições etapas automáticas interativo imersivo, leve rápido.</p><br><button class="btn white" style="width:100%" onclick="mostrarGame();iniciarCam()">🏃 INICIAR JOGO AGORA TIPO VÍDEO - MEDIAPIPE POSE REAL - ESTEIRA ADAPTADA</button></div>`;mostrarCronogramaGeral();}
+function mostrarCronogramaGeral(){const cont=document.getElementById('cronogramaGeral');if(!cont) return;if(!idLogado&&!dadosJogo){cont.innerHTML='<div style="text-align:center;color:#777;padding:20px">Nenhum perfil configurado. Crie perfil do jogo ou acesse com ID. Mantém todas informações mas mostra diferente sendo jogo, tela como sistema de jogo de PlayStation 5 3D 8k full HD etc.</div>';return;}if(dadosJogo&&!idLogado){const peso=parseFloat(dadosJogo.peso)||70;const altura=parseFloat(dadosJogo.altura)||170;const imc=(peso/((altura/100)*(altura/100))).toFixed(1);cont.innerHTML=`<div class="card"><div style="font-family:Orbitron;font-size:10px">🎮 PERFIL JOGADOR - ${dadosJogo.nome} - FINAL MÁXIMO SEM ERROS - TODAS INFORMAÇÕES DADOS CONTEÚDO PROJETO</div><p style="font-size:9px;color:#aaa;margin-top:6px">Pesa ${peso}kg Altura ${altura}cm IMC ${imc} - ${dadosJogo.objetivos} - ${dadosJogo.freq}x ${dadosJogo.dias.join(', ')} - Q6: ${dadosJogo.q6||'Não'} - Q4: ${dadosJogo.q4||'Não'}<br><br>Esteira horizontal embaixo tela toda de um lado ao outro simulando jogador correndo nas fases. Inimigos visão de jogo vindo de frente na direção real do jogador. Câmera reconhece movimentos automático, não precisa sincronizar já deixa automático reconhecer - MediaPipe Pose real 33 pontos esqueleto. Velocidades adaptadas desaceleradas coerentes por objetivo pra resultados mas aceitável pra jogar certo e melhor pq tava rápida exagerado demais. Baseado em todos dados originais dos usuários, todas fases linha tempo projeto Off Season Jan-Fev Manutenção/Resistência/Força/Hipertrofia, Bulking Mar-Mai, Maintenance Jun-Ago, Cutting Set-Nov, Férias Dez, mesma ordem etapas métodos semanas de acordo com quantidade dias treinos, combina tudo de acordo com escolha dos dias de treinos dos novos usuários ou os que já estão salvos nos dados que já participam no projeto original. Músicas sons animações mensagens pontuações pular agachar socar chutar etc, visual PS5 3D 8K Full HD com slides transições etapas automáticas interativo imersivo, leve rápido desde o início, tudo funcionando certos, apostando com todas informações dados conteúdo do projeto.<br><br>Não participante joga quantas vezes quiser, participante real joga quantas vezes quiser mas com sinalizações fora dias/horários plano pra não exagerar, até 7x seguidas mesmo dia, depois mensagem descansar, 7 dias direto bloqueia 7 dias pra focar treino físico real.</p><br><button class="btn white" onclick="mostrarGame();iniciarCam()">🏃 JOGAR TIPO VÍDEO - POSE REAL - ESTEIRA ADAPTADA</button></div>`;return;}const aluno=ALUNOS[idLogado];const enc=encontrar(idLogado);cont.innerHTML=enc?renderBox({...enc.dados,hora:enc.bloco.hora}):`<div class="card"><div style="font-family:Orbitron;font-size:10px">📋 ${aluno.nome} - ADMIN - TODAS INFORMAÇÕES</div><p style="font-size:9px;color:#aaa;margin-top:4px">Acesso total - Todas fases linha tempo projeto 52 semanas - Métodos Manutenção/Resistência/Força/Hipertrofia na ordem - 5x semana - Visual PS5 3D 8K Full HD - Final máximo sem erros - MediaPipe Pose real</p><br><button class="btn white" onclick="mostrarGame()">🎮 JOGAR TIPO VÍDEO - POSE REAL</button></div>`;}
 
-// GAME PS5 8K
+// GAME FINAL MÁXIMO - REFLEX RUN + MEDIAPIPE POSE REAL + PISTA 3D + ESTEIRA HORIZONTAL
+function initGameCanvas(){
+  canvas=document.getElementById('gameCanvas');
+  ctx=canvas.getContext('2d');
+  resizeCanvas();
+  window.addEventListener('resize',resizeCanvas);
+}
+function resizeCanvas(){if(canvas){canvas.width=window.innerWidth; canvas.height=window.innerHeight;}}
 async function iniciarCam(){
   try{
-    const v=document.getElementById('video');
-    const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1920},height:{ideal:1080}},audio:false});
-    stream=s; v.srcObject=s;
+    const video=document.getElementById('video');
+    const streamObj=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:false});
+    stream=streamObj;
+    video.srcObject=streamObj;
     localStorage.setItem('ptplayers_perm','true');
+    // MediaPipe Pose
+    pose=new Pose({locateFile:(file)=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`});
+    pose.setOptions({modelComplexity:1,smoothLandmarks:true,enableSegmentation:false,smoothSegmentation:false,minDetectionConfidence:0.5,minTrackingConfidence:0.5});
+    pose.onResults(onPoseResults);
+    camera=new Camera(video,{onFrame:async()=>{await pose.send({image:video});},width:640,height:480});
+    camera.start();
     calcularEsteira();
     playSound('start');
-  }catch(e){calcularEsteira();}
+  }catch(e){
+    console.log('MediaPipe ou câmera falhou, usando fallback',e);
+    calcularEsteira();
+    // Fallback para detecção simples se MediaPipe falhar
+    iniciarDeteccaoFallback();
+  }
+}
+function iniciarDeteccaoFallback(){
+  // Fallback simples se MediaPipe não carregar
+  const video=document.getElementById('video');
+  const mCanvas=document.createElement('canvas');
+  const mCtx=mCanvas.getContext('2d');
+  mCanvas.width=160; mCanvas.height=120;
+  let prev=null;
+  function loop(){
+    if(video.readyState===video.HAVE_ENOUGH_DATA){
+      mCtx.drawImage(video,0,0,160,120);
+      const frame=mCtx.getImageData(0,0,160,120);
+      if(prev){
+        let left=0,right=0,bottom=0,top=0;
+        for(let y=0;y<120;y+=8){
+          for(let x=0;x<160;x+=8){
+            const i=(y*160+x)*4;
+            const diff=Math.abs(frame.data[i]-prev.data[i])+Math.abs(frame.data[i+1]-prev.data[i+1])+Math.abs(frame.data[i+2]-prev.data[i+2]);
+            if(diff>35){
+              if(x<80&&y<60) left+=diff;
+              else if(x>=80&&y<60) right+=diff;
+              else if(y>=60) bottom+=diff;
+              else top+=diff;
+            }
+          }
+        }
+        if(left>6000){playerLane=Math.max(0,playerLane-1); autoHit('esq');}
+        if(right>6000){playerLane=Math.min(2,playerLane+1); autoHit('dir');}
+        if(bottom>7000){playerAction='agachar'; setTimeout(()=>playerAction='run',400);}
+        if(top>7000){playerAction='pulo'; setTimeout(()=>playerAction='run',400);}
+      }
+      prev=frame;
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+function onPoseResults(results){
+  const poseCanvas=document.getElementById('poseCanvas');
+  const pCtx=poseCanvas.getContext('2d');
+  pCtx.save();
+  pCtx.clearRect(0,0,poseCanvas.width,poseCanvas.height);
+  pCtx.drawImage(results.image,0,0,poseCanvas.width,poseCanvas.height);
+  if(results.poseLandmarks){
+    poseLandmarks=results.poseLandmarks;
+    drawConnectors(pCtx, results.poseLandmarks, POSE_CONNECTIONS, {color:'#00f5ff',lineWidth:2});
+    drawLandmarks(pCtx, results.poseLandmarks, {color:'#ff0033',lineWidth:1,radius:3});
+    detectarMovimentosPose(results.poseLandmarks);
+    // Atualiza hint esqueleto
+    const leftWrist=results.poseLandmarks[15];
+    const rightWrist=results.poseLandmarks[16];
+    const leftShoulder=results.poseLandmarks[11];
+    const rightShoulder=results.poseLandmarks[12];
+    const leftHip=results.poseLandmarks[23];
+    const rightHip=results.poseLandmarks[24];
+    const leftAnkle=results.poseLandmarks[27];
+    const rightAnkle=results.poseLandmarks[28];
+    let hint=`🦴 Pose: OK - 33 pontos<br>`;
+    if(leftWrist&&leftShoulder) hint+=`👊 Esq: ${(leftWrist.x-leftShoulder.x).toFixed(2)}<br>`;
+    if(rightWrist&&rightShoulder) hint+=`👊 Dir: ${(rightWrist.x-rightShoulder.x).toFixed(2)}<br>`;
+    if(leftHip) hint+=`🦵 Hip Y: ${leftHip.y.toFixed(2)}<br>`;
+    document.getElementById('skeletonHint').innerHTML=hint+`📹 Câmera auto sem sincronizar<br>⚡ Socos ${socos} | Combo ${combo}`;
+  }
+  pCtx.restore();
+}
+function detectarMovimentosPose(landmarks){
+  const now=Date.now();
+  // Pontos: 11 ombro esq, 12 ombro dir, 15 punho esq, 16 punho dir, 23 quadril esq, 24 quadril dir, 25 joelho esq, 26 joelho dir, 27 tornozelo esq, 28 tornozelo dir
+  const leftShoulder=landmarks[11];
+  const rightShoulder=landmarks[12];
+  const leftWrist=landmarks[15];
+  const rightWrist=landmarks[16];
+  const leftHip=landmarks[23];
+  const rightHip=landmarks[24];
+  const leftKnee=landmarks[25];
+  const rightKnee=landmarks[26];
+  const leftAnkle=landmarks[27];
+  const rightAnkle=landmarks[28];
+  const nose=landmarks[0];
+  if(!leftShoulder||!rightShoulder||!leftHip||!rightHip) return;
+  // Desvio esquerda/direita - quadril move X
+  const hipCenterX=(leftHip.x+rightHip.x)/2;
+  if(hipCenterX<0.42){playerLane=0; if(now-lastPunchTime>400){mostrarTip('↔️ DESVIO ESQUERDA - Pose Real - Quadril moveu',false); lastPunchTime=now;}}
+  else if(hipCenterX>0.58){playerLane=2; if(now-lastPunchTime>400){mostrarTip('↔️ DESVIO DIREITA - Pose Real',false); lastPunchTime=now;}}
+  else{playerLane=1;}
+  // Soco esquerda - punho esq ultrapassa ombro esq pra frente e rápido
+  if(leftWrist&&leftShoulder){
+    const punchDist=leftShoulder.x-leftWrist.x; // positivo se punho à esquerda do ombro (soco)
+    const punchForward=leftShoulder.z-leftWrist.z; // se punho mais perto da câmera
+    if(punchDist>0.15 && punchForward>0.1 && now-lastPunchTime>300){
+      autoHit('esq');
+      socos++;
+      mostrarTip('👊 SOCO ESQUERDA REAL! Punho ultrapassou ombro - MediaPipe Pose 33 pontos - Soco esq detectado',true);
+      playSound('hit');
+      lastPunchTime=now;
+    }
+  }
+  // Soco direita
+  if(rightWrist&&rightShoulder){
+    const punchDist=rightWrist.x-rightShoulder.x;
+    const punchForward=rightShoulder.z-rightWrist.z;
+    if(punchDist>0.15 && punchForward>0.1 && now-lastPunchTime>300){
+      autoHit('dir');
+      socos++;
+      mostrarTip('👊 SOCO DIREITA REAL! Punho ultrapassou ombro - MediaPipe Pose',true);
+      playSound('hit');
+      lastPunchTime=now;
+    }
+  }
+  // Chute - tornozelo sobe acima do quadril
+  if(leftAnkle&&leftHip){
+    if(leftAnkle.y < leftHip.y-0.15 && now-lastKickTime>500){
+      autoHit('esq');
+      mostrarTip('🦵 CHUTE ESQUERDA REAL! Tornozelo subiu > quadril - MediaPipe Pose - Chute detectado',true);
+      playSound('hit');
+      lastKickTime=now;
+    }
+  }
+  if(rightAnkle&&rightHip){
+    if(rightAnkle.y < rightHip.y-0.15 && now-lastKickTime>500){
+      autoHit('dir');
+      mostrarTip('🦵 CHUTE DIREITA REAL! Tornozelo subiu - MediaPipe Pose',true);
+      playSound('hit');
+      lastKickTime=now;
+    }
+  }
+  // Agachar - quadril desce
+  const avgHipY=(leftHip.y+rightHip.y)/2;
+  if(avgHipY>0.75 && now-lastSquatTime>600){
+    playerAction='agachar';
+    mostrarTip('🦵 AGACHAR REAL! Quadril desceu > 15% - MediaPipe Pose - Agachar detectado - Correto sem lesões',false);
+    playSound('squat');
+    lastSquatTime=now;
+    setTimeout(()=>{playerAction='run';},600);
+  }
+  // Pulo - quadris sobem rápido
+  if(leftHip&&rightHip&&nose){
+    const hipVel=Math.abs(leftHip.y-prevHipY||0);
+    if(avgHipY<0.55 && hipVel>0.02 && now-lastJumpTime>800){
+      playerAction='pulo';
+      mostrarTip('🦘 PULO REAL! Quadris subiram rápido - MediaPipe Pose - Pulo detectado - Correto sem lesões',false);
+      playSound('jump');
+      lastJumpTime=now;
+      setTimeout(()=>{playerAction='run';},500);
+    }
+  }
+}
+let prevHipY=0.6;
+function autoHit(lado){
+  if(obstacles.length===0) return;
+  const alvo=obstacles.find(o=>Math.abs(o.lane-playerLane)<0.8 && o.z>0.65);
+  if(alvo){
+    if(alvo.isRuim){
+      pontos+=10; cal+=2; combo++; socos++;
+      mostrarTip(`👊 SOCO ${lado.toUpperCase()} COMBINADO REAL! Destruiu ${alvo.nome} +10 - Golpe geral individual ou combinado nos movimentos que quiser nos inimigos alimentos ruins de acordo com cada objetivos do usuário - MediaPipe Pose Real 33 pontos - Câmera auto reconheceu movimento`,true);
+      playSound('hit');
+    } else {
+      pontos+=alvo.pontos; cal+=1; combo++;
+      mostrarTip(`⭐ COLETOU ${alvo.nome} +${alvo.pontos} - Baseado em todos dados originais - Pontuação!`,false);
+      playSound('coin');
+    }
+    obstacles=obstacles.filter(o=>o!==alvo);
+    updHud();
+  }
 }
 function calcularEsteira(){
-  let speed=3.5, label='Normal';
+  let speed=4, label='Normal';
   let objsStr=(dadosJogo?.objetivos||'')+' '+(encontrar(idLogado)?.dados.objetivo||'');
   let q6=(dadosJogo?.q6||'')+' '+(encontrar(idLogado)?.dados.q6||'');
-  let temLimit=/joelho|mobilidade|deficiencia|lesão|lesao|coluna|ombro|quadril/i.test(q6);
+  let temLimit=/joelho|mobilidade|deficiencia|lesão|lesao|coluna|ombro|quadril|artrite|condromalácia/i.test(q6);
   let isEmag=objsStr.includes('Emagrecimento')||objsStr.includes('Definição')||objsStr.includes('Condicionamento');
   let isLento=objsStr.includes('Saúde')||objsStr.includes('Reabilitação')||objsStr.includes('Ganho de Peso')||temLimit;
-  if(isEmag && !temLimit){speed=1.6; label='Acelerada - Emagrecimento/Definição/Condicionamento - Gasta calorias, potência corrida';}
-  else if(isLento){speed=5.5; label='Devagar - Saúde/Reabilitação/Ganho Peso ou limitação - Evita lesão';}
+  // DESACELERADO ACEITÁVEL PRA JOGAR CERTO E MELHOR - ANTES TAVA RÁPIDA EXAGERADO DEMAIS
+  if(isEmag && !temLimit){speed=2.8; label='Acelerada Média - Emagrecimento/Definição/Condicionamento - Gasta calorias, melhora potência corrida - Coerente com regras pra ter resultados mas aceitável pra jogar certo e melhor pq tava rápida exagerado demais';}
+  else if(isLento){speed=6.2; label='Devagar - Saúde/Reabilitação/Ganho Peso ou limitação joelho/mobilidade/artrite - Evita lesão - Velocidade coerente com regras - Q6: '+q6;}
+  else{speed=4.2; label='Normal - Hipertrofia - Equilíbrio - Coerente com regras';}
   document.documentElement.style.setProperty('--speed',speed+'s');
-  document.getElementById('esteira').style.setProperty('--speed',speed+'s');
-  document.getElementById('hudC').innerText=label.split(' - ')[0];
-  document.getElementById('personalMsg').innerText=`Esteira: ${label}. Pode dar golpes de várias formas gerais individuais ou combinadas nos movimentos que quiser nos inimigos alimentos ruins de acordo com cada objetivos do usuário, mas quando tiver que fazer os exercícios no tempo tem que ser corretos sem erros execução, sem lesões.`;
+  document.getElementById('hudC').innerText=label.split(' - ')[0]+' • MediaPipe Pose Real • Esteira Horizontal Tela Toda';
+  document.getElementById('personalMsg').innerText=`Final máximo sem erros completo leve rápido: Reflex Run Style pista indo pro horizonte, obstáculos vindo de frente direção real, jogador em frente telão gigante socando chutando agachando desviando. MediaPipe Pose real 33 pontos esqueleto rastreamento - soco esq/dir punho ultrapassa ombro rápido, chute tornozelo sobe > quadril, agachar quadril desce > 15%, pulo quadris sobem rápido, desvio quadril move X - câmera reconhece automático não precisa sincronizar já deixa automático reconhecer. Esteira horizontal embaixo tela toda de um lado ao outro simulando jogador correndo nas fases, velocidades adaptadas desaceleradas coerentes por objetivo pra resultados mas aceitável pra jogar certo e melhor pq tava rápida exagerado demais. Baseado em todos dados originais dos usuários: plano, dias, freq, horário, objetivo, valor, matrícula, total, venc, status, CPF, nasc, idade, gênero, whats, email, nível atividade, Q1-Q9 anamnese, endereço, todas fases linha tempo projeto Off Season Jan-Fev Manutenção/Resistência/Força/Hipertrofia, Bulking Mar-Mai, Maintenance Jun-Ago, Cutting Set-Nov, Férias Dez, mesma ordem etapas métodos semanas de acordo com quantidade dias treinos, combina tudo de acordo com escolha dos dias de treinos dos novos usuários ou os que já estão salvos nos dados que já participam no projeto original, músicas sons animações mensagens pontuações pular agachar socar chutar etc, visual PS5 3D 8K Full HD com slides transições etapas automáticas interativo imersivo, leve rápido desde o início, tudo funcionando certos, apostando com todas informações dados conteúdo do projeto.`;
 }
 function checkPlays(){
   const now=Date.now(); const hoje=new Date().toDateString();
   const data=JSON.parse(localStorage.getItem('ptplayers_plays')||'[]');
   const blockUntil=localStorage.getItem('ptplayers_block');
-  if(blockUntil && now < parseInt(blockUntil)){const dias=Math.ceil((parseInt(blockUntil)-now)/86400000);alert(`⛔ BLOQUEIO: Jogou 7 dias seguidos. Foco no treino físico real! Bloqueado ${dias} dia(s).`);return false;}
+  if(blockUntil && now < parseInt(blockUntil)){const dias=Math.ceil((parseInt(blockUntil)-now)/86400000);alert(`⛔ BLOQUEIO ATIVO: Você jogou 7 dias seguidos. Foco no treino físico real! Bloqueado por ${dias} dia(s) pra não exagerar e não se machucar. Jogo é complemento interativo pra agregar ajudando aluno, não alienar.`);return false;}
   if(idLogado){
     const aluno=encontrar(idLogado);
     if(aluno){
       const hojePlays=data.filter(p=>new Date(p).toDateString()===hoje).length;
-      if(hojePlays>=7) mostrarTip(`⚠️ Já jogou ${hojePlays}x hoje! Descanse - excesso atrapalha treino real. Plano: ${aluno.dados.dias}`,true);
+      if(hojePlays>=7){mostrarTip(`⚠️ Você já jogou ${hojePlays}x hoje! Descanse - excesso atrapalha treino real no projeto. Objetivo: ${aluno.dados.objetivo} - Plano: ${aluno.dados.dias} ${aluno.dados.freq} ${aluno.bloco.hora} - Se ficar jogando muito fora do plano vai atrapalhar o treino físico real no projeto ou pode se machucar. Até 7x seguidas mesmo no mesmo dia ou dias recorrentes, sinaliza mensagens personalizadas.`,true);}
+      if(hojePlays>=10){mostrarTip('🛑 Muitas horas jogando! Mensagens personalizadas pra descansar - se insistir 7 dias direto mesmo em pouco tempo sinaliza que vai bloquear uso por 7 dias pra focar no treino físico real e não exagerar alienando no jogo.',true);}
       const ultimos7=new Set(data.slice(-20).map(p=>new Date(p).toDateString()));
-      if(ultimos7.size>=7){localStorage.setItem('ptplayers_block',(now+7*86400000).toString());alert('🚫 7 dias direto! Bloqueia 7 dias pra focar no treino físico real.');return false;}
+      if(ultimos7.size>=7){localStorage.setItem('ptplayers_block',(now+7*86400000).toString());alert('🚫 Você jogou 7 dias direto mesmo em pouco tempo! Sinalizando que vai bloquear uso por 7 dias pra fazer ele focar no treino físico real e não exagerar alienando no jogo, já que foi criado pra agregar ajudando aluno, se jogar fora do prazo do foco do plano de cada um.');return false;}
+      const diaHoje=new Date().toLocaleDateString('pt-BR',{weekday:'long'}).toLowerCase();
+      const diasPlano=(aluno.dados.dias||'').toLowerCase();
+      if(diasPlano && !diasPlano.includes(diaHoje.substring(0,3)) && hojePlays>0){mostrarTip(`📅 Jogando fora dos dias do seu plano (${aluno.dados.dias}) - Cuidado pra não exagerar e atrapalhar treino físico real. Se for horas diga várias mensagens pra descansar.`,true);}
     }
   }
   return true;
@@ -301,50 +476,294 @@ function checkPlays(){
 function startGame(){
   if(!checkPlays()) return;
   limpar();
-  pontos=0; vidas=3; dist=0; cal=0; combo=0; tempo=900;
-  const area=document.getElementById('area');
+  pontos=0; vidas=3; dist=0; cal=0; combo=0; tempo=900; socos=0; obstacles=[]; roadOffset=0; playerLane=1; playerAction='run'; gameRunning=true;
   const ruins=[{e:'🍬',n:'Açúcar'},{e:'🛢️',n:'Óleo'},{e:'🥤',n:'Refri'},{e:'🍔',n:'Hambúrguer'},{e:'🍟',n:'Batata'},{e:'🍩',n:'Donut'},{e:'🍕',n:'Pizza'}];
-  const bons=[{e:'🍞',n:'Pão',p:3},{e:'🍌',n:'Banana',p:3},{e:'🥚',n:'Ovo',p:10},{e:'🍗',n:'Frango',p:10},{e:'🥑',n:'Abacate',p:20},{e:'🐟',n:'Salmão',p:50},{e:'🥦',n:'Brócolis',p:100}];
+  const bons=[{e:'🍞',n:'Pão',p:3},{e:'🍌',n:'Banana',p:3},{e:'🍚',n:'Arroz',p:5},{e:'🥚',n:'Ovo',p:10},{e:'🍗',n:'Frango',p:10},{e:'🥑',n:'Abacate',p:20},{e:'🐟',n:'Salmão',p:50},{e:'🥦',n:'Brócolis',p:100}];
   const sup=[{e:'💧',n:'Água',p:3},{e:'🏋️',n:'Halter',p:10},{e:'💪',n:'Whey',p:20},{e:'💎',n:'Super Mix',p:100}];
-  gameInt=setInterval(()=>{
-    if(vidas<=0){clearInterval(gameInt);clearInterval(timeInt);playSound('lose');alert('Fim! Nutrição:'+pontos); registrarPlay(); return;}
-    const r=Math.random(); let tipo,isRuim;
-    if(r<0.4){tipo=ruins[Math.floor(Math.random()*ruins.length)]; isRuim=true;}
-    else if(r<0.75){tipo=bons[Math.floor(Math.random()*bons.length)]; isRuim=false;}
-    else{tipo=sup[Math.floor(Math.random()*sup.length)]; isRuim=false;}
-    const div=document.createElement('div');
-    div.className='enemy '+(isRuim?'ruim':(tipo.p>=50?'sup':'bom'));
-    div.style.left=Math.random()*82+'%';
-    div.style.animationDuration=(2+Math.random()*2)+'s';
-    div.innerHTML=`<div>${tipo.e}</div><div style="font-size:7px">${tipo.n}${tipo.p?' '+tipo.p:''}</div>`;
-    let mult=1;
-    const objStr=(dadosJogo?.objetivos||'')+' '+(encontrar(idLogado)?.dados.objetivo||'');
-    if(objStr.includes('Ganho') && ['🍞','🍚','🥚','💪'].includes(tipo.e)) mult=2;
-    if(objStr.includes('Emagrecimento') && isRuim) mult=2;
-    div.onclick=()=>{if(isRuim){pontos+=5*mult; cal+=2; combo++; mostrarTip('Destruiu '+tipo.n+' +'+(5*mult)+' - Golpe combinado! '+objStr.split('|')[0],true); playSound('hit');}else{pontos+=tipo.p*mult; cal+=1; combo++; mostrarTip('Coletou '+tipo.n+' +'+(tipo.p*mult)+(mult>1?' 2x!':''),false); playSound('coin');} div.remove(); updHud();};
-    div.addEventListener('touchstart',()=>{div.onclick();});
-    area.appendChild(div);
-    setTimeout(()=>{if(div.parentNode){div.remove(); if(isRuim){vidas--; combo=0; updHud();}}},5000);
-    dist+=3;
-    if(dist%180==0) mostrarEx();
+  playMusic();
+  gameLoop=setInterval(()=>{
+    if(!gameRunning) return;
+    if(Math.random()<0.045){
+      const r=Math.random();
+      let tipo, isRuim;
+      if(r<0.45){tipo=ruins[Math.floor(Math.random()*ruins.length)]; isRuim=true;}
+      else if(r<0.8){tipo=bons[Math.floor(Math.random()*bons.length)]; isRuim=false;}
+      else{tipo=sup[Math.floor(Math.random()*sup.length)]; isRuim=false;}
+      obstacles.push({lane:Math.floor(Math.random()*3), z:0, tipo:isRuim?'ruim':(tipo.p>=50?'sup':'bom'), emoji:tipo.e, nome:tipo.n, pontos:tipo.p||5, isRuim});
+    }
+    obstacles.forEach(o=>{
+      let speedBase=0.022;
+      let objsStr=(dadosJogo?.objetivos||'')+' '+(encontrar(idLogado)?.dados.objetivo||'');
+      let q6=(dadosJogo?.q6||'')+' '+(encontrar(idLogado)?.dados.q6||'');
+      let temLimit=/joelho|mobilidade|deficiencia|lesão|lesao|coluna|ombro|quadril|artrite/i.test(q6);
+      if(objsStr.includes('Emagrecimento')&&!temLimit) speedBase=0.032;
+      else if(objsStr.includes('Saúde')||objsStr.includes('Reabilitação')||objsStr.includes('Ganho')||temLimit) speedBase=0.014;
+      o.z+=speedBase;
+    });
+    obstacles=obstacles.filter(o=>{
+      if(o.z>=1){
+        if(Math.abs(o.lane-playerLane)<0.6 && playerAction==='run'){
+          if(o.isRuim){vidas--; combo=0; mostrarTip(`❌ BATEU! ${o.nome} - Perdeu vida! Desvie ou soque com MediaPipe Pose Real - Correto sem lesões!`,true); playSound('lose');}
+          else{mostrarTip(`❌ Perdeu ${o.nome} - Não coletou!`,true);}
+          updHud();
+        }
+        return false;
+      }
+      return true;
+    });
+    dist+=2;
+    roadOffset+=3.5;
+    if(dist%150===0) mostrarEx();
     updHud();
-  },600);
-  timeInt=setInterval(()=>{tempo--; if(tempo<=0){clearInterval(gameInt);clearInterval(timeInt);alert('15:00 concluído!'); registrarPlay();} updHud();},1000);
+    drawRoad();
+    if(poseLandmarks) prevHipY=(poseLandmarks[23].y+poseLandmarks[24].y)/2;
+  },48);
+  timeLoop=setInterval(()=>{tempo--; if(tempo<=0){limpar(); stopMusic(); alert(`15:00 concluído! Cumpriu regras fase + 5 exercícios corretos sem erros execução, sem lesões! Pontos:${pontos} Cal:${cal} Dist:${dist}m Socos:${socos} - Final máximo sem erros completo leve rápido, Reflex Run Style pista indo pro horizonte, obstáculos vindo de frente direção real, jogador em frente telão gigante socando chutando agachando desviando, MediaPipe Pose real 33 pontos, câmera reconhece automático, esteira horizontal tela toda, velocidades adaptadas desaceleradas coerentes, baseado em todos dados originais, todas fases linha tempo, métodos semanas, dias treinos, músicas sons animações mensagens pontuações pular agachar socar chutar, visual PS5 3D 8K Full HD, slides transições etapas automáticas interativo imersivo`); registrarPlay();} updHud();},1000);
   registrarPlay();
 }
+function drawRoad(){
+  if(!ctx||!canvas) return;
+  const w=canvas.width, h=canvas.height;
+  const horizonY=h*0.42;
+  const roadBottomW=w*0.88;
+  const roadTopW=w*0.06;
+  // Céu gradiente
+  const skyGrad=ctx.createLinearGradient(0,0,0,horizonY);
+  skyGrad.addColorStop(0,'#87CEEB');
+  skyGrad.addColorStop(0.5,'#B0E0E6');
+  skyGrad.addColorStop(1,'#E0F6FF');
+  ctx.fillStyle=skyGrad;
+  ctx.fillRect(0,0,w,horizonY);
+  // Sol
+  ctx.fillStyle='#FFD700';
+  ctx.beginPath();
+  ctx.arc(w*0.85,horizonY*0.3,25,0,Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle='rgba(255,215,0,0.3)';
+  ctx.beginPath();
+  ctx.arc(w*0.85,horizonY*0.3,35,0,Math.PI*2);
+  ctx.fill();
+  // Montanhas
+  ctx.fillStyle='#2d5a27';
+  ctx.beginPath();
+  ctx.moveTo(0,horizonY);
+  for(let x=0;x<w;x+=70){ctx.lineTo(x,horizonY-25-Math.sin(x*0.008)*18); ctx.lineTo(x+35,horizonY-40-Math.sin((x+35)*0.008)*18);}
+  ctx.lineTo(w,horizonY);
+  ctx.fill();
+  ctx.fillStyle='#3a6b35';
+  ctx.beginPath();
+  ctx.moveTo(0,horizonY);
+  for(let x=0;x<w;x+=90){ctx.lineTo(x,horizonY-15-Math.sin(x*0.01+1)*12);}
+  ctx.lineTo(w,horizonY);
+  ctx.fill();
+  // Árvores verdes laterais igual vídeo
+  for(let i=0;i<10;i++){
+    const baseX=(i* w/10 + roadOffset*0.15)%w;
+    if(baseX> w*0.15 && baseX< w*0.85) continue;
+    const treeY=horizonY*0.6 + Math.sin(baseX*0.02)*10;
+    ctx.fillStyle='#1a3d1a';
+    ctx.fillRect(baseX-4,treeY,8, horizonY-treeY);
+    ctx.fillStyle='#2d8a2d';
+    ctx.beginPath();
+    ctx.arc(baseX,treeY,16,0,Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle='#3aaa3a';
+    ctx.beginPath();
+    ctx.arc(baseX,treeY-8,12,0,Math.PI*2);
+    ctx.fill();
+  }
+  // Chão areia/grama
+  ctx.fillStyle='#8B9A7D';
+  ctx.fillRect(0,horizonY,w,h-horizonY);
+  // Pista 3D indo pro horizonte
+  ctx.fillStyle='#2a2a2a';
+  ctx.beginPath();
+  ctx.moveTo(w/2-roadTopW/2,horizonY);
+  ctx.lineTo(w/2+roadTopW/2,horizonY);
+  ctx.lineTo(w/2+roadBottomW/2,h);
+  ctx.lineTo(w/2-roadBottomW/2,h);
+  ctx.closePath();
+  ctx.fill();
+  // Faixas laterais brancas contínuas
+  ctx.strokeStyle='#ffffff';
+  ctx.lineWidth=4;
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(w/2-roadTopW/2*0.92,horizonY);
+  ctx.lineTo(w/2-roadBottomW/2*0.92,h);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(w/2+roadTopW/2*0.92,horizonY);
+  ctx.lineTo(w/2+roadBottomW/2*0.92,h);
+  ctx.stroke();
+  // Faixa central amarela tracejada se movendo - esteira
+  ctx.strokeStyle='#FFD700';
+  ctx.lineWidth=3;
+  ctx.setLineDash([24,18]);
+  ctx.lineDashOffset=-roadOffset*1.2;
+  ctx.beginPath();
+  ctx.moveTo(w/2,horizonY);
+  ctx.lineTo(w/2,h);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  // Fogo/obstáculos no chão laterais igual vídeo Reflex Run
+  for(let i=0;i<4;i++){
+    const yPos = (horizonY + 50 + i*90 + roadOffset*0.6) % (h-horizonY) + horizonY;
+    const scale=(yPos-horizonY)/(h-horizonY);
+    const xLeft=w/2 - (roadBottomW/2*scale + roadTopW/2*(1-scale))*0.75;
+    const xRight=w/2 + (roadBottomW/2*scale + roadTopW/2*(1-scale))*0.75;
+    if(i%2===0){
+      ctx.fillStyle=`rgba(255,${80+Math.sin(Date.now()*0.01+i)*40},0,${0.5+scale*0.3})`;
+      ctx.fillRect(xLeft-20*scale, yPos-4*scale, 40*scale, 8*scale);
+      ctx.fillRect(xRight-20*scale, yPos-4*scale, 40*scale, 8*scale);
+    }
+  }
+  // Obstáculos vindo de frente - perspectiva real 3D
+  obstacles.forEach(o=>{
+    const z=o.z;
+    const y=horizonY + (h-horizonY)*z;
+    const scale=0.18 + z*1.3;
+    const laneOffset=(o.lane-1)*0.32;
+    const x=w/2 + laneOffset * roadBottomW * z * 0.55;
+    const size=18 + 52*z;
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.scale(scale,scale);
+    // Sombra no chão
+    ctx.fillStyle='rgba(0,0,0,0.35)';
+    ctx.beginPath();
+    ctx.ellipse(0,14, size*0.55, size*0.18, 0,0,Math.PI*2);
+    ctx.fill();
+    // Glow por tipo
+    if(o.tipo==='ruim'){ctx.shadowColor='#ff0033'; ctx.shadowBlur=12;}
+    else if(o.tipo==='sup'){ctx.shadowColor='#00f5ff'; ctx.shadowBlur=14;}
+    else{ctx.shadowColor='#00ff88'; ctx.shadowBlur=10;}
+    // Emoji
+    ctx.font=`${size}px Arial`;
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillStyle='#fff';
+    ctx.fillText(o.emoji,0,0);
+    ctx.shadowBlur=0;
+    // Nome e pontos
+    ctx.fillStyle='#fff';
+    ctx.font=`bold ${Math.max(7,size*0.22)}px Orbitron`;
+    ctx.fillText(o.nome,0,size*0.58);
+    if(o.pontos){ctx.font=`${Math.max(6,size*0.18)}px Rajdhani`; ctx.fillText(o.pontos+'pts',0,size*0.78);}
+    ctx.restore();
+    // Indicador quando perto e na mesma lane
+    if(Math.abs(o.lane-playerLane)<0.6 && z>0.78){
+      ctx.strokeStyle=o.isRuim?'#ff0033':'#00ff88';
+      ctx.lineWidth=2+z;
+      ctx.setLineDash([6,4]);
+      ctx.strokeRect(x-size*scale/2, y-size*scale/2, size*scale, size*scale);
+      ctx.setLineDash([]);
+    }
+  });
+  // Player - silhueta correndo igual vídeo, posição baseada na lane
+  const playerX=w/2 + (playerLane-1)*roadBottomW*0.26;
+  const playerY=h-68;
+  ctx.save();
+  ctx.translate(playerX,playerY);
+  const runOffset=Math.sin(Date.now()*0.012)*2.5;
+  if(playerAction==='agachar'){
+    ctx.fillStyle='rgba(255,255,255,0.95)';
+    ctx.fillRect(-13,2,26,18);
+    ctx.beginPath();
+    ctx.arc(0,-6,13,0,Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle='#00f5ff';
+    ctx.font='8px Orbitron';
+    ctx.textAlign='center';
+    ctx.fillText('AGACHAR',0,30);
+  } else if(playerAction==='pulo'){
+    ctx.translate(0,-22);
+    ctx.fillStyle='rgba(255,255,255,0.95)';
+    ctx.fillRect(-11,-18,22,28);
+    ctx.beginPath();
+    ctx.arc(0,-28,11,0,Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle='#00ff88';
+    ctx.font='8px Orbitron';
+    ctx.fillText('PULO',0,28);
+  } else {
+    // Correndo com braços socando
+    ctx.fillStyle='rgba(255,255,255,0.95)';
+    ctx.fillRect(-10,runOffset,20,26);
+    ctx.beginPath();
+    ctx.arc(0,-10+runOffset,11,0,Math.PI*2);
+    ctx.fill();
+    // Braços alternando
+    if(Math.floor(Date.now()/180)%2===0){
+      ctx.fillRect(-17,0+runOffset,7,16);
+      ctx.fillRect(10,2+runOffset,7,14);
+    } else {
+      ctx.fillRect(-17,2+runOffset,7,14);
+      ctx.fillRect(10,0+runOffset,7,16);
+    }
+    // Pernas correndo
+    ctx.fillRect(-7,26+runOffset,6,16);
+    ctx.fillRect(1,26-runOffset,6,16);
+    // Indicador lane
+    ctx.fillStyle='rgba(0,245,255,0.6)';
+    ctx.font='7px Orbitron';
+    ctx.textAlign='center';
+    ctx.fillText(['ESQ','MEIO','DIR'][playerLane],0,52);
+  }
+  ctx.restore();
+}
 function registrarPlay(){const data=JSON.parse(localStorage.getItem('ptplayers_plays')||'[]');data.push(Date.now());localStorage.setItem('ptplayers_plays',JSON.stringify(data));}
-function limpar(){clearInterval(gameInt);clearInterval(timeInt);document.querySelectorAll('.enemy').forEach(e=>e.remove());}
-function updHud(){const m=Math.floor(tempo/60),s=tempo%60;document.getElementById('hudL').innerText=`${vidas} Vidas • ${dist}m • ${cal}cal • ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;document.getElementById('hudR').innerText=`${pontos} Nutrição • Combo ${combo}`;}
-function mostrarTip(txt,isBad){const t=document.getElementById('tip');t.innerText=txt; t.style.background=isBad?'#ff0033':'#fff'; t.style.color=isBad?'#fff':'#000'; t.style.display='block'; setTimeout(()=>{t.style.display='none';},3500);}
-function mostrarEx(){const exs=[{t:'PONTE AGACHAMENTO 8x',d:'Agache 2s - ponte - correto sem erros execução, sem lesões, personalizado peso e objetivo'},{t:'POLICHINELO 12x',d:'Mãos acima + pernas - correto sem erros, queima calórica'},{t:'JOELHO ALTO 20x',d:'Correndo lugar - correto, condicionamento'},{t:'EMPURRÃO 15x',d:'Socos frontais - força correta'},{t:'PULAR MUROS 10x',d:'Pule muros baixos - correto'}];const ex=exs[Math.floor(Math.random()*exs.length)];document.getElementById('exTitle').innerText=ex.t;let peso=dadosJogo?.peso||'70';let obj=dadosJogo?.objetivos||'';let extra=obj.includes('Emagrecimento')?` Pesa ${peso}kg - intenso pra emagrecer saudável até 4kg/mês, correto sem lesão.`:obj.includes('Ganho')?` Pesa ${peso}kg - execução perfeita pra ganho peso saudável, correto.`:'';document.getElementById('exDesc').innerText=ex.d+extra;document.getElementById('exercise').style.display='block'; playSound('exercise');}
+function limpar(){clearInterval(gameLoop);clearInterval(timeLoop);gameRunning=false;obstacles=[];stopMusic();}
+function updHud(){const m=Math.floor(tempo/60),s=tempo%60;document.getElementById('hudL').innerText=`${vidas} Vidas • ${dist}m • ${cal}cal • ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;document.getElementById('hudR').innerText=`${pontos} Nutrição • Combo ${combo} • Socos ${socos}`;}
+function mostrarTip(txt,isBad){const t=document.getElementById('tip');t.innerText=txt; t.style.background=isBad?'#ff0033':'#fff'; t.style.color=isBad?'#fff':'#000'; t.style.display='block'; setTimeout(()=>{t.style.display='none';},3200);}
+function mostrarEx(){const exs=[{t:'PONTE AGACHAMENTO 8x',d:'Agache 2s - ponte - correto sem erros execução, sem lesões, personalizado peso e objetivo - MediaPipe Pose detecta agachar com quadril desce > 15% - Correto sem lesões'},{t:'POLICHINELO 12x',d:'Mãos acima + pernas - correto sem erros, queima calórica - MediaPipe Pose detecta pulo com quadris sobem rápido - Correto sem lesões'},{t:'JOELHO ALTO 20x - CHUTE',d:'Correndo lugar - correto, condicionamento - MediaPipe Pose detecta chute com tornozelo sobe > quadril - Chutar detectado'},{t:'EMPURRÃO 15x - SOCO COMBINADO REAL',d:'Socos frontais - força correta - MediaPipe Pose detecta soco esq/dir com punho ultrapassa ombro rápido - Socar geral individual ou combinado nos movimentos que quiser nos inimigos alimentos ruins de acordo com cada objetivos - Correto sem lesões'},{t:'PULAR MUROS 10x - PULO',d:'Pule muros baixos - correto sem lesão - MediaPipe Pose detecta pulo - Pular detectado'}];const ex=exs[Math.floor(Math.random()*exs.length)];document.getElementById('exTitle').innerText=ex.t;let peso=dadosJogo?.peso||'70';let obj=dadosJogo?.objetivos||'';let extra=obj.includes('Emagrecimento')?` Pesa ${peso}kg - intenso pra emagrecer saudável até 4kg/mês, correto sem lesão - Baseado todos dados originais, fases linha tempo, métodos semanas.`:` Pesa ${peso}kg - execução perfeita pra ganho peso saudável, correto sem lesão - Baseado todos dados originais.`;document.getElementById('exDesc').innerText=ex.d+extra;document.getElementById('exercise').style.display='block'; playSound('exercise');}
 function fecharEx(){document.getElementById('exercise').style.display='none';}
-function playSound(tipo){try{const ctx=new (window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);if(tipo==='coin'){o.frequency.value=800;g.gain.value=0.1;o.start();setTimeout(()=>o.stop(),100);}else if(tipo==='hit'){o.frequency.value=200;g.gain.value=0.2;o.start();setTimeout(()=>o.stop(),80);}else if(tipo==='start'){o.frequency.value=400;g.gain.value=0.1;o.start();setTimeout(()=>{o.frequency.value=600;},100);setTimeout(()=>o.stop(),200);}else if(tipo==='exercise'){o.frequency.value=600;g.gain.value=0.15;o.start();setTimeout(()=>o.stop(),300);}else if(tipo==='lose'){o.frequency.value=100;g.gain.value=0.2;o.start();setTimeout(()=>o.stop(),500);}}catch(e){}}
+function playSound(tipo){
+  try{
+    if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(); const g=audioCtx.createGain();
+    o.connect(g); g.connect(audioCtx.destination);
+    if(tipo==='coin'){o.frequency.value=820;g.gain.value=0.11;o.start();setTimeout(()=>o.stop(),110);o.type='sine';}
+    else if(tipo==='hit'){o.frequency.value=175;g.gain.value=0.26;o.start();setTimeout(()=>o.stop(),85);o.type='square';}
+    else if(tipo==='start'){o.frequency.value=420;g.gain.value=0.13;o.start();setTimeout(()=>{o.frequency.value=680;},110);setTimeout(()=>o.stop(),240);o.type='sine';}
+    else if(tipo==='exercise'){o.frequency.value=520;g.gain.value=0.16;o.start();setTimeout(()=>o.stop(),340);o.type='triangle';}
+    else if(tipo==='lose'){o.frequency.value=115;g.gain.value=0.22;o.start();setTimeout(()=>o.stop(),580);o.type='sawtooth';}
+    else if(tipo==='jump'){o.frequency.value=620;g.gain.value=0.11;o.start();setTimeout(()=>{o.frequency.value=920;},75);setTimeout(()=>o.stop(),170);o.type='sine';}
+    else if(tipo==='squat'){o.frequency.value=310;g.gain.value=0.13;o.start();setTimeout(()=>o.stop(),140);o.type='triangle';}
+  }catch(e){}
+}
+function playMusic(){
+  try{
+    if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(bgMusic) return;
+    bgMusic=setInterval(()=>{
+      const o=audioCtx.createOscillator(); const g=audioCtx.createGain();
+      o.connect(g); g.connect(audioCtx.destination);
+      o.frequency.value=78+Math.random()*28;
+      g.gain.value=0.018;
+      o.type='sine';
+      o.start();
+      setTimeout(()=>{try{g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.5); setTimeout(()=>o.stop(),500);}catch(e){}},70);
+    },320);
+  }catch(e){}
+}
+function stopMusic(){if(bgMusic){clearInterval(bgMusic);bgMusic=null;}}
+document.addEventListener('keydown',(e)=>{
+  if(!document.getElementById('game').classList.contains('ativo')) return;
+  if(e.key==='a'||e.key==='A'||e.key==='ArrowLeft'){playerLane=Math.max(0,playerLane-1); autoHit('esq'); mostrarTip('👊 SOCO ESQ + DESVIO ESQ - Teclado A - Golpe individual - MediaPipe Pose Real',true); playSound('hit');}
+  if(e.key==='d'||e.key==='D'||e.key==='ArrowRight'){playerLane=Math.min(2,playerLane+1); autoHit('dir'); mostrarTip('👊 SOCO DIR + DESVIO DIR - Teclado D - Golpe individual - MediaPipe Pose Real',true); playSound('hit');}
+  if(e.key==='w'||e.key==='W'||e.key==='ArrowUp'){playerAction='pulo'; setTimeout(()=>playerAction='run',450); mostrarTip('🦘 PULO REAL - Teclado W - Pular funcionando - MediaPipe Pose detecta quadris sobem rápido - Correto sem lesões',false); playSound('jump');}
+  if(e.key==='s'||e.key==='S'||e.key==='ArrowDown'){playerAction='agachar'; setTimeout(()=>playerAction='run',550); mostrarTip('🦵 AGACHAR REAL - Teclado S - Agachar funcionando - MediaPipe Pose detecta quadril desce > 15% - Correto sem lesões',false); playSound('squat');}
+  if(e.code==='Space'){autoHit('esq'); autoHit('dir'); socos++; mostrarTip('🦵 CHUTE + SOCO COMBINADO REAL - Space - Chutar funcionando - MediaPipe Pose detecta tornozelo sobe > quadril + punho ultrapassa ombro - Golpe combinado - Socar geral individual ou combinado nos movimentos que quiser nos inimigos alimentos ruins de acordo com cada objetivos',true); playSound('hit');}
+});
 window.onload=function(){
+  document.getElementById('clock').innerText=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  setInterval(()=>{document.getElementById('clock').innerText=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});},60000);
   const salvo=localStorage.getItem('ptplayers_jogo');
   if(salvo){try{dadosJogo=JSON.parse(salvo); maxDias=dadosJogo.freq; diasJogo=dadosJogo.dias||[];}catch(e){}}
   const idSalvo=localStorage.getItem('ptplayers_id');
   if(idSalvo && ALUNOS[idSalvo]){idLogado=idSalvo;}
-  if(localStorage.getItem('ptplayers_perm')){setTimeout(()=>{iniciarCam();},1500);}
+  if(localStorage.getItem('ptplayers_perm')){setTimeout(()=>{iniciarCam();},1000);}
 };
 </script>
 <script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
