@@ -1,3 +1,40 @@
+RAIZ DO REPOSITÓRIO /
+│
+├─ 📁 .github/
+│  ├─ 📁 workflows/  <- todos seus .yml continuam aqui
+│  └─ 📁 scripts/    <- atualiza.js, criar-arquivo.js, etc
+│
+├─ 📁 korvil/  <- AQUI É A PÁGINA INICIAL DO SITE
+│  │  index.html  <- INDEX PRINCIPAL DO SITE
+│  │  .nojekyll   <- cria esse arquivo vazio pra não dar bug no Pages
+│  │
+│  ├─ 📁 sections/  <- OS 5 SETORES
+│  │  │  index.html  <- Hub que lista os 5 setores
+│  │  │
+│  │  ├─ 📁 centralkorvil/  -> index.html
+│  │  ├─ 📁 sistemak/       -> index.html
+│  │  ├─ 📁 ktp/            -> index.html
+│  │  │  └─ 📁 projetotransformacao/projetos/2026/ -> seus .json
+│  │  ├─ 📁 kafortunado/    -> index.html
+│  │  └─ 📁 kalma/          -> index.html
+│  │
+│  ├─ 📁 sok/  <- SISTEMA OPERACIONAL KORVIL - A TRINDADE FICA AQUI DENTRO
+│  │  │  index.html  <- Painel do SOK
+│  │  │
+│  │  ├─ 📁 kbd/      <- BANCO DE DADOS - CORAÇÃO
+│  │  │  │  index.html
+│  │  │  └─ 📁 core/  -> aqui vai o código real que lê/escreve tudo
+│  │  │
+│  │  ├─ 📁 kai/      -> index.html - A IA
+│  │  └─ 📁 kriador/  -> index.html - O CRIADOR
+│  │
+│  ├─ 📁 assets/      <- CSS, JS, IMG global pra não repetir
+│  └─ 📁 data/        <- jsons globais se precisar
+│
+└─ 📄 README.md
+
+
+
 KORVIL CODE - CLIQUE MOSTRA CÓDIGO - LINK LÊ TUDO
 1 itens
 📜 HIST
